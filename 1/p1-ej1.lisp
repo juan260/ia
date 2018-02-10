@@ -9,10 +9,22 @@
 ;;;
 (defun prodEscRec (x y)
     (if (or (null x) (null y)) 
-        nil
-     (+ 
+        0
+     (+ (* (first x) (first y)) (prodEscRec (cdr x) (cdr y)))
      )
 )
 
 
-(defun sc-rec (x y) ...)
+(defun sc-rec (x y) 
+;;Falta comprobar la division por 0
+    (/ (prodEscRec x y) (sqrt (* (prodEscRec x x) (prodEscRec y y)))))
+
+
+(defun 
+
+(defun prodEscMapcar (x y)
+    (if (or (null x) (null y)) 
+        0
+     (+ (* (first x) (first y)) (prodEscRec (cdr x) (cdr y)))
+     )
+)
