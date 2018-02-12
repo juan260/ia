@@ -115,15 +115,16 @@
 				
 				
 				
-(defun combine-list-lsts (list lsts)
-	(unless (or (null list) (null (car lsts)))
-		(append (append-elt-lst (car list) lsts) (combine-list-lsts (cdr list) lsts))))
+(defun combine-list-lsts (lst lsts)
+	(unless  (or (null lst) (null lsts))
+		(append (append-elt-lst (car lst) lsts) (combine-list-lsts (cdr lst) lsts))))
 		
 		
 
 	
 (defun combine-list-of-lsts (lstolsts)
-	(unless (null lstolsts)
+	(unless (null lstolsts) 
+			(if (null (caar lstolsts)) NIL
 			(combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts))))))
 
 
@@ -150,10 +151,19 @@
 
 		;;(cons (append-elt-lst list (car lsts)) (combine-list-lsts list (cdr lsts)))))	
 
-(defun cortar (list)
-	(unless (null list)	
-	(append (list (car list)) (cortar (cdr list)))))
+(defun cortar (lst)
+	(unless  (null lst)
+		(append (list (list(car lst))) (cortar (cdr lst)))))
 
+
+	;;(unless (null list)	
+	;;(append (list (car list)) (cortar (cdr list)))))
+
+	
+(defun combine-list-lsts (lst lsts)
+	(unless  (or (null lst) (null lsts))
+		(append (append-elt-lst (car lst) lsts) (combine-list-lsts (cdr lst) lsts))))
+	
 			
 (defun combine-list-of-lsts (lstolsts)
 	(print lstolsts)
