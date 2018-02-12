@@ -29,20 +29,28 @@
 			  
 ;;;;;;;;;;;;;;;;;;;;;;; EJERCICIO 3.3 ;;;;;;;;;;;;;;;;;;
 
-;; Función que calcula todas las posibles disposiciones de elementos
-;; pertenecientes a N listas de forma que en cada disposición aparezca únicamente
-;; un elemento de cada lista
+;; Recibe una lista y devuelve una lista de listas cada
+;; una de las cuales contiene uno de los elementos de la lista original
 ;;
 ;; INPUT:
-;; lstolsts : listas a combinar
+;; lst : lista a cortar
 ;;
-;; OUTPUT: lista que contenga todas las combinaciones
+;; OUTPUT: lista de listas cada una de las cuales tiene un elemento
 
 
 (defun cortar (lst)
 	(unless  (null lst)
 		(append (list (list(car lst))) (cortar (cdr lst)))))
-	
+
+
+;; Devuelve una lista resultado de añadir al principio de todas
+;; las listas contenidas en lst el elemnto elt
+;;
+;; INPUT:
+;; elt : elemento a añadira todas las listas
+;; lst : lista de listas a las que añadir el elemento
+;;
+;; OUTPUT: lista que contenga todas las combinaciones	
 
 (defun append-elt-lst (elt lst)
 	(if (null lst) (list (list elt))
@@ -52,10 +60,31 @@
 			  (append-elt-lst elt (rest lst)) ))))
 
 
+
+;; Recibe una lista A y una lista de listas B y añade cada elemento
+;; de A a cada una de las listas de B de todas las maneras posibles
+;; un elemento de cada lista
+;;
+;; INPUT:
+;; lst : lista de la que tomar elementos
+;; lsts: lista de listas a las que añadir los elementos de lst
+;;
+;; OUTPUT: lista que contenga todas las combinaciones
+
+
 (defun combine-list-lsts (lst lsts)
 	(unless  (or (null lst) (null lsts))
 		(append (append-elt-lst (car lst) lsts) (combine-list-lsts (cdr lst) lsts))))
 	
+	
+;; Función que calcula todas las posibles disposiciones de elementos
+;; pertenecientes a N listas de forma que en cada disposición aparezca únicamente
+;; un elemento de cada lista
+;;
+;; INPUT:
+;; lstolsts : listas a combinar
+;;
+;; OUTPUT: lista que contenga todas las combinaciones
 			
 (defun combine-list-of-lsts (lstolsts)
 	(print lstolsts)
