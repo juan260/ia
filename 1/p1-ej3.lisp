@@ -78,3 +78,36 @@
 
 ((A (+ -)) (A (1 2)) (B ((+ -) (1 2))) (C (((+ -) (1 2)))))
 
+
+(defun add-prefix (prefix list)
+	(if (null list) NIL
+		(cons (cons prefix (car list)) (add-prefix prefix (cdr list)))))
+		
+(defun combine-list-of-lsts (lstolsts)
+		;;(print lstolsts)
+		;; Fin de la recursion
+		(if (null (car lstolsts)) 
+			NIL
+			;;Lista de un elemento
+			(if (null (cadar lstolsts)) 
+				(if (null (cdr lstolsts)) (car lstolsts)
+					(add-prefix (caar lstolsts)
+						(combine-list-of-lsts (cdr lstolsts))))
+				;;Else
+				(combine-list-of-lsts (cons (cdar lstolsts) (cdr lstolsts)))
+					)))
+					
+					
+					
+(defun combine-list-of-lsts (lstolsts)
+	;;(print lstolsts)
+	;; Si es la penúltima lista
+	(if (null (cddr lstolsts)) 
+		;; Las combina
+		(combine-lst-lst (car lstolsts) (cadr lstolsts))
+		;; Si no, la combina con el resultado de la recursión
+		(combine-lst-lst (car lstolsts) (combine-list-of-lists (cdr lstolsts)))))
+	
+	
+	
+
