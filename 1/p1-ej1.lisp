@@ -13,19 +13,16 @@
 (defun prodEscRec (x y)
     (if (or (null x) (null y)) 
         0
-     (+ (* (first x) (first y)) (prodEscRec (cdr x) (cdr y)))
-     )
-)
+    	(+ (* (first x) (first y)) (prodEscRec (cdr x) (cdr y)))))
 
 
 (defun sc-rec (x y) 
-;;Falta comprobar la division por 0
+	;;Falta comprobar la division por 0
     (/ (prodEscRec x y) (sqrt (* (prodEscRec x x) (prodEscRec y y)))))
 
 
 (defun prodEscMapcar (x y)
-    (reduce #'+ (mapcar #'* x y))
-)
+    (reduce #'+ (mapcar #'* x y)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,9 +59,7 @@
 
 (defun sc-conf (cat vs conf) 
 	(select conf cat (sort (copy-list vs)
-		#'(lambda (x y) (< (sc-rec x cat) (sc-rec y cat))))
-	
-))
+		#'(lambda (x y) (< (sc-rec x cat) (sc-rec y cat))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -89,9 +84,7 @@
 (defun sc-classifier (cats texts func)
 	(if (null texts) nil 
 		(cons (classify cats (car texts) func)	
-			(sc-classifier cats (cdr texts) func)))
-
-)
+			(sc-classifier cats (cdr texts) func))))
 
 
 ;;;; RENDIMIENTOS:
