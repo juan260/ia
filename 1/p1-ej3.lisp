@@ -55,6 +55,26 @@
 	)
 )
 
+((A ((+ -) (1 2))) (B (((+ -) (1 2)))) (C ((((+ -) (1 2))))))
 
+;; Este falla si una de las listas es un elemento
 
+(defun combine-list-of-lsts (lstolsts)
+	(if (atom (first lstolsts)) 
+		(if (null (rest (rest lstolsts)))
+			;; Caso (a (+ -)) -> combina a con (+ -)
+			(combine-elt-lst (first lstolsts) (rest lstolsts) )
+			;; Caso (a (+ -) (1 2)) -> combina a con el result de combinar ((+ -)(1 2))
+			(combine-elt-lst (first lstolsts) 
+							 (combine-list-of-lsts (rest lstolsts))
+			)
+		)
+		;; Caso ((a b c) (+ -) (1 2)) -> recursion pura
+		(append (combine-elt-lst (first (first lstolsts)) (rest lstolsts))
+				(combine-list-of-lsts (list (rest (first lstolsts)) (rest lstolsts)))
+		)
+	)
+)
+
+((A (+ -)) (A (1 2)) (B ((+ -) (1 2))) (C (((+ -) (1 2)))))
 
