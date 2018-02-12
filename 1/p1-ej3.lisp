@@ -96,17 +96,75 @@
 				;;Else
 				(combine-list-of-lsts (cons (cdar lstolsts) (cdr lstolsts)))
 					)))
-					
-					
-					
+
+
+
+
+
+
+
+
+
+
+(defun append-elt-lst (elt lst)
+	(if (null lst) (list (list elt))
+		(if (null (cdr lst))
+			(list (append (list elt) (first lst)))
+			(cons (append (list elt) (first lst))
+			  (append-elt-lst elt (rest lst)) ))))
+				
+				
+				
+(defun combine-list-lsts (list lsts)
+	(unless (or (null list) (null (car lsts)))
+		(append (append-elt-lst (car list) lsts) (combine-list-lsts (cdr list) lsts))))
+		
+		
+
+	
 (defun combine-list-of-lsts (lstolsts)
-	;;(print lstolsts)
+	(unless (null lstolsts)
+			(combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		;;(cons (append-elt-lst list (car lsts)) (combine-list-lsts list (cdr lsts)))))	
+
+(defun cortar (list)
+	(unless (null list)	
+	(append (list (car list)) (cortar (cdr list)))))
+
+			
+(defun combine-list-of-lsts (lstolsts)
+	(print lstolsts)
 	;; Si es la penúltima lista
-	(if (null (cddr lstolsts)) 
-		;; Las combina
-		(combine-lst-lst (car lstolsts) (cadr lstolsts))
-		;; Si no, la combina con el resultado de la recursión
-		(combine-lst-lst (car lstolsts) (combine-list-of-lists (cdr lstolsts)))))
+	(if (null (cdr lstolsts)) 
+		(cortar (car lstolsts))
+		(if (null (cddr lstolsts)) 
+			;; Las combina
+			(combine-lst-lst (car lstolsts) (cadr lstolsts))
+			;; Si no, la combina con el resultado de la recursión
+			(combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts))))))
 	
 	
 	
