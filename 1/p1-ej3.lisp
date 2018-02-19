@@ -98,4 +98,9 @@
 	
 	
 	
+	;; VERSION 2:
+(defun combine-list-of-lsts (lstolsts)
+    (if (null (car lstolsts))
+        '(NIL)
+        (combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts)))))
 
