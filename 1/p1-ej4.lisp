@@ -40,21 +40,19 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun positive-literal-p (x)
-  ;;
-  ;; 4.1.1 Completa el codigo
-  ;;
-  )
+ 	(and (atom x) (not (connector-p x)) (not (truth-value-p x))))
+ 	
 
 ;; EJEMPLOS:
 (positive-literal-p 'p)
 ;; evalua a T
-(positive-literal-p T)
+(or (positive-literal-p T)
 (positive-literal-p NIL)
 (positive-literal-p '¬)
 (positive-literal-p '=>)
 (positive-literal-p '(p))
 (positive-literal-p '(¬ p))
-(positive-literal-p '(¬ (v p q)))
+(positive-literal-p '(¬ (v p q))))
 ;; evaluan a NIL
 
 
@@ -68,14 +66,14 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun negative-literal-p (x)
-  ;;
-  ;; 4.1.2 Completa el codigo
-  ;;
-  )
+	(if (not (atom x))
+		(and (eql (car x) '¬) (positive-literal-p (cadr x)) 
+				(null (cddr x)))
+		NIL))
 
 ;; EJEMPLOS:
 (negative-literal-p '(¬ p))        ; T
-(negative-literal-p NIL)           ; NIL
+(or (negative-literal-p NIL)       ; NIL
 (negative-literal-p '¬)            ; NIL
 (negative-literal-p '=>)           ; NIL
 (negative-literal-p '(p))          ; NIL
@@ -85,7 +83,7 @@
 (negative-literal-p '(¬ =>))       ; NIL
 (negative-literal-p 'p)            ; NIL
 (negative-literal-p '((¬ p)))      ; NIL
-(negative-literal-p '(¬ (v p q)))  ; NIL
+(negative-literal-p '(¬ (v p q)))) ; NIL
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -97,17 +95,15 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun literal-p (x) 
-  ;;
-  ;; 4.1.3 Completa el codigo
-  ;;
+ 	(or (positive-literal-p x) (negative-literal-p x))
   )
 
 ;; EJEMPLOS:
-(literal-p 'p)             
-(literal-p '(¬ p))      
+(and (literal-p 'p)             
+(literal-p '(¬ p)))    
 ;;; evaluan a T
-(literal-p '(p))
-(literal-p '(¬ (v p q)))
+(or (literal-p '(p))
+(literal-p '(¬ (v p q))))
 ;;; evaluan a  NIL
 
 
@@ -158,17 +154,42 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.1.4
-;; Predicado para determinar si una expresion esta en formato prefijo 
+;; Predicado para determinar si una expresion esta en formato infijo 
 ;;
 ;; RECIBE   : expresion x 
 ;; EVALUA A : T si x esta en formato prefijo, 
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-p (x)
-  ;;
-  ;; 4.1.4 Completa el codigo
-  ;;
-  ) 
+  (unless (null x)             
+    (or (literal-p x)          ;; Un literal es FBF en formato infijo
+        (and (listp x)         ;; En caso de que no sea un literal debe ser una lista
+        	(let ((firstEl (first x))))
+        	(if (unary-connector-p firstEl)
+        		(wff-infix-p (rest x))
+        		(wff-infix-p firstEl) 
+             
+             
+             (or (null (second x)) (wff-infix-p (cddr x))))))))
+             	
+             	
+               (cond
+               	((null connector
+                ((unary-connector-p connector)  ;; Si el primer elemento es un connector unario
+                 (and (null (rest rest_1))      ;; deberia tener la estructura (<conector> FBF)
+                      (wff-prefix-p (first rest_1)))) 
+                ((binary-connector-p connector) ;; Si el primer elemento es un conector binario
+                 (let ((rest_2 (rest rest_1)))  ;; deberia tener la estructura 
+                   (and (null (rest rest_2))    ;; (<conector> FBF1 FBF2)
+                        (wff-prefix-p (first rest_1))
+                        (wff-prefix-p (first rest_2)))))               
+                ((n-ary-connector-p connector)  ;; Si el primer elemento es un conector enario
+                 (or (null rest_1)              ;; conjuncion o disyuncion vacias
+                     (and (wff-prefix-p (first rest_1)) ;; tienen que ser FBF los operandos 
+                          (let ((rest_2 (rest rest_1)))
+                            (or (null rest_2)           ;; conjuncion o disyuncion con un elemento
+                                (wff-prefix-p (cons connector rest_2)))))))	
+                (t NIL)))))))                   ;; No es FBF en formato prefijo 
 
 ;;
 ;; EJEMPLOS:
