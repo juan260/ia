@@ -493,29 +493,6 @@
 ;;            la negacion  aparece unicamente en literales 
 ;;            negativos.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun negate (lst)
-	(unless (null lst)
-		(if (positive-literal-p lst)
-			(list +not+ lst)
-			(if (eql (first lst) +not+)
-				(reduce-scope-of-negation (second lst))
-				(cons +not+ (reduce-scope-of-negation lst))))))
-
-(defun negate-list (list)
-	(cons (negate (first list)) (negate-list (rest list)))) 
-		
-
-(defun reduce-scope-of-negation (wff)
-	(if (or (positive-literal-p wff) (connector-p wff))
-		wff
- 		(if (eql (first wff) +not+)
- 			(cons (exchange-and-or (caadr wff))
- 			(negate-list (cdadr wff)))))))
- 		
-  
-  
-  
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
   
 (defun morgan (wff)
@@ -524,22 +501,20 @@
 				(reduce-scope-of-negation (second wff)))
 			((n-ary-connector-p (first wff))
 				(cons (exchange-and-or (first wff)) 
-						(negar-rec (rest wff)))))
+						(negar-lista (rest wff)))))
 		
-		wff))  
+		(cons +not+ wff)))  
 
 
 
-(defun negar-rec (wff)
-	(if (listp wff)
-		(cond 
-			((eql (first wff) +not+)
-				(reduce-scope-of-negation (rest wff)))
-			((n-ary-connector-p (first wff))
-				(cons (morgan (first wff) (negar-rec (rest wff))))))
-				
-			
-		(cons +not+ wff)))
+(defun negar-lista (wff)
+	(unless (null wff)
+		(cons (negar (first wff)) (negar-lista (rest wff)))))
+		
+(defun negar (elt)
+	(cond ((negative-literal-p elt) (second elt))
+			((positive-literal-p elt) (cons +not+ elt))
+			((listp elt) (morgan elt))))
 		
   
   
@@ -561,7 +536,7 @@
 				((n-ary-connector-p firstEl)
 					(if (null secondEl)
 						wff
-						(redScopeNeg-n-ary restEl)))))))
+						(cons firstEl (redScopeNeg-n-ary restEl))))))))
 				
 		
   
@@ -699,10 +674,16 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun eliminate-connectors (cnf)
-  ;;
-  ;; 4.2.5 Completa el codigo
-  ;;
-  )
+	(unless (null cnf)
+	(let ((firstEl (first cnf)))
+	(cond ((n-ary-connector-p firstEl)
+				(eliminate-connectors (rest cnf)))
+		((listp firstEl)
+				(cons (eliminate-connectors firstEl) 
+						(eliminate-connectors (rest cnf))))
+		(t (cons firstEl (eliminate-connectors (rest cnf))))))))
+		
+  
 
 (eliminate-connectors 'nil)
 (eliminate-connectors (cnf '(^ (v p  (¬ q))  (v k  r  (^ m  n)))))
@@ -735,9 +716,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-to-cnf (wff)
-  ;;
-  ;; 4.2.6 Completa el codigo
-  ;;
+  	(eliminate-connectors (cnf (infix-to-prefix wff)))
   )
 
 ;;
@@ -757,11 +736,36 @@
 ;; EVALUA A : clausula equivalente sin literales repetidos 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun equal-literals (elt1 elt2)
+	(or (eql elt1 elt2)
+		(and (negative-literal-p elt1) (negative-literal-p elt2)
+			(eql (second elt1) (second elt2)))))
+
+
+(defun remove-element (lst elt)
+	(unless (null lst)
+		(let ((firstEl (first lst)))
+		(if (equal-literals elt firstEl)
+			(cdr lst)
+			(cons firstEl (remove-element (rest lst) elt))))))
+
+(defun search-element-p (lst elt)
+	(unless (null lst)
+		(or (equal-literals (first lst) elt) 
+			(search-element-p (rest lst) elt))))
+
+(defun eliminate-repeated-literals-rec (k complete)
+	(if (null k)
+		complete
+		(let ((firstEl (first k)) (restEl (rest k)))
+		(if (search-element-p restEl firstEl)
+			(eliminate-repeated-literals-rec restEl (remove-element complete firstEl))
+			(eliminate-repeated-literals-rec restEl complete)))))
+		
 (defun eliminate-repeated-literals (k)
-  ;;
-  ;; 4.3.1 Completa el codigo
-  ;;
-  )
+  	(eliminate-repeated-literals-rec k k))
+  	
+  
 
 ;;
 ;; EJEMPLO:
