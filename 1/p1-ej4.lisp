@@ -281,19 +281,19 @@
 ;; EVALUA A : FBF en formato prefijo 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun infix-to-prefix (wff)
-  (when (wwf-infix-p wwf)
-    (if (or (literal-p wwf) (n-ary-connector-p wwf)) ; '(v), '(¬ a), 'a
+  (when (wff-infix-p wff)
+    (if (or (literal-p wff) (n-ary-connector-p wff)) ; '(v), '(¬ a), 'a
       wff
-      (let ((op1 (first wwf)) ;op1 puede ser un operando o un ¬
-            (op2 (second wwf));op2 puede ser un connectr o un operando 
-            (rst (rest(rest wwf))))
+      (let ((op1 (first wff)) ;op1 puede ser un operando o un ¬
+            (op2 (second wff));op2 puede ser un connectr o un operando 
+            (op3 (third wff)))
         (cond
-          ((unary-connector-p op1) ; caso (¬wff) -> (¬(inf-pre wwf))
+          ((unary-connector-p op1) ; caso (¬wff) -> (¬(inf-pre wff))
            (list op1 (infix-to-prefix op2)))
-          ((binary-connector-p op2) ; caso (wwf1 <=> wwf2)  -> (<=> (inf-pre wwf1) (inf-pre wwf2)) 
-           (list op2 (infix-to-prefix op1) (infix-to-prefix rst)))
-          ((n-ary-connector-p op2) ; caso (wwf1 ^ ... ^ wwf n) -> (^ (inf-pre wwf1) ... (inf-pre wwfn))
-           (cons op2 (mapcan #'(lambda(x) (unless (connector-p x) (list (infix-to-prefix x)))  (wwf)))) ))))))
+          ((binary-connector-p op2) ; caso (wff1 <=> wff2)  -> (<=> (inf-pre wff1) (inf-pre wff2)) 
+           (list op2 (infix-to-prefix op1) (infix-to-prefix op3)))
+          ((n-ary-connector-p op2) ; caso (wff1 ^ ... ^ wff n) -> (^ (inf-pre wff1) ... (inf-pre wffn))
+           (cons op2 (mapcan #'(lambda(x) (unless (connector-p x) (list (infix-to-prefix x))))  wff)) ))))))
 ;;
 ;; EJEMPLOS
 ;;
