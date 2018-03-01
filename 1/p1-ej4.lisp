@@ -749,22 +749,24 @@
 			(cdr lst)
 			(cons firstEl (remove-element (rest lst) elt))))))
 
-(defun search-element-p (lst elt)
+(defun search-literal-p (lst elt)
 	(unless (null lst)
 		(or (equal-literals (first lst) elt) 
-			(search-element-p (rest lst) elt))))
+			(search-literal-p (rest lst) elt))))
 
 (defun eliminate-repeated-literals-rec (k complete)
 	(if (null k)
 		complete
 		(let ((firstEl (first k)) (restEl (rest k)))
-		(if (search-element-p restEl firstEl)
+		(if (search-literal-p restEl firstEl)
 			(eliminate-repeated-literals-rec restEl (remove-element complete firstEl))
 			(eliminate-repeated-literals-rec restEl complete)))))
 		
 (defun eliminate-repeated-literals (k)
-  	(eliminate-repeated-literals-rec k k))
-  	
+	(unless (null k)
+  		(if (search-literal-p (rest k) (first k))
+  			(rest k)
+  			(cons (first k) (eliminate-repeated-literals (rest k))))))
   
 
 ;;
@@ -780,10 +782,23 @@
 ;; RECIBE   : cnf - FBF en FNC (lista de clausulas, conjuncion implicita)
 ;; EVALUA A : FNC equivalente sin clausulas repetidas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun equal-clauses (cl1 cl2)
+	(if (null (cdr cl1))
+		(search-literal-p cl2 (first cl1))
+		(and (search-literal-p cl2 (first cl1))
+			(equal-clauses (rest cl1) cl2))))
+
+
+(defun search-clause-p (cl1 lst)
+	(unless (null lst)
+		(or (equal-clauses cl1 (first lst))
+			(search-clause-p cl1 (rest lst)))))
+
+(defun eliminate-clause (cl1
+
 (defun eliminate-repeated-clauses (cnf) 
-  ;;
-  ;; 4.3.2 Completa el codigo
-  ;;
+  (if (first cnf)
   )
 
 ;;
