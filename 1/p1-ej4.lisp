@@ -347,20 +347,24 @@
 ;; RECIBE   : FBF en formato prefijo 
 ;; EVALUA A : T si FBF es una clausula, NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun list-of-literals-or-nil (lst)
+	(or (null lst)
+		(and (literal-p (first lst)) (list-of-literals-or-nil (rest lst)))))
+
 (defun clause-p (wff)
-  ;;
-  ;; 4.1.6 Completa el codigo
-  ;;
-  )
+     (and (listp wff)                     
+           (if (eql (first wff) +or+)  
+           		(list-of-literals-or-nil (rest wff))))) 
+
 
 ;;
 ;; EJEMPLOS:
 ;;
-(clause-p '(v))             ; T
+(and (clause-p '(v))             ; T
 (clause-p '(v p))           ; T
 (clause-p '(v (¬ r)))       ; T
-(clause-p '(v p q (¬ r) s)) ; T
-(clause-p NIL)                    ; NIL
+(clause-p '(v p q (¬ r) s))) ; T
+(or (clause-p NIL)                    ; NIL
 (clause-p 'p)                     ; NIL
 (clause-p '(¬ p))                 ; NIL
 (clause-p NIL)                    ; NIL
@@ -368,7 +372,7 @@
 (clause-p '((¬ p)))               ; NIL
 (clause-p '(^ a b q (¬ r) s))     ; NIL
 (clause-p '(v (^ a b) q (¬ r) s)) ; NIL
-(clause-p '(¬ (v p q)))           ; NIL
+(clause-p '(¬ (v p q))))           ; NIL
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 1.7
@@ -378,20 +382,25 @@
 ;; EVALUA A : T si FBF esta en FNC con conectores, 
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun list-of-clauses-or-nil-p (lst)
+	(or (null lst)
+		(and (clause-p (first lst)) 
+			(list-of-clauses-or-nil-p (rest lst)))))
+
 (defun cnf-p (wff)
-  ;;
-  ;; 4.1.7 Completa el codigo
-  ;;
-  )
+  (and (listp wff)
+  		(eql (first wff) +and+)
+  		(list-of-clauses-or-nil-p (rest wff))))
+  
 
 ;;
 ;; EJEMPLOS:
 ;;
-(cnf-p '(^ (v a  b c) (v q r) (v (¬ r) s) (v a b))) ; T
+(and (cnf-p '(^ (v a  b c) (v q r) (v (¬ r) s) (v a b))) ; T
 (cnf-p '(^ (v a  b (¬ c)) ))                        ; T
 (cnf-p '(^ ))                                       ; T
 (cnf-p '(^(v )))                                    ; T
-(cnf-p '(¬ p))                                      ; NIL
+(not (or (cnf-p '(¬ p))                                      ; NIL
 (cnf-p '(^ a b q (¬ r) s))                          ; NIL
 (cnf-p '(^ (v a b) q (v (¬ r) s) a b))              ; NIL
 (cnf-p '(v p q (¬ r) s))                            ; NIL
@@ -407,7 +416,7 @@
 (cnf-p '(^ (v a  (v b c)) (v q r) (v (¬ r) s) a b)) ; NIL
 (cnf-p '(^ (v a (^ b c)) (^ q r) (v (¬ r) s) a b))  ; NIL
 (cnf-p '(¬ (v p q)))                                ; NIL
-(cnf-p '(v p q (r) s))                              ; NIL 
+(cnf-p '(v p q (r) s)))))                           ; NIL 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.2.1: Incluya comentarios en el codigo adjunto
@@ -452,16 +461,25 @@
 ;;            sin el connector =>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun eliminate-conditional (wff)  
-  ;;
-  ;; 4.2.2 Completa el codigo
-  ;;
-  )       
+  (if (or (null wff) (literal-p wff))
+      wff
+    (let ((connector (first wff)))
+      (if (eq connector +cond+)
+          (let ((wff1 (eliminate-conditional (second wff)))
+                (wff2 (eliminate-conditional (third  wff))))
+            (list +or+ 
+                  (list +not+ wff1)
+                  wff2))
+        (cons connector 
+              (mapcar #'eliminate-conditional (rest wff)))))))
+
+
 
 ;;
 ;; EJEMPLOS:
 ;;
-(eliminate-conditional '(=> p q))                      ;;; (V (¬ P) Q)
-(eliminate-conditional '(=> p (v q s p)))              ;;; (V (¬ P) (V Q S P))
+(eliminate-conditional '(=> p q))         ;;; (V (¬ P) Q)
+(eliminate-conditional '(=> p (v q s p)))   ;;; (V (¬ P) (V Q S P))
 (eliminate-conditional '(=> (=> (¬ p) q) (^ s (¬ q)))) ;;; (V (¬ (V (¬ (¬ P)) Q)) (^ S (¬ Q)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -475,11 +493,79 @@
 ;;            la negacion  aparece unicamente en literales 
 ;;            negativos.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun negate (lst)
+	(unless (null lst)
+		(if (positive-literal-p lst)
+			(list +not+ lst)
+			(if (eql (first lst) +not+)
+				(reduce-scope-of-negation (second lst))
+				(cons +not+ (reduce-scope-of-negation lst))))))
+
+(defun negate-list (list)
+	(cons (negate (first list)) (negate-list (rest list)))) 
+		
+
 (defun reduce-scope-of-negation (wff)
-  ;;
-  ;; 4.2.3 Completa el codigo
-  ;;
-  )
+	(if (or (positive-literal-p wff) (connector-p wff))
+		wff
+ 		(if (eql (first wff) +not+)
+ 			(cons (exchange-and-or (caadr wff))
+ 			(negate-list (cdadr wff)))))))
+ 		
+  
+  
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
+  
+(defun morgan (wff)
+	(if (listp wff)
+		(cond ((eql (first wff) +not+)
+				(reduce-scope-of-negation (second wff)))
+			((n-ary-connector-p (first wff))
+				(cons (exchange-and-or (first wff)) 
+						(negar-rec (rest wff)))))
+		
+		wff))  
+
+
+
+(defun negar-rec (wff)
+	(if (listp wff)
+		(cond 
+			((eql (first wff) +not+)
+				(reduce-scope-of-negation (rest wff)))
+			((n-ary-connector-p (first wff))
+				(cons (morgan (first wff) (negar-rec (rest wff))))))
+				
+			
+		(cons +not+ wff)))
+		
+  
+  
+(defun redScopeNeg-n-ary (wff)
+	(unless (null wff)
+		(cons (reduce-scope-of-negation (first wff))
+				(redScopeNeg-n-ary (rest wff)))))  
+  
+  
+(defun reduce-scope-of-negation (wff)
+	(if (literal-p wff)
+		wff
+		(let 	((firstEl (first wff))
+				(restEl (rest wff))
+				(secondEl (second wff)))
+			(cond
+				((eql firstEl +not+)
+					(morgan secondEl))
+				((n-ary-connector-p firstEl)
+					(if (null secondEl)
+						wff
+						(redScopeNeg-n-ary restEl)))))))
+				
+		
+  
+  
 
 (defun exchange-and-or (connector)
   (cond
