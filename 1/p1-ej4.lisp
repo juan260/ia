@@ -24,6 +24,9 @@
   (or (eql x +and+) 
       (eql x +or+)))
 
+(defun n-or-binary-connector-p (x)
+	(or (binary-connector-p x) (n-ary-connector x)))
+
 (defun connector-p (x) 
   (or (unary-connector-p  x)
       (binary-connector-p x)
@@ -161,39 +164,42 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-p (x)
-  (unless (null x)             
+	
+  (unless (truth-value-p x)
+            
     (or (literal-p x)          ;; Un literal es FBF en formato infijo
         (and (listp x)         ;; En caso de que no sea un literal debe ser una lista
-        	(let ((firstEl (first x))))
-        	(if (unary-connector-p firstEl)
-        		(wff-infix-p (rest x))
-        		(wff-infix-p firstEl) 
-             
-             
-             (or (null (second x)) (wff-infix-p (cddr x))))))))
-             	
-             	
-               (cond
-               	((null connector
-                ((unary-connector-p connector)  ;; Si el primer elemento es un connector unario
-                 (and (null (rest rest_1))      ;; deberia tener la estructura (<conector> FBF)
-                      (wff-prefix-p (first rest_1)))) 
-                ((binary-connector-p connector) ;; Si el primer elemento es un conector binario
-                 (let ((rest_2 (rest rest_1)))  ;; deberia tener la estructura 
-                   (and (null (rest rest_2))    ;; (<conector> FBF1 FBF2)
-                        (wff-prefix-p (first rest_1))
-                        (wff-prefix-p (first rest_2)))))               
-                ((n-ary-connector-p connector)  ;; Si el primer elemento es un conector enario
-                 (or (null rest_1)              ;; conjuncion o disyuncion vacias
-                     (and (wff-prefix-p (first rest_1)) ;; tienen que ser FBF los operandos 
-                          (let ((rest_2 (rest rest_1)))
-                            (or (null rest_2)           ;; conjuncion o disyuncion con un elemento
-                                (wff-prefix-p (cons connector rest_2)))))))	
-                (t NIL)))))))                   ;; No es FBF en formato prefijo 
+        	
+        	(cond 
+        		((unary-connector-p (first x))
+        			(unless (not (null (cddr x)))
+         				(wff-infix-p (second x))))
+        		((n-ary-connector-p (first x))
+        			
+        			(null (cdr x)))
+        		((literal-p (first x))
+        			(or
+        				(if (binary-connector-p (second x))
+        					(and (null (cdddr x)) (wff-infix-p (third x))))
+        				(if (n-ary-connector-p (second x))
+        					(or (and (null (fourth x)) (wff-infix-p (third x)))
+        						(and (eql (fourth x) (second x)) (wff-infix-p (cddr x)))))))
+        		((listp (first x))
+        			(or (and (n-ary-connector-p (caar x)) (null (cdar x)))
+        				(and (not (null (cdar x))) (wff-infix-p (car x))
+        						(or
+        							(if (binary-connector-p (second x))
+        								(and (null (cdddr x)) (wff-infix-p (third x))))
+        							(if (n-ary-connector-p (second x))
+        								(or (and (null (fourth x)) (wff-infix-p (third x)))
+        									(and (eql (fourth x) (second x)) (wff-infix-p (cddr x))))))))))))))
+        					
+
 
 ;;
 ;; EJEMPLOS:
 ;;
+(and 
 (wff-infix-p 'a) 						; T
 (wff-infix-p '(^)) 					; T  ;; por convencion
 (wff-infix-p '(v)) 					; T  ;; por convencion
@@ -204,8 +210,8 @@
 (wff-infix-p '( B => (A ^ C ^ D))) 			; T   
 (wff-infix-p '( B => (A ^ C))) 			; T 
 (wff-infix-p '( B ^ (A ^ C))) 			; T 
-(wff-infix-p '((p v (a => (b ^ (¬ c) ^ d))) ^ ((p <=> (¬ q)) ^ p ) ^ e))  ; T 
-(wff-infix-p nil) 					; NIL
+(wff-infix-p '((p v (a => (b ^ (¬ c) ^ d))) ^ ((p <=> (¬ q)) ^ p ) ^ e)))  ; T 
+(or (wff-infix-p nil) 					; NIL
 (wff-infix-p '(a ^)) 					; NIL
 (wff-infix-p '(^ a)) 					; NIL
 (wff-infix-p '(a)) 					; NIL
@@ -218,7 +224,7 @@
 (wff-infix-p '(A => B <=> C)) 		      ; NIL
 (wff-infix-p '( B => (A ^ C v D))) 		      ; NIL   
 (wff-infix-p '( B ^ C v D )) 			      ; NIL 
-(wff-infix-p '((p v (a => e (b ^ (¬ c) ^ d))) ^ ((p <=> (¬ q)) ^ p ) ^ e)); NIL 
+(wff-infix-p '((p v (a => e (b ^ (¬ c) ^ d))) ^ ((p <=> (¬ q)) ^ p ) ^ e))); NIL 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convierte FBF en formato prefijo a FBF en formato infijo
