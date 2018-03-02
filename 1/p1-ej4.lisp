@@ -741,31 +741,16 @@
 		(and (negative-literal-p elt1) (negative-literal-p elt2)
 			(eql (second elt1) (second elt2)))))
 
-
-(defun remove-element (lst elt)
-	(unless (null lst)
-		(let ((firstEl (first lst)))
-		(if (equal-literals elt firstEl)
-			(cdr lst)
-			(cons firstEl (remove-element (rest lst) elt))))))
-
 (defun search-literal-p (lst elt)
 	(unless (null lst)
 		(or (equal-literals (first lst) elt) 
 			(search-literal-p (rest lst) elt))))
 
-(defun eliminate-repeated-literals-rec (k complete)
-	(if (null k)
-		complete
-		(let ((firstEl (first k)) (restEl (rest k)))
-		(if (search-literal-p restEl firstEl)
-			(eliminate-repeated-literals-rec restEl (remove-element complete firstEl))
-			(eliminate-repeated-literals-rec restEl complete)))))
 		
 (defun eliminate-repeated-literals (k)
 	(unless (null k)
   		(if (search-literal-p (rest k) (first k))
-  			(rest k)
+  			(eliminate-repeated-literals (rest k))
   			(cons (first k) (eliminate-repeated-literals (rest k))))))
   
 
@@ -783,8 +768,23 @@
 ;; EVALUA A : FNC equivalente sin clausulas repetidas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun elim-elem (lst elem)
+	(unless (null lst)
+		(if (equal-literals (first lst) elem)
+			(rest lst)
+			(cons (first lst) (elim-elem (rest lst) elem)))))
+
+
 (defun equal-clauses (cl1 cl2)
-	(if (null (cdr cl1))
+	
+	(if (null cl1)
+		(null cl2)
+		(let ((firstEl (first cl1)))
+			(and (search-literal-p cl2 firstEl)
+				(equal-clauses (rest cl1) (elim-elem cl2 firstEl))))))
+		
+(defun equal-clauses1 (cl1 cl2)
+	(if (or (null (cdr cl1)) (null (cdr cl2)))
 		(search-literal-p cl2 (first cl1))
 		(and (search-literal-p cl2 (first cl1))
 			(equal-clauses (rest cl1) cl2))))
@@ -795,12 +795,22 @@
 		(or (equal-clauses cl1 (first lst))
 			(search-clause-p cl1 (rest lst)))))
 
-(defun eliminate-clause (cl1
 
-(defun eliminate-repeated-clauses (cnf) 
-  (if (first cnf)
-  )
+(defun elim-repeated-clauses-rec (cnf)
+	(unless (null cnf)
+  		(if (search-clause-p (first cnf) (rest cnf))
+  	 		(elim-repeated-clauses-rec (rest cnf))
+  	 		(cons (first cnf)
+  	 				(elim-repeated-clauses-rec (rest cnf))))))
 
+(defun elim-repeated-literals-from-clauses (cnf)
+	(unless (null cnf)
+		(cons (eliminate-repeated-literals (first cnf))
+			(elim-repeated-literals-from-clauses (rest cnf)))))
+	
+(defun eliminate-repeated-clauses (cnf)
+	(elim-repeated-clauses-rec (elim-repeated-literals-from-clauses cnf)))
+	
 ;;
 ;; EJEMPLO:
 ;;
