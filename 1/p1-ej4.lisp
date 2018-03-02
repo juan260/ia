@@ -816,10 +816,9 @@
 ;;            NIL en caso contrario
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun subsume (K1 K2)
-  ;;
-  ;; 4.3.3 Completa el codigo
-  ;;
-  )
+  (if (subsetp K1 K2 :test 'equal) 
+    K1 
+    NIL))
   
 ;;
 ;;  EJEMPLOS:
@@ -848,11 +847,16 @@
 ;; RECIBE   : K (clausula), cnf (FBF en FNC)
 ;; EVALUA A : FBF en FNC equivalente a cnf sin clausulas subsumidas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun eliminate-subsumed-clauses (cnf) 
-  ;;
-  ;; 4.3.4 Completa el codigo
-  ;;
-)
+(defun anyone-subsumes (x cnf)
+  (cond
+    ((and (subsume (first cnf) x) (not (equal-clauses (first cnf) x)))
+     NIL) ; si 1st cnf 'contiene y no es igual' a x
+    ((null (rest cnf))
+     x); si ya no quedan eltos en cnf, y ninguno subsumia a x
+    (t (anyone-subsumes x (rest cnf))))) ; ver si demas eltos te subsumen
+
+(defun eliminate-subsumed-clauses (cnf)
+    (mapcan #'(lambda(x)  (when (anyone-subsumes x cnf) (list(anyone-subsumes x cnf)))) cnf))
 
 ;;
 ;;  EJEMPLOS:
