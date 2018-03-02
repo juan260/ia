@@ -834,7 +834,7 @@
 ;;  EJEMPLOS:
 ;;
 (subsume '(a) '(a b (~ c)))
-;; ((a))
+;; ((A))
 (subsume NIL '(a b (~ c)))
 ;; (NIL)
 (subsume '(a b (~ c)) '(a) )
@@ -849,6 +849,8 @@
 ;; (A B (~ C))
 (subsume '((~ a) b (~ c) a) '(a b (~ c)) )
 ;; nil
+(subsume '((~ a)) '((~ a) b (~ c)))
+;; ((~ A))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.3.4
@@ -881,7 +883,7 @@
      cnf1)
     ((and (noone-subsumes elem cnf1) (noone-subsumes elem cnf2)) ; Aniadimos elem a cnf1
      (rec-elim-subsum (my-cons elem cnf1) (first cnf2) (rest cnf2)))
-    (t (rec-elim-subsum (cnf1) (first cnf2) (rest cnf2))))) ; No aniadimos elem a cnf1
+    (t (rec-elim-subsum cnf1 (first cnf2) (rest cnf2))))) ; No aniadimos elem a cnf1
 
 (defun eliminate-subsumed-clauses(cnf)
   (rec-elim-subsum () (first cnf) (rest cnf)))
@@ -932,10 +934,7 @@
 ;; EVALUA A : FBF en FNC equivalente a cnf sin tautologias 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun eliminate-tautologies (cnf) 
-  ;;
-  ;; 4.3.6 Completa el codigo
-  ;;
-  )
+  (mapcan #'(lambda (x) (unless (tautology-p x) (list x))) cnf))
 
 ;;
 ;;  EJEMPLOS:
@@ -947,6 +946,11 @@
 (eliminate-tautologies '((a (~ a) b c)))
 ;; NIL
 
+(eliminate-tautologies 
+ '(((~ b) a) (a (~ a) b c) ( a (~ b)) (s d (~ s) (~ s)) (a) (c) (c d (~d)) () ))
+;; (((~ B) A) (A (~ B)) (A) (C) (C D (~D)) NIL)
+;; TODO como deberia comportarse ante ()?? 
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.3.7
 ;; simplifica FBF en FNC 
@@ -961,16 +965,17 @@
 ;;            y sin clausulas subsumidas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun simplify-cnf (cnf) 
-  ;;
-  ;; 4.3.7 Completa el codigo
-  ;;
-  )
+  (eliminate-subsumed-clauses 
+    (eliminate-tautologies 
+      (eliminate-repeated-clauses
+        (mapcar #'(lambda(x) (eliminate-repeated-literals x) ) cnf)))))
 
 ;;
 ;;  EJEMPLOS:
 ;;
 (simplify-cnf '((a a) (b) (a) ((~ b)) ((~ b)) (a b c a)  (s s d) (b b c a b)))
-;; ((B) ((~ B)) (S D) (A)) ;; en cualquier orden
+;; ((S D) ((~ B)) (A) (B))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
