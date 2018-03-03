@@ -1,3 +1,5 @@
+;;Pareja 09
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Definicion de simbolos que representan valores de verdad,
 ;; conectores y predicados para evaluar si una expresion LISP
@@ -768,27 +770,38 @@
 ;; EVALUA A : FNC equivalente sin clausulas repetidas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;
+;; Funcion que elimina un elemento una sola vez de la lista
+;; Ejemplo: (elim-elem '(a b a) 'a) -> (B A)
+;;
+
 (defun elim-elem (lst elem)
 	(unless (null lst)
 		(if (equal-literals (first lst) elem)
 			(rest lst)
 			(cons (first lst) (elim-elem (rest lst) elem)))))
 
+;;
+;; Funcion que determina si dos clausulas son iguales,
+;; es decir, si tienen los mismos literales repetidos el
+;; mismo numero de veces
+;;
 
 (defun equal-clauses (cl1 cl2)
-	
 	(if (null cl1)
 		(null cl2)
 		(let ((firstEl (first cl1)))
 			(and (search-literal-p cl2 firstEl)
-				(equal-clauses (rest cl1) (elim-elem cl2 firstEl))))))
-		
-(defun equal-clauses1 (cl1 cl2)
-	(if (or (null (cdr cl1)) (null (cdr cl2)))
-		(search-literal-p cl2 (first cl1))
-		(and (search-literal-p cl2 (first cl1))
-			(equal-clauses (rest cl1) cl2))))
+				(equal-clauses (rest cl1) 
+				(elim-elem cl2 firstEl))))))
 
+;;
+;; Funcion que busca la clausula cl1 en la lista lst
+;; comparandolas con la funcion equal-clauses.
+;; Devuelve t si lo encuentra y false si no.
+;; Se podría sustituir por la funcion ya incluida en 
+;; lisp llamada 'member'
+;;
 
 (defun search-clause-p (cl1 lst)
 	(unless (null lst)
@@ -796,17 +809,28 @@
 			(search-clause-p cl1 (rest lst)))))
 
 
+;;
+;; Version recursiva de la funcion principal 
+;; que recibe las clausulas con los literales
+;; repetidos eliminados
+;;
+
 (defun elim-repeated-clauses-rec (cnf)
 	(unless (null cnf)
   		(if (search-clause-p (first cnf) (rest cnf))
   	 		(elim-repeated-clauses-rec (rest cnf))
   	 		(cons (first cnf)
-  	 				(elim-repeated-clauses-rec (rest cnf))))))
+  	 			  (elim-repeated-clauses-rec (rest cnf))))))
+
+;;
+;; Funcion principal que primero elimina los literales
+;; repetidos y luego llama a la versión recursiva de sí misma
+;;
 
 (defun elim-repeated-literals-from-clauses (cnf)
 	(unless (null cnf)
 		(cons (eliminate-repeated-literals (first cnf))
-			(elim-repeated-literals-from-clauses (rest cnf)))))
+			(elim-repeated-litrals-from-clauses (rest cnf)))))
 	
 (defun eliminate-repeated-clauses (cnf)
 	(elim-repeated-clauses-rec (elim-repeated-literals-from-clauses cnf)))
@@ -834,7 +858,9 @@
 ;;  EJEMPLOS:
 ;;
 (subsume '(a) '(a b (~ c)))
+
 ;; ((A))
+
 (subsume NIL '(a b (~ c)))
 ;; (NIL)
 (subsume '(a b (~ c)) '(a) )
@@ -899,10 +925,12 @@
 (eliminate-subsumed-clauses
  '((a b c) (b c) (a (~ c) b) ((~ a))  ((~ a) b) (a b (~ a)) (c b a)))
 ;;; ((A (~ C) B) ((~ A)) (B C))
+
 (eliminate-subsumed-clauses '((a)))
 ;;; ((A))
 (eliminate-subsumed-clauses '())
 ;;; NIL
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.3.5
@@ -974,7 +1002,7 @@
 ;;  EJEMPLOS:
 ;;
 (simplify-cnf '((a a) (b) (a) ((~ b)) ((~ b)) (a b c a)  (s s d) (b b c a b)))
-;; ((S D) ((~ B)) (A) (B))
+;; ((B) ((~ B)) (S D) (A)) ;; en cualquier orden
 
 
 
@@ -987,11 +1015,16 @@
 ;; EVALUA A : cnf_lambda^(0) subconjunto de clausulas de cnf  
 ;;            que no contienen el literal lambda ni ~lambda   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun extract-neutral-clauses (lambda cnf) 
-  ;;
-  ;; 4.4.1 Completa el codigo
-  ;;
-  )
+(defun equal-neutral-literal (lit1 lit2)
+	(or (equal-literals lit1 lit2)
+		(equal-literals (negar lit1) lit2)))
+
+(defun extract-neutral-clauses (lambda cnf)   
+  	(if (member lambda (first cnf) :test 'equal-neutral-literal)
+  		(extract-neutral-clauses lambda (rest cnf))
+  		(cons (first cnf) 
+  			  (extract-neutral-clauses lambda (rest cnf))))) 
+  
 
 ;;
 ;;  EJEMPLOS:
