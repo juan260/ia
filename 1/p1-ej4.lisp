@@ -57,7 +57,7 @@
 (positive-literal-p '=>)
 (positive-literal-p '(p))
 (positive-literal-p '(~ p))
-(positive-literal-p '(~ (v p q)))º
+(positive-literal-p '(~ (v p q))))
 ;; evaluan a NIL
 
 
@@ -905,14 +905,21 @@
 ;; Repite el proceso con el elemento siguiente a  elem; el primero de cnf2
 (defun rec-elim-subsum(cnf1 elem cnf2)
   (cond 
-    ((null elem) ; Caso base: f( (a b) NIL NIL ) = (a b)
+    ((null elem)
+     ; Caso base: f( (a b) NIL NIL ) = (a b)
      cnf1)
-    ((and (noone-subsumes elem cnf1) (noone-subsumes elem cnf2)) ; Aniadimos elem a cnf1
+    ((and (noone-subsumes elem cnf1) (noone-subsumes elem cnf2))
+     ; Si nadie subsume a elemn, aniadimos elem a cnf1 y repetimos con 1st-cnf2 y rest-cnf2
      (rec-elim-subsum (my-cons elem cnf1) (first cnf2) (rest cnf2)))
-    (t (rec-elim-subsum cnf1 (first cnf2) (rest cnf2))))) ; No aniadimos elem a cnf1
+    (t
+     ; Si alguien subsume a elem, no aniadimos elem a cnf1 y repetimos con 1st-cnf2 y rest-cnf2
+     (rec-elim-subsum cnf1 (first cnf2) (rest cnf2)))))
 
 (defun eliminate-subsumed-clauses(cnf)
-  (rec-elim-subsum () (first cnf) (rest cnf)))
+  (if
+    (equal cnf '(NIL) )
+    cnf
+    (rec-elim-subsum () (first cnf) (rest cnf))))
 ;;
 ;;  EJEMPLOS:
 ;;
@@ -942,8 +949,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun tautology-p (K) 
   (cond 
-    ((null K) NIL)
-    ((member (list +not+ (first K)) K :test 'equal) T)
+    ((null K) NIL) ;Caso base: no quedan eltos en clausula para comprobar
+    ((member (list +not+ (first K)) K :test 'equal) T) ;Si (x (~x)) in K, es tautologia
     (t (tautology-p (rest K)))))
 
 
@@ -961,7 +968,8 @@
 ;; RECIBE   : cnf - FBF en FNC
 ;; EVALUA A : FBF en FNC equivalente a cnf sin tautologias 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun eliminate-tautologies (cnf) 
+(defun eliminate-tautologies (cnf)
+  ; Concateno listas con todas las clausulas que no son tautology
   (mapcan #'(lambda (x) (unless (tautology-p x) (list x))) cnf))
 
 ;;
@@ -1015,15 +1023,41 @@
 ;; EVALUA A : cnf_lambda^(0) subconjunto de clausulas de cnf  
 ;;            que no contienen el literal lambda ni ~lambda   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun equal-neutral-literal (lit1 lit2)
-	(or (equal-literals lit1 lit2)
-		(equal-literals (negar lit1) lit2)))
 
-(defun extract-neutral-clauses (lambda cnf)   
-  	(if (member lambda (first cnf) :test 'equal-neutral-literal)
-  		(extract-neutral-clauses lambda (rest cnf))
-  		(cons (first cnf) 
-  			  (extract-neutral-clauses lambda (rest cnf))))) 
+
+;; Devuelve T if (lambda not in K) AND (~lambda not in K)
+(defun not-contains-lambda(lambda K)
+	(not (or (member lambda K :test 'equal)
+              (member (list +not+ lambda) K :test 'equal))))
+              
+;; Devuelve el subconjunto de conj que no contienen ni ñambda ni ~lambda
+(defun aux-extract-neutral (subconj conj lambda)
+  (cond
+    ((null conj)
+     ; Si conj vacio, he terminado. Devuelvo subconj con el filtro
+     subconj)
+    ((not-contains-lambda lambda (first conj))
+     ; Si 1ª clausula de conj es neutra para lambda, aniado la clausula a subconj y repito
+     (aux-extract-neutral (adjoin (first conj) subconj :test 'equal) (rest conj) lambda))
+    (t
+      ; Si no, no la aniado a subconj y repito
+      (aux-extract-neutral subconj (rest conj) lambda))))
+
+(defun extract-neutral-clauses (lambda cnf)
+  (aux-extract-neutral () cnf lambda))
+
+
+
+
+;(defun equal-neutral-literal (lit1 lit2)
+;	(or (equal-literals lit1 lit2)
+;		(equal-literals (list +not+ lit1) lit2)))
+
+;(defun extract-neutral-clauses (lambda cnf)   
+;  	(if (member lambda (first cnf) :test 'equal-neutral-literal)
+;  		(extract-neutral-clauses lambda (rest cnf))
+;  		(cons (first cnf) 
+;  			  (extract-neutral-clauses lambda (rest cnf))))) 
   
 
 ;;
@@ -1031,19 +1065,14 @@
 ;;
 (extract-neutral-clauses 'p
                            '((p (~ q) r) (p q) (r (~ s) q) (a b p) (a (~ p) c) ((~ r) s)))
-;; ((R (~ S) Q) ((~ R) S))
-
-
+;; (((~ R) S) (R (~ S) Q))
 (extract-neutral-clauses 'r NIL)
 ;; NIL
-
 (extract-neutral-clauses 'r '(NIL))
 ;; (NIL)
-
 (extract-neutral-clauses 'r
                            '((p (~ q) r) (p q) (r (~ s) q) (a b p) (a (~ p) c) ((~ r) s)))
-;; ((P Q) (A B P) (A (~ P) C))
-
+;; ((A (~ P) C) (A B P) (P Q))
 (extract-neutral-clauses 'p
                            '((p (~ q) r) (p q) (r (~ s) p q) (a b p) (a (~ p) c) ((~ r) p s)))
 ;; NIL
@@ -1057,20 +1086,26 @@
 ;; EVALUA A : cnf_lambda^(+) subconjunto de clausulas de cnf 
 ;;            que contienen el literal lambda  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Extrae las clausulas de conj que contienen a elto
+
+;; Extrae las clausulas de conj que pasan la funcion 'equal
 (defun extract-clauses (subconj conj elto)
   (cond
     ((null conj)
+     ; Si no quedan clausulas q mirar en conj, ya he terminado: subconj contiene el filtro
      subconj)
-    ((member elto (first conj) :test 'equal) 
+    ((member elto (first conj) :test 'equal)
+     ; si 'elto pertenece a la 1ª clausula de conj, aniado clausula a subconj y repito
      (extract-clauses (adjoin (first conj) subconj :test 'equal) (rest conj) elto))
     (t
+      ; si no, no aniado a subconj y repito
       (extract-clauses subconj (rest conj) elto))))
 
 
   
 (defun extract-positive-clauses (lambda cnf) 
   (extract-clauses () cnf lambda))
+; Llamo a extract-clauses para que filtre clausulas de cnf que contengan 'lambda
+
 
 ;;
 ;;  EJEMPLOS:
@@ -1101,7 +1136,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun extract-negative-clauses (lambda cnf) 
-  (extract-clauses () cnf (list +not+ lambda)))
+  (extract-clauses () cnf (list +not+ lambda))) 
+; Llamo a extract-clauses para que filtre clausulas de cnf que contengan '(~ lambda)
 
 ;;
 ;;  EJEMPLOS:
@@ -1133,12 +1169,23 @@
 ;;                          sobre K1 y K2, con los literales repetidos 
 ;;                          eliminados
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun resolve-on (lambda K1 K2) 
-  ;;
-  ;; 4.4.4 Completa el codigo
-  ;;
-  )
 
+;;This test evals TRUE if you can resolve on K1 and K2
+(defun resolvable (lambda K1 K2)
+  (let ((notlambda (list +not+ lambda)))
+    (or (and (member lambda K1 :test 'equal)
+             (member notlambda K2 :test 'equal))
+        (and (member notlambda K1 :test 'equal)
+             (member lambda K2 :test 'equal)))))
+
+
+(defun resolve-on (lambda K1 K2) 
+  (unless (not (resolvable lambda K1 K2))
+    ; A la union de conjuntos K1 y K2, restamos el conjunto (lambda ~lambda)
+    (list
+      (set-difference (union K1 K2 :test 'equal)          ; {K1} U {K2} \
+                      (list lambda (list +not+ lambda))   ; {(lambda ~lambda)} 
+                      :test 'equal))))
 ;;
 ;;  EJEMPLOS:
 ;;
@@ -1173,29 +1220,62 @@
 ;;            
 ;; EVALUA A : RES_lambda(cnf) con las clauses repetidas eliminadas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Devuelve una lista con el resultado de aplicar res  sobre K1 y todas las Ki de cnf
+(defun resolve(lambda K1 cnf)
+  (unless (null cnf)
+    (union (resolve-on lambda K1 (first cnf))
+           (resolve lambda K1 (rest cnf))
+           :test 'equal)))
+
+;; EXAMPLES
+(resolve 'a '(a b) '(((~ a) b) (a c) ((~ a) d) ))
+;; ((B) (B D))
+(resolve 'a '(a b) ())
+;; NIL
+(resolve 'a () ())
+;; NIL
+
+;; Devuelve una lista con el resultad de aplicar res sobre todos los posibles
+;; pares de clausulas (K1, K2) con K1 en cnf1 y K2 en cnf2
+(defun resolve-pairs (lambda cnf1 cnf2)
+  (unless (null cnf1)
+    (union (resolve lambda (first cnf1) cnf2)
+           (resolve-pairs lambda (rest cnf1) cnf2)
+           :test 'equal)))
+
+;; EXAMPLES
+(resolve-pairs 'a '((a b) (a e) (a (~ d))) '(((~ a) b) ((~ a) c) ((~ a) d) ))
+;; ((B) (B C) (B D) (E B) (E C) (E D) ((~ D) B) ((~ D) C) ((~ D) D))
+(resolve-pairs 'a '() '(((~ a) b) ((~ a) c) ((~ a) d) ))
+;; NIL
+(resolve-pairs 'a '() '())
+;; NIL
+(resolve-pairs 'a '((a b) (a e) (a (~ d))) '(((~ a) b) ((~ a) c) ((~ a) d) ((~ a) d)))
+;; ((B) (B C) (B D) (E B) (E C) (E D) ((~ D) B) ((~ D) C) ((~ D) D)) <- No hay repeiciones
+
 (defun build-RES (lambda cnf)
-  ;;
-  ;; 4.4.5 Completa el codigo
-  ;;
-)
+  (union (extract-neutral-clauses lambda cnf)
+         (resolve-pairs lambda 
+                        (extract-negative-clauses lambda cnf)
+                        (extract-positive-clauses lambda cnf))
+         :test 'equal-clauses))
 
 ;;
 ;;  EJEMPLOS:
 ;;
 (build-RES 'p NIL)
 ;; NIL
-(build-RES 'P '((A  (~ P) B) (A P) (A B)));; ((A B))
-(build-RES 'P '((B  (~ P) A) (A P) (A B)));; ((B A))
-
+(build-RES 'P '((A  (~ P) B) (A P) (A B)))
+;; ((B B))
+(build-RES 'P '((B  (~ P) A) (A P) (A B)))
+;; ((B A))
 (build-RES 'p '(NIL))
 ;; (NIL)
-
 (build-RES 'p '((p) ((~ p))))
 ;; (NIL)
-
 (build-RES 'q '((p q) ((~ p) q) (a b q) (p (~ q)) ((~ p) (~ q))))
-;; ((P) ((~ P) P) ((~ P)) (B A P) (B A (~ P)))
-
+;; (((~ P) A B) ((~ P)) ((~ P) P) (P A B) (P (~ P)) (P))
 (build-RES 'p '((p q) (c q) (a b q) (p (~ q)) (p (~ q))))
 ;; ((A B Q) (C Q))
 
@@ -1208,10 +1288,65 @@
 ;; EVALUA A :	T  si cnf es SAT
 ;;                NIL  si cnf es UNSAT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Acumula en posit todos los literales positivos de la clausula K
+(defun rec-positive-in-clause (clause)
+  (cond
+    ((null clause)
+     ; No quedan literales en clause que mirar. Hemos terminado
+     NIL)
+    ((positive-literal-p (first clause))
+     ; El 1er lit de clause es positivo: la union del 1er lit y los positivos en rest-clause
+     (union (list (first clause))
+            (rec-positive-in-clause (rest clause))
+            :test 'equal))
+    (t
+      ; El 1er lit de clause es negativo: los positivos de rest-clause))
+      (rec-positive-in-clause (rest clause)))))
+
+;; EXAMPLES
+(rec-positive-in-clause '(a b (~ c) d (~ e)))
+;; (A B D)
+(rec-positive-in-clause '((~ a) (~ b)))
+;; NIL
+
+;; Devuelve un conjunto todos los literales positivos de cnf
+(defun rec-positive-in-cnf (cnf)
+  (unless 
+    (null cnf)
+    (union (rec-positive-in-clause (first cnf))
+           (rec-positive-in-cnf (rest cnf))
+           :test 'equal)))
+
+;; EXAMPLES
+(rec-positive-in-cnf '(   (b (~ a) c)  (e (~ d) f)  (h (~ g) i)   )   )
+;; (B C E F H I)
+(rec-positive-in-cnf '(NIL)   )
+;; NIL
+(rec-positive-in-cnf '(   (b (~ a) c)  (e (~ d) f)  (b (~ g) c)   )   )
+;; (E F B C)
+(rec-positive-in-cnf '(   ((~ a) (~ b))  ((~ c) (~ d))  ((~ f) (~ g))   )   )
+;;NIL
+
+;; Devuelve NIL si cnf NO es UNSAT.
+(defun unsat (cnf)
+  (if 
+    (member NIL cnf :test 'equal)
+    t
+    NIL)
+
+(defun rec-RES-SAT (lambdas cnf)
+  (cond
+    ;; Si cnf UNSAT -> NIL
+    ((unsat cnf) NIL)
+    ;; Si no hay mas literales sobre los que resolver -> True
+    ((null lambdas) T)
+    ;; Else: aplicamos res sobre cnf con el primer lambda, repetimos para los demas lambdas
+    (t (rec-RES-SAT (rest lambdas)
+                    (simplify  (build-RES (first lambdas)
+                                          cnf))))))
 (defun  RES-SAT-p (cnf) 
-  ;;
-  ;; 4.5 Completa el codigo
-  ;;
+  
   )
 
 ;;
