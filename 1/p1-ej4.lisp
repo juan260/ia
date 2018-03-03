@@ -1024,11 +1024,20 @@
 ;; EVALUA A : cnf_lambda^(+) subconjunto de clausulas de cnf 
 ;;            que contienen el literal lambda  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Extrae las clausulas de conj que contienen a elto
+(defun extract-clauses (subconj conj elto)
+  (cond
+    ((null conj)
+     subconj)
+    ((member elto (first conj) :test 'equal) 
+     (extract-clauses (adjoin (first conj) subconj :test 'equal) (rest conj) elto))
+    (t
+      (extract-clauses subconj (rest conj) elto))))
+
+
+  
 (defun extract-positive-clauses (lambda cnf) 
-  ;;
-  ;; 4.4.2 Completa el codigo
-  ;;
-  )
+  (extract-clauses () cnf lambda))
 
 ;;
 ;;  EJEMPLOS:
@@ -1036,16 +1045,14 @@
 (extract-positive-clauses 'p
                              '((p (~ q) r) (p q) (r (~ s) q) (a b p) (a (~ p) c) ((~ r) s)))
 
-;; ((P (~ Q) R) (P Q) (A B P))
-
-
+;; ((A B P) (P Q) (P (~ Q) R))
 (extract-positive-clauses 'r NIL)
 ;; NIL
 (extract-positive-clauses 'r '(NIL))
 ;; NIL
 (extract-positive-clauses 'r
                              '((p (~ q) r) (p q) (r (~ s) q) (a b p) (a (~ p) c) ((~ r) s)))
-;; ((P (~ Q) R) (R (~ S) Q))
+;; ((R (~ S) Q) (P (~ Q) R))
 (extract-positive-clauses 'p
                              '(((~ p) (~ q) r) ((~ p) q) (r (~ s) (~ p) q) (a b (~ p)) ((~ r) (~ p) s)))
 ;; NIL
@@ -1059,11 +1066,9 @@
 ;; EVALUA A : cnf_lambda^(-) subconjunto de clausulas de cnf  
 ;;            que contienen el literal ~lambda  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun extract-negative-clauses (lambda cnf) 
-  ;;
-  ;; 4.4.3 Completa el codigo
-  ;;
-  )
+  (extract-clauses () cnf (list +not+ lambda)))
 
 ;;
 ;;  EJEMPLOS:
