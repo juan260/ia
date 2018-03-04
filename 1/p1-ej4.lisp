@@ -515,7 +515,7 @@
 		
 (defun negar (elt)
 	(cond ((negative-literal-p elt) (second elt))
-			((positive-literal-p elt) (cons +not+ elt))
+			((positive-literal-p elt) (list +not+ elt))
 			((listp elt) (morgan elt))))
 		
   
@@ -563,7 +563,7 @@
 ;;
 ;; Dada una FBF, que no contiene los conectores <=>, => en la 
 ;; que la negacion aparece unicamente en literales negativos
-;; evalua a una FNC equivalente en FNC con conectores ^, v  
+;; evalua a una FBF equivalente en FNC con conectores ^, v  
 ;;
 ;; RECIBE   : FBF en formato prefijo sin conector <=>, =>, 
 ;;            en la que la negacion aparece unicamente 
@@ -573,51 +573,77 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun combine-elt-lst (elt lst)
   (if (null lst)
+      ; Si lst vacia, devuelve '((elt))
       (list (list elt))
+    ; Si no: ((elt x1) (elt x2) ... (elt xn)) para los xi en lst   
     (mapcar #'(lambda (x) (cons elt x)) lst)))
 
+; Dada una lista de listas de literales, devuelve una lista con todas las posibles listas que 
+; tienen un elemento de cada lista. En las listas internas pone como conector el conector
+;externo, y en la lista externa pone como conector el opuesto del conector el externo, 
 (defun exchange-NF (nf)
   (if (or (null nf) (literal-p nf)) 
-      nf
+      nf ; Si nf esta vacia o es un literal, no tenemos que hacer nada
     (let ((connector (first nf)))
+      ; Si no: cambia el conector externo por el su opuesto,
       (cons (exchange-and-or connector)
             (mapcar #'(lambda (x)
+                          ; y todos los internos por el externo,
                           (cons connector x))
+                ; en todas las posibles listas q contienen un elto de cada lista    
                 (exchange-NF-aux (rest nf)))))))
 
+; Dada una lista de listas, devuelve todas las listas posibles
+; resultado de combiar un elemento de cada lista
 (defun exchange-NF-aux (nf)
   (if (null nf) 
       NIL
     (let ((lst (first nf)))
-      (mapcan #'(lambda (x) 
+      (mapcan #'(lambda (x)
+                  ; Combina cada x de la primera lista con todas las listas
+                  ; que salen de combinar entre si las demas listas
                   (combine-elt-lst 
                    x 
                    (exchange-NF-aux (rest nf)))) 
+        ;; Si 1er elto literal, aplicamos al elto. Si es conector, aplicamos a lo demas.      
         (if (literal-p lst) (list lst) (rest lst))))))
 
+;; Dada una lista de sublistas conectadas entre si por un conector X, 'deshace' todas 
+;; sublistas conectadas con X, eliminando el conector y llevando todos los literales de la
+;; sublista a la lista principal, i.e. (^ (v cosas) (^ cosas2)) --> (^ (v cosas) cosas2)
 (defun simplify (connector lst-wffs )
   (if (literal-p lst-wffs)
+      ; Si la lista es un literal, hacemos (literal)
       lst-wffs                    
     (mapcan #'(lambda (x) 
                 (cond 
+                 ; Si el elto de la sublista es literal, hacemos (literal) 
                  ((literal-p x) (list x))
+                 ; Si la sublista esta conectada por el conector que simplificamos,
+                 ; aplicamos la simplificacion a todos sus elementos menos al conector
                  ((equal connector (first x))
                   (mapcan 
                       #'(lambda (y) (simplify connector (list y))) 
                     (rest x))) 
+                 ; Si el conector no era el buscado, dejamos a la sublista tal cual
                  (t (list x))))               
+      ;mapcan concatena todas las listas anteriores      
       lst-wffs)))
 
 (defun cnf (wff)
   (cond
-   ((cnf-p wff) wff)
-   ((literal-p wff)
+   ((cnf-p wff) wff) ; Si ya es cnf, nada que hacer
+   ((literal-p wff) ; Si ya es un literal, (^ (v lit))
     (list +and+ (list +or+ wff)))
    ((let ((connector (first wff))) 
       (cond
-       ((equal +and+ connector) 
+       ((equal +and+ connector)
+        ; Si es (^ () ()) : aplicamos cnf a todas las sublistas, simplificamos los ^ 
+        ; y aniadimos el ^ del principio
         (cons +and+ (simplify +and+ (mapcar #'cnf (rest wff)))))
        ((equal +or+ connector) 
+        ; Si es (v () ()) : simplificamos los v, aniadimos el v del ppio y hacemos
+        ; el intercambio de los ^ por v 
         (cnf (exchange-NF (cons +or+ (simplify +or+ (rest wff)))))))))))
 
 
@@ -718,8 +744,15 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-to-cnf (wff)
-  	(eliminate-connectors (cnf (infix-to-prefix wff)))
-  )
+  ;Aplicamos las funciones en el orden definido en el enunciado
+  (eliminate-connectors 
+    (cnf
+      (reduce-scope-of-negation
+        (eliminate-conditional
+          (eliminate-biconditional
+            (infix-to-prefix wff)))))))
+;  	(eliminate-connectors (cnf (infix-to-prefix wff)))
+;  )
 
 ;;
 ;; EJEMPLOS:
@@ -830,7 +863,7 @@
 (defun elim-repeated-literals-from-clauses (cnf)
 	(unless (null cnf)
 		(cons (eliminate-repeated-literals (first cnf))
-			(elim-repeated-litrals-from-clauses (rest cnf)))))
+			(elim-repeated-literals-from-clauses (rest cnf)))))
 	
 (defun eliminate-repeated-clauses (cnf)
 	(elim-repeated-clauses-rec (elim-repeated-literals-from-clauses cnf)))
@@ -892,7 +925,7 @@
     ((subsume (first cnf) x)
      NIL) ; si 1st cnf 'contiene y no es igual' a x
     ((null (rest cnf))
-     x); si ya no quedan eltos en cnf, y ninguno subsumia a x
+     t); si ya no quedan eltos en cnf, y ninguno subsumia a x
     (t (noone-subsumes x (rest cnf))))) ; ver si demas eltos te subsumen
 
 ;; Igual que (cons elem list) pero si list = (), devuelve (elem)
@@ -904,10 +937,13 @@
 ;; Introduce elem en cnf1 si elem no es subsumido por cnf1 o cnf2.
 ;; Repite el proceso con el elemento siguiente a  elem; el primero de cnf2
 (defun rec-elim-subsum(cnf1 elem cnf2)
-  (cond 
-    ((null elem)
-     ; Caso base: f( (a b) NIL NIL ) = (a b)
-     cnf1)
+  (cond
+    
+    ((null cnf2) 
+     ; Caso base: hay que parar la recursion: devolvemos cnf1 con o sin elem 
+     (if (noone-subsumes elem cnf1)
+         (my-cons elem cnf1)
+         cnf1))
     ((and (noone-subsumes elem cnf1) (noone-subsumes elem cnf2))
      ; Si nadie subsume a elemn, aniadimos elem a cnf1 y repetimos con 1st-cnf2 y rest-cnf2
      (rec-elim-subsum (my-cons elem cnf1) (first cnf2) (rest cnf2)))
@@ -917,7 +953,7 @@
 
 (defun eliminate-subsumed-clauses(cnf)
   (if
-    (equal cnf '(NIL) )
+    (equal cnf '() )
     cnf
     (rec-elim-subsum () (first cnf) (rest cnf))))
 ;;
@@ -933,11 +969,13 @@
  '((a b c) (b c) (a (~ c) b) ((~ a))  ((~ a) b) (a b (~ a)) (c b a)))
 ;;; ((A (~ C) B) ((~ A)) (B C))
 
+
 (eliminate-subsumed-clauses '((a)))
 ;;; ((A))
 (eliminate-subsumed-clauses '())
 ;;; NIL
-
+(eliminate-subsumed-clauses '(()))
+;; (NIL)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 4.3.5
@@ -1293,15 +1331,15 @@
 (defun rec-positive-in-clause (clause)
   (cond
     ((null clause)
-     ; No quedan literales en clause que mirar. Hemos terminado
+     ;; No quedan literales en clause que mirar. Hemos terminado
      NIL)
     ((positive-literal-p (first clause))
-     ; El 1er lit de clause es positivo: la union del 1er lit y los positivos en rest-clause
+     ;; El 1er lit de clause es positivo: la union del 1er lit y los positivos en rest-clause
      (union (list (first clause))
             (rec-positive-in-clause (rest clause))
             :test 'equal))
     (t
-      ; El 1er lit de clause es negativo: los positivos de rest-clause))
+      ;; El 1er lit de clause es negativo los positivos de rest-clause
       (rec-positive-in-clause (rest clause)))))
 
 ;; EXAMPLES
@@ -1328,26 +1366,28 @@
 (rec-positive-in-cnf '(   ((~ a) (~ b))  ((~ c) (~ d))  ((~ f) (~ g))   )   )
 ;;NIL
 
-;; Devuelve NIL si cnf NO es UNSAT.
+;; Devuelve T si cnf es UNSAT.
 (defun unsat (cnf)
   (if 
     (member NIL cnf :test 'equal)
     t
-    NIL)
+    NIL))
 
 (defun rec-RES-SAT (lambdas cnf)
   (cond
+    ;; Si cnf vacia -> T
+    ((null cnf) T)
     ;; Si cnf UNSAT -> NIL
     ((unsat cnf) NIL)
     ;; Si no hay mas literales sobre los que resolver -> True
     ((null lambdas) T)
     ;; Else: aplicamos res sobre cnf con el primer lambda, repetimos para los demas lambdas
     (t (rec-RES-SAT (rest lambdas)
-                    (simplify  (build-RES (first lambdas)
+                    (simplify-cnf  (build-RES (first lambdas)
                                           cnf))))))
 (defun  RES-SAT-p (cnf) 
-  
-  )
+  (rec-RES-SAT (rec-positive-in-cnf cnf) 
+               cnf))
 
 ;;
 ;;  EJEMPLOS:
@@ -1381,10 +1421,14 @@
 ;;            NIL en caso de que no sea consecuencia logica.  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun logical-consequence-RES-SAT-p (wff w)
-  ;;
-  ;; 4.6 Completa el codigo
-  ;;
-  )
+  (not ;; Si la union es UNSAT, devolvemos True
+    (RES-SAT-p ;; resolvemos sobre la union de wff y not w
+      (union (simplify-cnf 
+               (wff-infix-to-cnf wff))
+             (simplify-cnf 
+               (wff-infix-to-cnf 
+                 (list +not+ w)))
+             :test 'equal-clauses))))
 
 ;;
 ;;  EJEMPLOS:
