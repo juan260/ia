@@ -792,19 +792,19 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun eliminate-connectors (cnf)
-	(unless (null cnf)
-	(let ((firstEl (first cnf)))
-	(cond ((n-ary-connector-p firstEl)		;; Si el argumento de entrada
-											;; es una expresion n-aria 
-											;; eliminamos conectoresde todos
-											;; sus operandos
-				(eliminate-connectors (rest cnf)))
-		((listp firstEl)					;; Si es una expresion elimino sus conectores
-											;; (este caso es por la recursion)
-				(cons (eliminate-connectors firstEl) 
-						(eliminate-connectors (rest cnf))))
-		(t (cons firstEl (eliminate-connectors (rest cnf))))))))
-		
+    (unless (null cnf)
+    (let ((firstEl (first cnf)))
+    (cond ((n-ary-connector-p firstEl)      ;; Si el argumento de entrada
+                                            ;; es una expresion n-aria 
+                                            ;; eliminamos conectoresde todos
+                                            ;; sus operandos
+                (eliminate-connectors (rest cnf)))
+        ((listp firstEl)                    ;; Si es una expresion elimino sus conectores
+                                            ;; (este caso es por la recursion)
+                (cons (eliminate-connectors firstEl) 
+                        (eliminate-connectors (rest cnf))))
+        (t (cons firstEl (eliminate-connectors (rest cnf))))))))
+        
   
 
 (eliminate-connectors 'nil)
@@ -838,16 +838,13 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-to-cnf (wff)
-  ;Aplicamos las funciones en el orden definido en el enunciado
+  ;; Aplicamos las funciones en el orden definido en el enunciado
   (eliminate-connectors 
     (cnf
       (reduce-scope-of-negation
         (eliminate-conditional
           (eliminate-biconditional
-            (infix-to-prefix wff)))))))
-;  	(eliminate-connectors (cnf (infix-to-prefix wff)))
-;  )
-
+            (infix-to-prefix wff))))))) 
 ;;
 ;; EJEMPLOS:
 ;; 
@@ -870,9 +867,9 @@
 ;; Funcion auxiliar que comprueba si dos literales son iguales
 ;;;;
 (defun equal-literals (elt1 elt2)
-	(or (eql elt1 elt2)
-		(and (negative-literal-p elt1) (negative-literal-p elt2)
-			(eql (second elt1) (second elt2)))))
+    (or (eql elt1 elt2)
+        (and (negative-literal-p elt1) (negative-literal-p elt2)
+            (eql (second elt1) (second elt2)))))
 
 
 ;;;;
@@ -880,21 +877,20 @@
 ;; Busca el elemento en la lista y devuelve t si lo encuentra.
 ;;;;
 (defun search-literal-p (lst elt)
-	(unless (null lst)
-		(or (equal-literals (first lst) elt) 
-			(search-literal-p (rest lst) elt))))
+    (unless (null lst)
+        (or (equal-literals (first lst) elt) 
+            (search-literal-p (rest lst) elt))))
 
-	
+
 (defun eliminate-repeated-literals (k)
-	(unless (null k)
-  		(if (search-literal-p (rest k) (first k))	;; Busco el primer
-  												;; elemento en el resto.
-  			(eliminate-repeated-literals (rest k))	;; Si esta continuo la
-  												;; recursion sin añadirlo.
-  										;; Si no esta repetido, lo añado 
-  										;; a la lista que devolvere al final.
-  			(cons (first k) (eliminate-repeated-literals (rest k))))))
-  
+    (unless (null k)
+        (if (search-literal-p (rest k) (first k))   ;; Busco el primer
+                                                    ;; elemento en el resto.
+            (eliminate-repeated-literals (rest k))  ;; Si esta continuo la
+                                                    ;; recursion sin añadirlo.
+                                                    ;; Si no esta repetido, lo añado 
+                                        ;; a la lista que devolvere al final.
+            (cons (first k) (eliminate-repeated-literals (rest k))))))
 
 ;;
 ;; EJEMPLO:
@@ -916,10 +912,10 @@
 ;;
 
 (defun elim-elem (lst elem)
-	(unless (null lst)
-		(if (equal-literals (first lst) elem)
-			(rest lst)
-			(cons (first lst) (elim-elem (rest lst) elem)))))
+    (unless (null lst)
+        (if (equal-literals (first lst) elem)
+            (rest lst)
+            (cons (first lst) (elim-elem (rest lst) elem)))))
 
 ;;
 ;; Funcion que determina si dos clausulas son iguales,
@@ -928,16 +924,15 @@
 ;;
 
 (defun equal-clauses (cl1 cl2)
-	(if (null cl1)		;; Si una es nula (o si hemos llegado
-						;; al final de la recursion)
-		(null cl2)		;; la otra tambien debe ser nula
-						;; (o haber llegado a la vez al final)
-		(let ((firstEl (first cl1)))
-			(and (search-literal-p cl2 firstEl) ;; Busco el primer elemento
-				(equal-clauses (rest cl1) 
-				(elim-elem cl2 firstEl))))))	;; Sigo la recursion, pero 
-									;; eliminando el elemento encontrado.
-											
+    (if (null cl1)      ;; Si una es nula (o si hemos llegado
+                        ;; al final de la recursion)
+        (null cl2)      ;; la otra tambien debe ser nula
+                        ;; (o haber llegado a la vez al final)
+          (let ((firstEl (first cl1)))
+            (and (search-literal-p cl2 firstEl) ;; Busco el primer elemento
+                 (equal-clauses (rest cl1)
+                                (elim-elem cl2 firstEl))))))    ;; Sigo la recursion, pero
+                                                                ;; eliminando el elemento encontrado.
 
 ;;
 ;; Funcion que busca la clausula cl1 en la lista lst
@@ -948,11 +943,10 @@
 ;;
 
 (defun search-clause-p (cl1 lst)
-	(unless (null lst)
-		(or (equal-clauses cl1 (first lst))
-			(search-clause-p cl1 (rest lst)))))
-
-
+    (unless (null lst)
+        (or (equal-clauses cl1 (first lst))
+            (search-clause-p cl1 (rest lst)))))
+            
 ;;
 ;; Version recursiva de la funcion principal 
 ;; que recibe las clausulas con los literales
@@ -960,11 +954,11 @@
 ;;
 
 (defun elim-repeated-clauses-rec (cnf)
-	(unless (null cnf)
-  		(if (search-clause-p (first cnf) (rest cnf))
-  	 		(elim-repeated-clauses-rec (rest cnf))
-  	 		(cons (first cnf)
-  	 			  (elim-repeated-clauses-rec (rest cnf))))))
+    (unless (null cnf)
+        (if (search-clause-p (first cnf) (rest cnf))
+            (elim-repeated-clauses-rec (rest cnf))
+            (cons (first cnf)
+                  (elim-repeated-clauses-rec (rest cnf))))))
 
 ;;
 ;; Funcion principal que primero elimina los literales
@@ -972,13 +966,13 @@
 ;;
 
 (defun elim-repeated-literals-from-clauses (cnf)
-	(unless (null cnf)
-		(cons (eliminate-repeated-literals (first cnf))
-			(elim-repeated-literals-from-clauses (rest cnf)))))
-	
+    (unless (null cnf)
+            (cons (eliminate-repeated-literals (first cnf))
+            (elim-repeated-literals-from-clauses (rest cnf)))))
+              
 (defun eliminate-repeated-clauses (cnf)
-	(elim-repeated-clauses-rec (elim-repeated-literals-from-clauses cnf)))
-	
+    (elim-repeated-clauses-rec (elim-repeated-literals-from-clauses cnf)))
+    
 ;;
 ;; EJEMPLO:
 ;;
@@ -1175,11 +1169,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;; Devuelve T if (lambda not in K) AND (~lambda not in K)
-(defun not-contains-lambda(lambda K)
-	(not (or (member lambda K :test 'equal)
-              (member (list +not+ lambda) K :test 'equal))))
-              
+;; Devuelve T if (lambda not in K) AND (not lambda not in K)
+(defun not-contains-lambda (lambda K)
+    (not (or (member lambda K :test 'equal)
+             (member (list +not+ lambda) K :test 'equal))))
+             
 ;; Devuelve el subconjunto de conj que no contienen ni lambda ni ~lambda
 (defun aux-extract-neutral (subconj conj lambda)
   (cond
@@ -1416,7 +1410,7 @@
 (build-RES 'p '((p) ((~ p))))
 ;; (NIL)
 (build-RES 'q '((p q) ((~ p) q) (a b q) (p (~ q)) ((~ p) (~ q))))
-;; (((~ P) A B) ((~ P)) ((~ P) P) (P A B) (P (~ P)) (P))
+;; (((~ P) A B) (#1=(~ P)) (P A B) (P #1#) (P))
 (build-RES 'p '((p q) (c q) (a b q) (p (~ q)) (p (~ q))))
 ;; ((A B Q) (C Q))
 
