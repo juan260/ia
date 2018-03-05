@@ -28,7 +28,7 @@
       (eql x +or+)))
 
 (defun n-or-binary-connector-p (x)
-	(or (binary-connector-p x) (n-ary-connector x)))
+    (or (binary-connector-p x) (n-ary-connector x)))
 
 (defun connector-p (x) 
   (or (unary-connector-p  x)
@@ -46,11 +46,11 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun positive-literal-p (x)
-	;; Tiene que cumplirse que es un atomo lisp, y que no es ni un 
-	;; conector ni un valor deverdad
- 	(and (atom x) (not (connector-p x)) (not (truth-value-p x))))
- 	
- 	
+    ;; Tiene que cumplirse que es un atomo lisp, y que no es ni un 
+    ;; conector ni un valor deverdad
+     (and (atom x) (not (connector-p x)) (not (truth-value-p x))))
+     
+     
 
 ;; EJEMPLOS:
 (positive-literal-p 'p)
@@ -74,14 +74,14 @@
 ;; EVALUA A : T si la expresion es un literal negativo, 
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-		
+        
 (defun negative-literal-p (x)
     ;; Tiene que ser una lista, compuesta por:
     (if (listp x) (and (eql (car x) +not+)      ;; Un simbolo de negacion
           (positive-literal-p (cadr x))     ;; un literal positivo
                     (null (cddr x)))        ;; y nada mas
      NIL))
-		
+        
 
 ;; EJEMPLOS:
 (negative-literal-p '(~ p))        ;; T
@@ -107,8 +107,8 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun literal-p (x) 
-	;; Tiene que ser un literal positivo o negativo
- 	(or (positive-literal-p x) (negative-literal-p x))
+    ;; Tiene que ser un literal positivo o negativo
+     (or (positive-literal-p x) (negative-literal-p x))
   )
 
 ;; EJEMPLOS:
@@ -146,7 +146,7 @@
                      (and (wff-prefix-p (first rest_1)) ;; tienen que ser FBF los operandos 
                           (let ((rest_2 (rest rest_1)))
                             (or (null rest_2)           ;; conjuncion o disyuncion con un elemento
-                                (wff-prefix-p (cons connector rest_2)))))))	
+                                (wff-prefix-p (cons connector rest_2)))))))    
                 (t NIL)))))))                   ;; No es FBF en formato prefijo 
 ;;
 ;; EJEMPLOS:
@@ -174,86 +174,86 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-p (x)
-	
-  (unless (truth-value-p x)	   ;; Por convenio los valores de verdad no 
-  							   ;; expresiones infijo
+    
+  (unless (truth-value-p x)       ;; Por convenio los valores de verdad no 
+                                 ;; expresiones infijo
             
     (or (literal-p x)          ;; Un literal es FBF en formato infijo
         (and (listp x)         ;; En caso de que no sea un literal debe ser una lista
-        	
-        	(cond 
-        										
-        		((unary-connector-p (first x))	
-        			;; Si el primer elemento es un conector unario (negacion)
-        			;; tiene que estar sucedido por un unico elemento, 
-        			;; es decir, (cddr x) tiene que ser nil y el segundo
-        			;; elemento tiene que ser una expresion infijo o un literal
-        			(unless (not (null (cddr x)))
-         				(wff-infix-p (second x))))
-         				
-         			;; Si es un conector n-ario y aparece antes que ningun
-         			;; otro literal, tiene que ser el unico elemento de la lista,
-         			;; ya que si hubiera un literal en la expresion tendria que ir
-         			;; antes del conector al ser expresion infijo.
-        		((n-ary-connector-p (first x))
-        			
-        			(null (cdr x)))
-        			
-        			;; Si aparece un literal, debe de estar sucedido por un operador
-        			;; binario o n-ario, que a su vez deben estar sucedidos por
-        			;; una o mas expresiones infijo o literales segun corresponda
-        		((literal-p (first x))
-        			(or
-        				(if (binary-connector-p (second x))
-        					(and (null (cdddr x)) (wff-infix-p (third x))))
-        				(if (n-ary-connector-p (second x))
-        					(or (and (null (fourth x)) (wff-infix-p (third x)))
-        						(and (eql (fourth x) (second x)) (wff-infix-p (cddr x)))))))
-        		
-        		;; Si el primer elemento es una lista debe ser una expresion infijo
-        		;; y debe estar sucedida por un conector n-ario o binario como en
-        		;; el caso anterior, que as u vez debe estar sucedido por un literal 
-        		;; o expresion infijo
-        		((listp (first x))
-        			(or (and (n-ary-connector-p (caar x)) (null (cdar x)))
-        				(and (not (null (cdar x))) (wff-infix-p (car x))
-        						(or
-        							(if (binary-connector-p (second x))
-        								(and (null (cdddr x)) (wff-infix-p (third x))))
-        							(if (n-ary-connector-p (second x))
-        								(or (and (null (fourth x)) (wff-infix-p (third x)))
-        									(and (eql (fourth x) (second x)) (wff-infix-p (cddr x))))))))))))))
-        					
+            
+            (cond 
+                                                
+                ((unary-connector-p (first x))    
+                    ;; Si el primer elemento es un conector unario (negacion)
+                    ;; tiene que estar sucedido por un unico elemento, 
+                    ;; es decir, (cddr x) tiene que ser nil y el segundo
+                    ;; elemento tiene que ser una expresion infijo o un literal
+                    (unless (not (null (cddr x)))
+                         (wff-infix-p (second x))))
+                         
+                     ;; Si es un conector n-ario y aparece antes que ningun
+                     ;; otro literal, tiene que ser el unico elemento de la lista,
+                     ;; ya que si hubiera un literal en la expresion tendria que ir
+                     ;; antes del conector al ser expresion infijo.
+                ((n-ary-connector-p (first x))
+                    
+                    (null (cdr x)))
+                    
+                    ;; Si aparece un literal, debe de estar sucedido por un operador
+                    ;; binario o n-ario, que a su vez deben estar sucedidos por
+                    ;; una o mas expresiones infijo o literales segun corresponda
+                ((literal-p (first x))
+                    (or
+                        (if (binary-connector-p (second x))
+                            (and (null (cdddr x)) (wff-infix-p (third x))))
+                        (if (n-ary-connector-p (second x))
+                            (or (and (null (fourth x)) (wff-infix-p (third x)))
+                                (and (eql (fourth x) (second x)) (wff-infix-p (cddr x)))))))
+                
+                ;; Si el primer elemento es una lista debe ser una expresion infijo
+                ;; y debe estar sucedida por un conector n-ario o binario como en
+                ;; el caso anterior, que as u vez debe estar sucedido por un literal 
+                ;; o expresion infijo
+                ((listp (first x))
+                    (or (and (n-ary-connector-p (caar x)) (null (cdar x)))
+                        (and (not (null (cdar x))) (wff-infix-p (car x))
+                                (or
+                                    (if (binary-connector-p (second x))
+                                        (and (null (cdddr x)) (wff-infix-p (third x))))
+                                    (if (n-ary-connector-p (second x))
+                                        (or (and (null (fourth x)) (wff-infix-p (third x)))
+                                            (and (eql (fourth x) (second x)) (wff-infix-p (cddr x))))))))))))))
+                            
 
 
 ;;
 ;; EJEMPLOS:
 ;;
 (and 
-(wff-infix-p 'a) 						; T
-(wff-infix-p '(^)) 					; T  ;; por convencion
-(wff-infix-p '(v)) 					; T  ;; por convencion
-(wff-infix-p '(A ^ (v))) 			      ;; T  
-(wff-infix-p '( a ^ b ^ (p v q) ^ (~ r) ^ s))  	; T 
-(wff-infix-p '(A => B)) 				; T
-(wff-infix-p '(A => (B <=> C))) 			; T
-(wff-infix-p '( B => (A ^ C ^ D))) 			; T   
-(wff-infix-p '( B => (A ^ C))) 			; T 
-(wff-infix-p '( B ^ (A ^ C))) 			; T 
+(wff-infix-p 'a)                         ; T
+(wff-infix-p '(^))                     ; T  ;; por convencion
+(wff-infix-p '(v))                     ; T  ;; por convencion
+(wff-infix-p '(A ^ (v)))                   ;; T  
+(wff-infix-p '( a ^ b ^ (p v q) ^ (~ r) ^ s))      ; T 
+(wff-infix-p '(A => B))                 ; T
+(wff-infix-p '(A => (B <=> C)))             ; T
+(wff-infix-p '( B => (A ^ C ^ D)))             ; T   
+(wff-infix-p '( B => (A ^ C)))             ; T 
+(wff-infix-p '( B ^ (A ^ C)))             ; T 
 (wff-infix-p '((p v (a => (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e)))  ;; T 
-(or (wff-infix-p nil) 					; NIL
-(wff-infix-p '(a ^)) 					; NIL
-(wff-infix-p '(^ a)) 					; NIL
-(wff-infix-p '(a)) 					; NIL
-(wff-infix-p '((a))) 				      ;; NIL
-(wff-infix-p '((a) b))   			      ;; NIL
-(wff-infix-p '(^ a b q (~ r) s))  		      ;; NIL 
-(wff-infix-p '( B => A C)) 			      ;; NIL   
-(wff-infix-p '( => A)) 				      ;; NIL   
-(wff-infix-p '(A =>)) 				      ;; NIL   
-(wff-infix-p '(A => B <=> C)) 		      ;; NIL
-(wff-infix-p '( B => (A ^ C v D))) 		      ;; NIL   
-(wff-infix-p '( B ^ C v D )) 			      ;; NIL 
+(or (wff-infix-p nil)                     ; NIL
+(wff-infix-p '(a ^))                     ; NIL
+(wff-infix-p '(^ a))                     ; NIL
+(wff-infix-p '(a))                     ; NIL
+(wff-infix-p '((a)))                       ;; NIL
+(wff-infix-p '((a) b))                     ;; NIL
+(wff-infix-p '(^ a b q (~ r) s))                ;; NIL 
+(wff-infix-p '( B => A C))                   ;; NIL   
+(wff-infix-p '( => A))                       ;; NIL   
+(wff-infix-p '(A =>))                       ;; NIL   
+(wff-infix-p '(A => B <=> C))               ;; NIL
+(wff-infix-p '( B => (A ^ C v D)))               ;; NIL   
+(wff-infix-p '( B ^ C v D ))                   ;; NIL 
 (wff-infix-p '((p v (a => e (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e))); NIL 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -381,15 +381,15 @@
 ;; Funcion auxiliar que devuelve true si recibe como
 ;; argumento una lista de literales o nil
 (defun list-of-literals-or-nil (lst)
-	(or (null lst)
-		(and (literal-p (first lst)) (list-of-literals-or-nil (rest lst)))))
+    (or (null lst)
+        (and (literal-p (first lst)) (list-of-literals-or-nil (rest lst)))))
 
 (defun clause-p (wff)
-     (and (listp wff)      				;; Recibe una lista               
-           (if (eql (first wff) +or+)  	;; cuyo primer elemento es un or
-           	;; que va sucedido de una lista de literales o de nada
-           	;; por ejemplo (v a b) es una clausula, pero (v) tambien
-           		(list-of-literals-or-nil (rest wff))))) 
+     (and (listp wff)                      ;; Recibe una lista               
+           (if (eql (first wff) +or+)      ;; cuyo primer elemento es un or
+               ;; que va sucedido de una lista de literales o de nada
+               ;; por ejemplo (v a b) es una clausula, pero (v) tambien
+                   (list-of-literals-or-nil (rest wff))))) 
 
 
 ;;
@@ -421,17 +421,17 @@
 ;; Funcion auxiliar que devuelve true en caso de recibir
 ;; como argumento una lista de clausulas o nil
 (defun list-of-clauses-or-nil-p (lst)
-	(or (null lst)
-		(and (clause-p (first lst)) 
-			(list-of-clauses-or-nil-p (rest lst)))))
+    (or (null lst)
+        (and (clause-p (first lst)) 
+            (list-of-clauses-or-nil-p (rest lst)))))
 
 (defun cnf-p (wff)
-  (and (listp wff)					;; Tiene que ser una lista
-  		(eql (first wff) +and+)		;; cuyo primer elemento tiene que ser
-  									;; un and
-  			;; que tiene que estar sucedido de una lista de clausulas
-  			;; o de nada (como ocurre en (^), que es una cnf)
-  		(list-of-clauses-or-nil-p (rest wff))))
+  (and (listp wff)                    ;; Tiene que ser una lista
+          (eql (first wff) +and+)        ;; cuyo primer elemento tiene que ser
+                                      ;; un and
+              ;; que tiene que estar sucedido de una lista de clausulas
+              ;; o de nada (como ocurre en (^), que es una cnf)
+          (list-of-clauses-or-nil-p (rest wff))))
   
 
 ;;
@@ -472,10 +472,10 @@
 
 (defun eliminate-biconditional (wff)
   (if (or (null wff) (literal-p wff)) ;; Si recibe como argumento nill
-      wff							  ;; o un literallo devuelve
+      wff                              ;; o un literallo devuelve
       
-    (let ((connector (first wff)))				;; Si no, mira si el conector
-      (if (eq connector +bicond+)				;; es un bicondicional
+    (let ((connector (first wff)))                ;; Si no, mira si el conector
+      (if (eq connector +bicond+)                ;; es un bicondicional
           (let ((wff1 (eliminate-biconditional (second wff))) 
                 (wff2 (eliminate-biconditional (third  wff))))
                 ;; Si lo es, elimina el bicondicional en las dos
@@ -510,11 +510,11 @@
 ;;            sin el connector =>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun eliminate-conditional (wff)  
-  (if (or (null wff) (literal-p wff))	;; Si el argumento es un literal
-      wff								;; o nil devolvemos el argumento
+  (if (or (null wff) (literal-p wff))    ;; Si el argumento es un literal
+      wff                                ;; o nil devolvemos el argumento
     (let ((connector (first wff)))
-    	;; En cualquier otro caso, estamos ante una expresion.
-    	;; Comprobamos el conector.
+        ;; En cualquier otro caso, estamos ante una expresion.
+        ;; Comprobamos el conector.
       (if (eq connector +cond+)
           (let ((wff1 (eliminate-conditional (second wff)))
                 (wff2 (eliminate-conditional (third  wff))))
@@ -561,42 +561,42 @@
 ;; en todas las subexpresiones que reciba
 
 (defun morgan (wff)
-	(if (listp wff) 					;; Si es una lista
-		(cond ((eql (first wff) +not+)	;; y es una expresion negada
-					;; Se intenta reducir el alcance de la negacion
-					;; y se devuelve el resultado
-				(reduce-scope-of-negation (second wff)))
-				
-												
-			((n-ary-connector-p (first wff))	;; Si es un operador n-ario
-				(cons (exchange-and-or (first wff)) ;; intercambiamos and y or
-						(negar-lista (rest wff)))))	;; y negamos todos los 
-													;; elementos de la lista
-		
-		(cons +not+ wff)))  ;; Si no es una expresión, debe ser un literal, 
-							;; lo negamos y lo devolvemos
+    (if (listp wff)                     ;; Si es una lista
+        (cond ((eql (first wff) +not+)    ;; y es una expresion negada
+                    ;; Se intenta reducir el alcance de la negacion
+                    ;; y se devuelve el resultado
+                (reduce-scope-of-negation (second wff)))
+                
+                                                
+            ((n-ary-connector-p (first wff))    ;; Si es un operador n-ario
+                (cons (exchange-and-or (first wff)) ;; intercambiamos and y or
+                        (negar-lista (rest wff)))))    ;; y negamos todos los 
+                                                    ;; elementos de la lista
+        
+        (cons +not+ wff)))  ;; Si no es una expresión, debe ser un literal, 
+                            ;; lo negamos y lo devolvemos
 
 
 ;;;;
 ;; Funcion auxiliar que niega todos los elementos de la lista
 ;;;;
 (defun negar-lista (wff)
-	(unless (null wff)
-		(cons (negar (first wff)) (negar-lista (rest wff)))))
-		
-		
+    (unless (null wff)
+        (cons (negar (first wff)) (negar-lista (rest wff)))))
+        
+        
 ;;;;
 ;; Funcion auxiliar que niega el elemento que reciba.
-;;;;	
+;;;;    
 (defun negar (elt)
-			;; Si es un literal negativo lo convierte a positivo
-	(cond ((negative-literal-p elt) (second elt)) 
-			;; Si es un literal positivo lo convierte a negativo
-			((positive-literal-p elt) (list +not+ elt))
-			;; Si es una expresion intentara negarla aplicando las leyes
-			;; de De Morgan haciendo un llamada a la funcion morgan
-			((listp elt) (morgan elt))))
-		
+            ;; Si es un literal negativo lo convierte a positivo
+    (cond ((negative-literal-p elt) (second elt)) 
+            ;; Si es un literal positivo lo convierte a negativo
+            ((positive-literal-p elt) (list +not+ elt))
+            ;; Si es una expresion intentara negarla aplicando las leyes
+            ;; de De Morgan haciendo un llamada a la funcion morgan
+            ((listp elt) (morgan elt))))
+        
 ;;;;
 ;; Funcion auxiliar que recibe una lista de expresiones
 ;; e intenta reducir el rango de la negacion en todas ellas.
@@ -604,33 +604,33 @@
 ;; de la funcion principal reduce-scope-of-negation
 ;;;;
 (defun redScopeNeg-n-ary (wff)
-	(unless (null wff)
-		(cons (reduce-scope-of-negation (first wff))
-				(redScopeNeg-n-ary (rest wff)))))  
+    (unless (null wff)
+        (cons (reduce-scope-of-negation (first wff))
+                (redScopeNeg-n-ary (rest wff)))))  
 ;;;;
 ;; Funcion principal  
 ;;;;
 (defun reduce-scope-of-negation (wff)
-	(if (literal-p wff)			;; Si recibe un literal
-		wff						;; lo devuelve
-		(let 	((firstEl (first wff))
-				(restEl (rest wff))
-				(secondEl (second wff)))
-			(cond				;; Si no es un literal 
-								;; es una expresion
-						
-				((eql firstEl +not+)	;; Si es una expresion negada
-					(morgan secondEl))	;; aplicamos las leyes de De Morgan
-					
-					;; Por otro lado, si es un conector n-ario, intento
-					;; reducir el rango de la negacion en todos sus
-					;; operandos, haciendo uso de redScopeNeg-n-ary
-				((n-ary-connector-p firstEl) 
-					(if (null secondEl)	
-						wff				
-						(cons firstEl (redScopeNeg-n-ary restEl))))))))
-				
-		
+    (if (literal-p wff)            ;; Si recibe un literal
+        wff                        ;; lo devuelve
+        (let     ((firstEl (first wff))
+                (restEl (rest wff))
+                (secondEl (second wff)))
+            (cond                ;; Si no es un literal 
+                                ;; es una expresion
+                        
+                ((eql firstEl +not+)    ;; Si es una expresion negada
+                    (morgan secondEl))    ;; aplicamos las leyes de De Morgan
+                    
+                    ;; Por otro lado, si es un conector n-ario, intento
+                    ;; reducir el rango de la negacion en todos sus
+                    ;; operandos, haciendo uso de redScopeNeg-n-ary
+                ((n-ary-connector-p firstEl) 
+                    (if (null secondEl)    
+                        wff                
+                        (cons firstEl (redScopeNeg-n-ary restEl))))))))
+                
+        
 ;;;;
 ;; Funcion auxiliar que intercambia and por or y viceversa
 ;;;;
@@ -1420,7 +1420,7 @@
 ;; atomos en la FNC 
 ;;
 ;; RECIBE   : cnf - FBF en FNC simplificada
-;; EVALUA A :	T  si cnf es SAT
+;; EVALUA A :    T  si cnf es SAT
 ;;                NIL  si cnf es UNSAT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
