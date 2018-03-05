@@ -73,13 +73,14 @@
 ;; EVALUA A : T si la expresion es un literal negativo, 
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		
 (defun negative-literal-p (x)
-	;; Tiene que ser una lista, compuesta por:
-	(if (listp x)
-		(and (eql (car x) +not+) 		;; Un simbolo de negacion
-		(positive-literal-p (cadr x))   ;; un literal positivo
-				(null (cddr x)))		;; y nada mas.
-		NIL))
+    ;; Tiene que ser una lista, compuesta por:
+    (if (listp x) (and (eql (car x) +not+)      ;; Un simbolo de negacion
+          (positive-literal-p (cadr x))     ;; un literal positivo
+                    (null (cddr x)))        ;; y nada mas
+     NIL))
+		
 
 ;; EJEMPLOS:
 (negative-literal-p '(~ p))        ; T
@@ -1177,14 +1178,14 @@
 	(not (or (member lambda K :test 'equal)
               (member (list +not+ lambda) K :test 'equal))))
               
-;; Devuelve el subconjunto de conj que no contienen ni ñambda ni ~lambda
+;; Devuelve el subconjunto de conj que no contienen ni lambda ni ~lambda
 (defun aux-extract-neutral (subconj conj lambda)
   (cond
     ((null conj)
      ; Si conj vacio, he terminado. Devuelvo subconj con el filtro
      subconj)
     ((not-contains-lambda lambda (first conj))
-     ; Si 1ª clausula de conj es neutra para lambda, aniado la clausula a subconj y repito
+     ; Si primera clausula de conj es neutra para lambda, aniado la clausula a subconj y repito
      (aux-extract-neutral (adjoin (first conj) subconj :test 'equal) (rest conj) lambda))
     (t
       ; Si no, no la aniado a subconj y repito
@@ -1241,7 +1242,7 @@
      ; Si no quedan clausulas q mirar en conj, ya he terminado: subconj contiene el filtro
      subconj)
     ((member elto (first conj) :test 'equal)
-     ; si 'elto pertenece a la 1ª clausula de conj, aniado clausula a subconj y repito
+     ; si 'elto pertenece a la primera clausula de conj, aniado clausula a subconj y repito
      (extract-clauses (adjoin (first conj) subconj :test 'equal) (rest conj) elto))
     (t
       ; si no, no aniado a subconj y repito

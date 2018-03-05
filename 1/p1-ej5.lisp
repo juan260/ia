@@ -20,8 +20,6 @@
 	(mapcar #'(lambda(n)
 				(cons n path))
 			  (rest (assoc node net))))
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (defun shortest-path (start end net)
@@ -36,25 +34,37 @@
 ;; De esta manera nunca hay caminos que formen un bucle infinito.
 ;;
 
-(defun filter (func list)
-	(unless (null list)
-	(if (funcall func (first list))
-		(cons (first list) (filter (rest list))))))
-
-
+;;;;
+;; Funcion auxiliar que mira si la lista recibida como
+;; primer argumento contiene el elemento recibido como segundo
+;; argumento
+;;;;
 (defun list-contains (lst elt)
 	(unless (null lst)
 		(or (eql (first lst) elt)
 			(list-contains (rest lst) elt))))
 
+
+;;;;
+;; Funcion auxiliar que dado un camino seguido hasta ahora,
+;; el nodo actual, y el grafo, devuelve una lista de los
+;; posibles siguientes caminos a seguir desde el nodo
+;; actual, siempre y cuando estos no esten repetidos.
+;;;;
 (defun new-paths-no-repetition (path node net)
-		(mapcar #'(lambda(n)
-					(cons n path))
-			  (filter #'(lambda(n)
-			  		(not (list-contains path n)))
-			  		(rest (assoc node net)))))
+		(mapcan #'(lambda(n)
+						;; Comprobamos que el camino seguido
+						;; hasta ahora no contiene el siguiente nodo
+						;; para evitar caminos con nodos repetidos
+					(and (not (list-contains path n)) 
+						(list (cons n path))))
+			  		(rest (assoc node net))))
 	
 	
+;;;;
+;; Funcion de busqueda en anchura sin caminos con 
+;; elementos repetidos.
+;;;;
 (defun bfs-improved (end queue net) 
 	(if (null queue) '() ;; No quedan listas en cola: hemos terminado
 		(let* ((path (first queue))
@@ -68,7 +78,11 @@
 				    (append (rest queue)
 						  (new-paths-no-repetition path node net))
 				    net)))))
-	
+				    
+;;;;
+;;	Funcion mejorada de la busqueda de mejor camino entre dos nodos
+;; mediante bfs-improved.
+;;;;
 (defun shortest-path-improved (start end net)
 	(bfs-improved end (list (list start)) net))
 	
