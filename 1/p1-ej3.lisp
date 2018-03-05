@@ -29,19 +29,6 @@
 			  
 ;;;;;;;;;;;;;;;;;;;;;;; EJERCICIO 3.3 ;;;;;;;;;;;;;;;;;;
 
-;; Recibe una lista y devuelve una lista de listas cada
-;; una de las cuales contiene uno de los elementos de la lista original
-;;
-;; INPUT:
-;; lst : lista a cortar
-;;
-;; OUTPUT: lista de listas cada una de las cuales tiene un elemento
-
-
-(defun cortar (lst)
-	(unless  (null lst)
-		(append (list (list(car lst))) (cortar (cdr lst)))))
-
 
 ;; Devuelve una lista resultado de añadir al principio de todas
 ;; las listas contenidas en lst el elemnto elt
@@ -73,8 +60,10 @@
 
 
 (defun combine-list-lsts (lst lsts)
-	(unless  (or (null lst) (null lsts))
-		(append (append-elt-lst (car lst) lsts) (combine-list-lsts (cdr lst) lsts))))
+	(unless (null lsts)
+	(if (null (cdr lst))
+		(append-elt-lst (car lst) lsts)
+		(append (append-elt-lst (car lst) lsts) (combine-list-lsts (cdr lst) lsts)))))
 	
 	
 ;; Función que calcula todas las posibles disposiciones de elementos
@@ -86,21 +75,11 @@
 ;;
 ;; OUTPUT: lista que contenga todas las combinaciones
 			
+
 (defun combine-list-of-lsts (lstolsts)
-	(print lstolsts)
-	(if (null (cdr lstolsts)) 
-		(cortar (car lstolsts))
-		(if (null (cddr lstolsts)) 
-			;; Las combina
-			(combine-lst-lst (car lstolsts) (cadr lstolsts))
-			;; Si no, la combina con el resultado de la recursión
-			(combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts))))))
 	
-	
-	
-	;; VERSION 2:
-(defun combine-list-of-lsts (lstolsts)
-    (if (null (car lstolsts))
-        '(NIL)
-        (combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts)))))
+    (if (null lstolsts)
+    	'(NIL)
+    	(unless (null (car lstolsts))
+        (combine-list-lsts (car lstolsts) (combine-list-of-lsts (cdr lstolsts))))))
 
