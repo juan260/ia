@@ -174,9 +174,8 @@
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wff-infix-p (x)
-    
   (unless (truth-value-p x)       ;; Por convenio los valores de verdad no 
-                                 ;; expresiones infijo
+                                 ;; son expresiones infijo
             
     (or (literal-p x)          ;; Un literal es FBF en formato infijo
         (and (listp x)         ;; En caso de que no sea un literal debe ser una lista
@@ -212,7 +211,7 @@
                 
                 ;; Si el primer elemento es una lista debe ser una expresion infijo
                 ;; y debe estar sucedida por un conector n-ario o binario como en
-                ;; el caso anterior, que as u vez debe estar sucedido por un literal 
+                ;; el caso anterior, que a su vez debe estar sucedido por un literal 
                 ;; o expresion infijo
                 ((listp (first x))
                     (or (and (n-ary-connector-p (caar x)) (null (cdar x)))
@@ -224,6 +223,7 @@
                                         (or (and (null (fourth x)) (wff-infix-p (third x)))
                                             (and (eql (fourth x) (second x)) (wff-infix-p (cddr x))))))))))))))
                             
+
 
 
 ;;
