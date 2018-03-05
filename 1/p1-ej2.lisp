@@ -36,8 +36,8 @@
               ((= 0 (funcall f a)) (list a))
               ((= 0 (funcall f b)) (list b))
               ((> tol (- b a)) (list medio))
-              ((>= 0 (* (funcall f a) (funcall f medio))) (bisect f a medio tol))
-              ((>= 0 (* (funcall f b) (funcall f medio))) (bisect f medio b tol))))))
+              ((>= 0 (* (funcall f a) (funcall f medio))) (bisect-aux f a medio tol))
+              ((>= 0 (* (funcall f b) (funcall f medio))) (bisect-aux f medio b tol))))))
                
 ;; Finds all the roots that are located between consecutive values of a list
 ;; of values

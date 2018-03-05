@@ -214,14 +214,13 @@
                 ;; el caso anterior, que a su vez debe estar sucedido por un literal 
                 ;; o expresion infijo
                 ((listp (first x))
-                    (or (and (n-ary-connector-p (caar x)) (null (cdar x)))
-                        (and (not (null (cdar x))) (wff-infix-p (car x))
+                        (and (wff-infix-p (car x))
                                 (or
                                     (if (binary-connector-p (second x))
                                         (and (null (cdddr x)) (wff-infix-p (third x))))
                                     (if (n-ary-connector-p (second x))
                                         (or (and (null (fourth x)) (wff-infix-p (third x)))
-                                            (and (eql (fourth x) (second x)) (wff-infix-p (cddr x))))))))))))))
+                                            (and (eql (fourth x) (second x)) (wff-infix-p (cddr x)))))))))))))
                             
 
 
@@ -240,8 +239,8 @@
 (wff-infix-p '( B => (A ^ C ^ D)))             ; T   
 (wff-infix-p '( B => (A ^ C)))             ; T 
 (wff-infix-p '( B ^ (A ^ C)))             ; T 
-(wff-infix-p '((p v (a => (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e)))  ;; T 
-(or (wff-infix-p nil)                     ; NIL
+(wff-infix-p '((p v (a => (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e))  ;; T 
+(not (or (wff-infix-p nil)                     ; NIL
 (wff-infix-p '(a ^))                     ; NIL
 (wff-infix-p '(^ a))                     ; NIL
 (wff-infix-p '(a))                     ; NIL
@@ -254,7 +253,7 @@
 (wff-infix-p '(A => B <=> C))               ;; NIL
 (wff-infix-p '( B => (A ^ C v D)))               ;; NIL   
 (wff-infix-p '( B ^ C v D ))                   ;; NIL 
-(wff-infix-p '((p v (a => e (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e))); NIL 
+(wff-infix-p '((p v (a => e (b ^ (~ c) ^ d))) ^ ((p <=> (~ q)) ^ p ) ^ e))))); NIL 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convierte FBF en formato prefijo a FBF en formato infijo
@@ -377,19 +376,24 @@
 ;; RECIBE   : FBF en formato prefijo 
 ;; EVALUA A : T si FBF es una clausula, NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;;
 ;; Funcion auxiliar que devuelve true si recibe como
 ;; argumento una lista de literales o nil
+;;;;
 (defun list-of-literals-or-nil (lst)
-    (or (null lst)
+    (or (null lst) ;; O el argumento de entrada es un NIL
+    ;; Comprobamos que el elemento actual es una lista y continuamos la recursion
         (and (literal-p (first lst)) (list-of-literals-or-nil (rest lst)))))
 
+;;;;
+;; Funcion principal
+;;;;
 (defun clause-p (wff)
      (and (listp wff)                      ;; Recibe una lista               
-           (if (eql (first wff) +or+)      ;; cuyo primer elemento es un or
+            (eql (first wff) +or+)      ;; cuyo primer elemento es un or
                ;; que va sucedido de una lista de literales o de nada
                ;; por ejemplo (v a b) es una clausula, pero (v) tambien
-                   (list-of-literals-or-nil (rest wff))))) 
+                   (list-of-literals-or-nil (rest wff))))
 
 
 ;;
@@ -398,8 +402,8 @@
 (and (clause-p '(v))             ;; T
 (clause-p '(v p))           ;; T
 (clause-p '(v (~ r)))       ;; T
-(clause-p '(v p q (~ r) s))) ;; T
-(or (clause-p NIL)                    ;; NIL
+(clause-p '(v p q (~ r) s)) ;; T
+(not (or (clause-p NIL)                    ;; NIL
 (clause-p 'p)                     ;; NIL
 (clause-p '(~ p))                 ;; NIL
 (clause-p NIL)                    ;; NIL
@@ -407,19 +411,20 @@
 (clause-p '((~ p)))               ;; NIL
 (clause-p '(^ a b q (~ r) s))     ;; NIL
 (clause-p '(v (^ a b) q (~ r) s)) ;; NIL
-(clause-p '(~ (v p q))))           ;; NIL
+(clause-p '(~ (v p q))))))        ;; NIL
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EJERCICIO 1.7
 ;; Predicado para determinar si una FBF esta en FNC  
 ;;
-;; RECIBE   : FFB en formato prefijo 
+;; RECIBE   : FBF en formato prefijo 
 ;; EVALUA A : T si FBF esta en FNC con conectores, 
 ;;            NIL en caso contrario. 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;
 ;; Funcion auxiliar que devuelve true en caso de recibir
 ;; como argumento una lista de clausulas o nil
+;;;;
 (defun list-of-clauses-or-nil-p (lst)
     (or (null lst)
         (and (clause-p (first lst)) 
