@@ -79,23 +79,25 @@
 (defparameter *planets* '(Avalon Davion Katril Kentares Mallory Proserpina Sirtis))
 
 (defparameter *white-holes* 
-	'((Avalon Mallory 6.4) (Avalon Proserpina 8.6) 
-	  (Kentares  Avalon 3) (Kentares Proserpina 7) (Kentares Katril 10)
-	  (Proserpina Avalon 8.6) (Proserpina Mallory 15) (Proserpina Davion 5)
-	  (Proserpina Sirtis 12)
-	  (Sirtis Proserpina 12) (Sirtis Davion 6)
-	  (Davion Sirtis 6) (Davion Proserpina 5)
-	  (Katril Davion 9) (Katril Mallory 10)
-	  (Mallory Katril 10) (Mallory Proserpina 15)))
+    '((Avalon Mallory 6.4) (Avalon Proserpina 8.6) 
+      (Kentares  Avalon 3) (Kentares Proserpina 7) (Kentares Katril 10)
+      (Proserpina Avalon 8.6) (Proserpina Mallory 15) (Proserpina Davion 5)
+      (Proserpina Sirtis 12)
+      (Sirtis Proserpina 12) (Sirtis Davion 6)
+      (Davion Sirtis 6) (Davion Proserpina 5)
+      (Katril Davion 9) (Katril Mallory 10)
+      (Mallory Katril 10) (Mallory Proserpina 15)))
 
 (defparameter *worm-holes*  
   '((Avalon Kentares 4) (Avalon Mallory 9)
-    (Davion Katril 5) (Davion Sirtis 8)  
-    (Kentares Avalon 4) (Kentares Proserpina 12)))
+
+    (Davion Katril 5) (Davion Sirtis 8) 
+    (Katril Sirtis 10) (Katril Mallory 5)
+    (Proserpina Sirtis 9) (Proserpina Mallory 11) (Proserpina Kentares 12)))
 
 (defparameter *sensors*
-	'((Sirtis 0) (Kaatril 9) (Proserpina 7) (Davion 5) (Kentares 14)
-	  (Mallory 12) (Avalon 15)))
+    '((Sirtis 0) (Katril 9) (Proserpina 7) (Davion 5) (Kentares 14)
+      (Mallory 12) (Avalon 15)))
 
 (defparameter *planet-origin* 'Mallory)
 (defparameter *planets-destination* '(Sirtis))
@@ -120,11 +122,19 @@
 ;;    The cost (a number) or NIL if the state is not in the sensor list
 ;;
 (defun f-h-galaxy (state sensors)
-  ...)
+    (unless 
+        (null sensors)
+        (if (equal (first (first sensors)) state)
+            ;; Si el primer elt de la sublista es el state, devuelvo
+            ;; el segundo elt de la sublista
+            (second (first sensors))
+            ;; Si no, sigo buscando en el resto de los sensores
+            (f-h-galaxy state (rest sensors)))))
 
 (f-h-galaxy 'Sirtis *sensors*) ;-> 0
 (f-h-galaxy 'Avalon *sensors*) ;-> 15
 (f-h-galaxy 'Earth  *sensors*) ;-> NIL
+(f-h-galaxy 'Proserpina *sensors*) ;-> 7
 
 
 ;;
@@ -138,21 +148,39 @@
 ;; BEGIN: Exercise 2 -- Navigation operators
 ;;
 
-(defun filterList (elt lstlsts &optional exceptions)
-	(unless (null lstlsts)
-    	(if (and (eql (caar lstlsts) elt) (null (member (cadar lstlsts) exceptions)))
-        	(cons (first lstlsts) (filterList elt (rest lstlsts)))
-        	(filterList elt (rest lstlsts)))))
+(defun filterList (elt lstlsts)
+    (unless (null lstlsts)
+        (if (eql (caar lstlsts) elt)
+            (cons (first lstlsts) (filterList elt (rest lstlsts)))
+            (filterList elt (rest lstlsts)))))
+
+
+(defun filterListWorn (elt lstlsts exceptions)
+    (unless (null lstlsts)
+        (if (and (eql (caar lstlsts) elt) (not (subset (cadar lstlsts) exceptions)))
+            (cons (first lstlsts) (filterListWorm elt (rest lstlsts) exceptions))
+            (filterListWorm elt (rest lstlsts) exceptions))))
 
 
 (defun navigate-holes (type state holes)
-	(mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
-	
+    (mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
+    
 (defun navigate-white-hole (state white-holes)
-  (navigate-holes 'navigate-white-hole state (filterList state white-holes)))
+    (navigate-holes 'navigate-white-hole state 
+    	(remove state white-holes :test #'(lambda(x y) (not (eql x (first y)))))))
 
 (defun navigate-worm-hole (state worm-holes planets-forbidden)
-  (navigat-holes 'navigate-worm-hole state (filterList state worm-holes planet-forbidden)))
+    (navigate-holes 'navigate-worm-hole state
+    	(mapcan :test #'(lambda(x y) 
+    		(cond 
+    			(eql (first y) x)
+    				(if (null (intersection 
+    				(list y)
+    			(eql (second y) x)
+    				(list (list x (first y) (third y)))
+    			(
+    		
+    		worm-holes)))
 
 
 (navigate-worm-hole 'Mallory *worm-holes* *planets-forbidden*)  ;-> 
