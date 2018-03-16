@@ -91,7 +91,7 @@
 (defparameter *worm-holes*  
   '((Avalon Kentares 4) (Avalon Mallory 9)
     (Davion Katril 5) (Davion Sirtis 8)  
-    (Kentares Avalon 4) (Kentares Proserpina 12) ...))
+    (Kentares Avalon 4) (Kentares Proserpina 12)))
 
 (defparameter *sensors*
 	'((Sirtis 0) (Kaatril 9) (Proserpina 7) (Davion 5) (Kentares 14)
@@ -138,12 +138,21 @@
 ;; BEGIN: Exercise 2 -- Navigation operators
 ;;
 
+(defun filterList (elt lstlsts &optional exceptions)
+	(unless (null lstlsts)
+    	(if (and (eql (caar lstlsts) elt) (null (member (cadar lstlsts) exceptions)))
+        	(cons (first lstlsts) (filterList elt (rest lstlsts)))
+        	(filterList elt (rest lstlsts)))))
 
+
+(defun navigate-holes (type state holes)
+	(mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
+	
 (defun navigate-white-hole (state white-holes)
-  ...)
+  (navigate-holes 'navigate-white-hole state (filterList state white-holes)))
 
 (defun navigate-worm-hole (state worm-holes planets-forbidden)
-  ...)
+  (navigat-holes 'navigate-worm-hole state (filterList state worm-holes planet-forbidden)))
 
 
 (navigate-worm-hole 'Mallory *worm-holes* *planets-forbidden*)  ;-> 
