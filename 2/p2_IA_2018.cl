@@ -90,11 +90,12 @@
 
 (defparameter *worm-holes*  
   '((Avalon Kentares 4) (Avalon Mallory 9)
-    (Davion Katril 5) (Davion Sirtis 8)  
-    (Kentares Avalon 4) (Kentares Proserpina 12) ...))
+    (Davion Katril 5) (Davion Sirtis 8) 
+	(Katril Sirtis 10) (Katril Mallory 5)
+	(Proserpina Sirtis 9) (Proserpina Mallory 11) (Proserpina Kentares 12)))
 
 (defparameter *sensors*
-	'((Sirtis 0) (Kaatril 9) (Proserpina 7) (Davion 5) (Kentares 14)
+	'((Sirtis 0) (Katril 9) (Proserpina 7) (Davion 5) (Kentares 14)
 	  (Mallory 12) (Avalon 15)))
 
 (defparameter *planet-origin* 'Mallory)
@@ -120,11 +121,19 @@
 ;;    The cost (a number) or NIL if the state is not in the sensor list
 ;;
 (defun f-h-galaxy (state sensors)
-  ...)
+	(unless 
+		(null sensors)
+		(if (equal (first (first sensors)) state)
+			;; Si el primer elt de la sublista es el state, devuelvo
+			;; el segundo elt de la sublista
+			(second (first sensors))
+			;; Si no, sigo buscando en el resto de los sensores
+			(f-h-galaxy state (rest sensors)))))
 
 (f-h-galaxy 'Sirtis *sensors*) ;-> 0
 (f-h-galaxy 'Avalon *sensors*) ;-> 15
 (f-h-galaxy 'Earth  *sensors*) ;-> NIL
+(f-h-galaxy 'Proserpina *sensors*) ;-> 7
 
 
 ;;
