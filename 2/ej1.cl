@@ -56,3 +56,14 @@
 
 (defun f-h-galaxy (state sensors)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;
+;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun navigate-white-hole (state white-holes) 
+    
+    )
+    
