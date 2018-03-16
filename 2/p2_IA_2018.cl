@@ -184,9 +184,13 @@
 ;;
 ;; BEGIN: Exercise 3 -- Goal test
 ;;
+(defun all-mandatory-visited (node planets-mandatory)
+    )
 
 (defun f-goal-test-galaxy (node planets-destination planets-mandatory) 
-  ...)
+  (and 
+    (member (node-state node) planets-destination :test #'equal)
+    (all-mandatory-visited node planets-mandatory)))
 
 
 (defparameter node-01
