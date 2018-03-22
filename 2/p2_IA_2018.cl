@@ -150,39 +150,40 @@
 ;; BEGIN: Exercise 2 -- Navigation operators
 ;;
 
-(defun filterList (elt lstlsts)
-    (unless (null lstlsts)
-        (if (eql (caar lstlsts) elt)
-            (cons (first lstlsts) (filterList elt (rest lstlsts)))
-            (filterList elt (rest lstlsts)))))
-
-
-(defun filterListWorn (elt lstlsts exceptions)
-    (unless (null lstlsts)
-        (if (and (eql (caar lstlsts) elt) (not (subset (cadar lstlsts) exceptions)))
-            (cons (first lstlsts) (filterListWorm elt (rest lstlsts) exceptions))
-            (filterListWorm elt (rest lstlsts) exceptions))))
-
-
+;;;;
+;; Funcion auxiliar que a partir de un estado y una lista de agujeros genera acciones
+;; resutantes de moverse del estado actual al segundo elemento de cada agujero
+;; asumiendo que es el destinoy que se puede navegar a el. El argumento type
+;; indicará el nombre que sele da a la accion (white hole o black hole)
+;;;;
 (defun navigate-holes (type state holes)
     (mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
     
+;;;;
+;; Devuelve una lista de acciones que se pueden realizar desde el estado actual hacia
+;; los agujeros blancos de la lista
+;;;;
 (defun navigate-white-hole (state white-holes)
     (navigate-holes 'navigate-white-hole state 
-    	(remove state white-holes :test #'(lambda(x y) (not (eql x (first y)))))))
+        (remove state white-holes :test #'(lambda(x y) (not (eql x (first y)))))))
 
+
+;;;;
+;; Devuelve una lista con las acciones que se pueden realizar al atravesar agujeros
+;; negros desde el estado actual. Descarta los panetas prohibidos.
+;;;;    
 (defun navigate-worm-hole (state worm-holes planets-forbidden)
     (navigate-holes 'navigate-worm-hole state
-    	(mapcan #'(lambda(y) 
-    		(cond 
-    			((eql (first y) state)
-    				(if (null (member (second y) planets-forbidden)) 
-    					(list y)))
-    			((eql (second y) state)
-    				(if (null (member (first y) planets-forbidden))
-    				(list (list state (first y) (third y)))))))
-    		
-    		worm-holes)))
+        (mapcan #'(lambda(y) 
+            (cond 
+                ((eql (first y) state)
+                    (if (null (member (second y) planets-forbidden)) 
+                        (list y)))
+                ((eql (second y) state)
+                    (if (null (member (first y) planets-forbidden))
+                    (list (list state (first y) (third y)))))))
+            
+            worm-holes)))
 
 
 (navigate-worm-hole 'Mallory *worm-holes* *planets-forbidden*)  ;-> 
@@ -286,7 +287,7 @@
 
 ;; FUNCION AUXILIAR
 
-;; Devuelve true si los planetas obligstorios que quedan por visitar a node-1
+;; Devuelve true si los planetas obligatorios que quedan por visitar a node-1
 ;; son los mismos que quedan por visitar a node-2
 ;; null-XOR nos permite comprobar si 2 conjuntos son iguales
 
@@ -362,16 +363,28 @@
 ;;
 ;; BEGIN Exercise 5: Expand node
 ;;
+;;;
 
-(defun expand-operator (node operator)
-  
-  )
+;;;;;; TODO: problema: como metemos planetas prohibidos?
+
+(defun expand-operator (node operator problem)
+    (mapcar #'(lambda (actn) 
+            (make-node 
+                :state (action-final actn) :parent node
+                :action actn :depth (+ (node-depth node) 1) 
+                :g (+ (node-g node) (action-cost actn))
+                :h (funcall (problem-f-h problem)
+                            (action-final actn))
+                :f (+ (+ (node-g node) (action-cost actn)) 
+                    (funcall (problem-f-h problem)
+                            (action-final actn)))))
+        (funcall operator node)))
 
 
 
 (defun expand-node (node problem)
   (mapcan 
-    #'(lambda (operator) (expand-operator node operator)) 
+    #'(lambda (operator) (expand-operator node operator problem)) 
     (problem-operators problem)))
 
 
@@ -425,9 +438,32 @@
 ;;;
 ;;;  BEGIN Exercise 6 -- Node list management
 ;;;  
-(defun insert-nodes-strategy (nodes lst-nodes strategy)
-  ...)
 
+(defun insert-node-strategy (node lst-nodes strategy)
+    (unless (null lst-nodes)
+        (if (funcall (strategy-node-compare-p strategy) node (first lst-nodes))
+            (cons node lst-nodes)
+            (cons (first lst-nodes) 
+                (insert-node-strategy node (rest lst-nodes) strategy)))))
+
+
+(defun insert-nodes-strategy (nodes lst-nodes strategy)
+    (if (null nodes) 
+        lst-nodes
+        (insert-node-strategy (first nodes) 
+            (insert-nodes-strategy (rest nodes) lst-nodes strategy)
+            strategy)))
+
+
+(defun node-g-<= (node-1 node-2)
+    (<= (node-g node-1)
+        (node-g node-2)))
+        
+(defparameter *uniform-cost*
+    (make-strategy
+        :name 'uniform-cost
+        :node-compare-p #'node-g-<=))
+    
 
 
 (defparameter node-01
@@ -442,38 +478,73 @@
 ;;;         :PARENT NIL 
 ;;;         :ACTION NIL 
 ;;;         :DEPTH 0 :G 0 :H 0 :F 0)
+
+
+
+
+
 ;;; #S(NODE :STATE PROSERPINA 
 ;;;         :PARENT NIL 
 ;;;         :ACTION NIL 
 ;;;         :DEPTH 12 :G 10 :H 0 :F 20)
+
+
+
+
 ;;; #S(NODE :STATE AVALON
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
+
+
+
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL AVALON :COST 8.6)
 ;;;         :DEPTH 13    :G 18.6    :H 15    :F 33.6)
+
+
+
+
 ;;; #S(NODE :STATE DAVION
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
+
+
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL DAVION :COST 5)
 ;;;         :DEPTH 13    :G 15      :H 5     :F 20)
+
+
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 15)
 ;;;         :DEPTH 13    :G 25      :H 12    :F 37)
+
+
+
+
+
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 0     :F 22)
+
+
+
 ;;; #S(NODE :STATE KENTARES
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL KENTARES :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 14    :F 36)
+
+
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 11)
 ;;;         :DEPTH 13    :G 21      :H 12    :F 33)
+
+
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
 ;;;         :DEPTH 13    :G 19      :H 0     :F 19)
+
+
+
 ;;; #S(NODE :STATE KENTARES 
 ;;;         :PARENT NIL 
 ;;;         :ACTION NIL 
@@ -527,8 +598,8 @@
 
 
 ;;;(insert-nodes-strategy '(4 8 6 2) '(1 3 5 7)
-;;;		(make-strategy 	:name 'simple
-;;;					:node-compare-p #'<));-> (1 2 3 4 5 6 7)
+;;;        (make-strategy     :name 'simple
+;;;                    :node-compare-p #'<));-> (1 2 3 4 5 6 7)
  
 
 
