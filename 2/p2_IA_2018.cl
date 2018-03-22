@@ -173,14 +173,14 @@
 
 (defun navigate-worm-hole (state worm-holes planets-forbidden)
     (navigate-holes 'navigate-worm-hole state
-    	(mapcan :test #'(lambda(x y) 
+    	(mapcan #'(lambda(y) 
     		(cond 
-    			(eql (first y) x)
-    				(if (null (intersection 
-    				(list y)
-    			(eql (second y) x)
-    				(list (list x (first y) (third y)))
-    			(
+    			((eql (first y) state)
+    				(if (null (member (second y) planets-forbidden)) 
+    					(list y)))
+    			((eql (second y) state)
+    				(if (null (member (first y) planets-forbidden))
+    				(list (list state (first y) (third y)))))))
     		
     		worm-holes)))
 
