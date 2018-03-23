@@ -633,8 +633,14 @@
 ;;
 
 (defparameter *A-star*
-  (make-strategy ...))
+  (make-strategy
+    :name 'A-star
+    :node-compare-p #'node-f-<=))
 
+;; A* explora nodos en funcion de su coste f = g+h
+(defun node-f-<= (node-1 node-2)
+  (<= (node-f node-1)
+      (node-f node-2)))
 ;;
 ;; END: Exercise 7 -- Definition of the A* strategy
 ;;
@@ -646,8 +652,19 @@
 ;;; 
 ;;;    BEGIN Exercise 8: Search algorithm
 ;;;
+(defun graph-search-rec (problem strategy open)
+  (let 
+    ((first (first open))
+     (test (problem:f-search-state-equal problem)))
+    (unless
+      (null open)
+      ())))
+
 (defun graph-search (problem strategy)
-  ...)
+  (graph-search-rec
+    problem
+    strategy
+    (list (problem:initial-state problem)))
 
 
 ;
