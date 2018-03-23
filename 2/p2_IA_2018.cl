@@ -440,12 +440,26 @@
 ;;;  
 
 (defun insert-node-strategy (node lst-nodes strategy)
-    (unless (null lst-nodes)
-        (if (funcall (strategy-node-compare-p strategy) node (first lst-nodes))
+    (if (null lst-nodes)
+        (list node)
+        (if (funcall (strategy-node-compare-p strategy) 
+                    node 
+                    (first lst-nodes))
             (cons node lst-nodes)
             (cons (first lst-nodes) 
                 (insert-node-strategy node (rest lst-nodes) strategy)))))
 
+
+(defun insert-node-strategy (node lst-nodes strategy)
+    (cond ((null lst-nodes)
+        (list node))
+        
+        ((funcall (strategy-node-compare-p strategy) 
+                    node
+                    (first lst-nodes))
+            (cons node lst-nodes))
+        (t (cons (first lst-nodes) 
+                (insert-node-strategy node (rest lst-nodes) strategy)))))
 
 (defun insert-nodes-strategy (nodes lst-nodes strategy)
     (if (null nodes) 
@@ -666,13 +680,19 @@
 ;;;    BEGIN Exercise 9: Solution path / action sequence
 ;;;
 (defun solution-path (node)
-  ...)
+    (if (null (node-parent node))
+        (list (node-name node))
+        (cons (node-name node)
+              (solution-path (node-parent node))))))
 
 (solution-path nil) ;;; -> NIL 
 (solution-path (a-star-search *galaxy-M35*))  ;;;-> (MALLORY ...)
 
-(defun action-sequence-aux (node)
-  ...)
+(defun action-sequence (node)
+        (if (null (node-parent node))
+        (list (node-action node))
+        (cons (node-action node)
+              (action-secuence (node-parent node))))))
 
 (action-sequence (a-star-search *galaxy-M35*))
 ;;; ->
@@ -695,7 +715,7 @@
    :node-compare-p #'depth-first-node-compare-p))
 
 (defun depth-first-node-compare-p (node-1 node-2)
-  ...)
+  (>= (node-depth node-1) (node-depth node-2)))
 
 (solution-path (graph-search *galaxy-M35* *depth-first*))
 ;;; -> (MALLORY ... )
@@ -706,7 +726,7 @@
    :node-compare-p #'breadth-first-node-compare-p))
 
 (defun breadth-first-node-compare-p (node-1 node-2)
-  ...)
+  (<= (node-depth node-1) (node-depth node-2)))
 
 (solution-path (graph-search *galaxy-M35* *breadth-first*))
 ;; -> (MALLORY ... )
