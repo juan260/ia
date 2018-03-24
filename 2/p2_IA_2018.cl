@@ -165,7 +165,10 @@
 ;;;;
 (defun navigate-white-hole (state white-holes)
     (navigate-holes 'navigate-white-hole state 
-        (remove state white-holes :test #'(lambda(x y) (not (eql x (first y)))))))
+        (remove state 
+        		white-holes 
+        		:test #'(lambda(x y) 
+        		(not (eql x (first y)))))))
 
 
 ;;;;
@@ -177,11 +180,15 @@
         (mapcan #'(lambda(y) 
             (cond 
                 ((eql (first y) state)
-                    (if (null (member (second y) planets-forbidden)) 
+                    (if (null (member (second y) 
+                    				  planets-forbidden)) 
                         (list y)))
                 ((eql (second y) state)
-                    (if (null (member (first y) planets-forbidden))
-                    (list (list state (first y) (third y)))))))
+                    (if (null (member (first y) 
+                    				  planets-forbidden))
+                    (list (list state 
+                    			(first y) 
+                    			(third y)))))))
             
             worm-holes)))
 
