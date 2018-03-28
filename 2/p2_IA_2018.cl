@@ -154,7 +154,7 @@
 ;; Funcion auxiliar que a partir de un estado y una lista de agujeros genera acciones
 ;; resutantes de moverse del estado actual al segundo elemento de cada agujero
 ;; asumiendo que es el destinoy que se puede navegar a el. El argumento type
-;; indicará el nombre que sele da a la accion (white hole o black hole)
+;; indicará el nombre que se le da a la accion (white hole o black hole)
 ;;;;
 (defun navigate-holes (type state holes)
     (mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
@@ -166,9 +166,9 @@
 (defun navigate-white-hole (state white-holes)
     (navigate-holes 'navigate-white-hole state 
         (remove state 
-        		white-holes 
-        		:test #'(lambda(x y) 
-        		(not (eql x (first y)))))))
+                white-holes 
+                :test #'(lambda(x y) 
+                (not (eql x (first y)))))))
 
 
 ;;;;
@@ -181,14 +181,14 @@
             (cond 
                 ((eql (first y) state)
                     (if (null (member (second y) 
-                    				  planets-forbidden)) 
+                                      planets-forbidden)) 
                         (list y)))
                 ((eql (second y) state)
                     (if (null (member (first y) 
-                    				  planets-forbidden))
+                                      planets-forbidden))
                     (list (list state 
-                    			(first y) 
-                    			(third y)))))))
+                                (first y) 
+                                (third y)))))))
             
             worm-holes)))
 
