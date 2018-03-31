@@ -372,7 +372,6 @@
 ;;
 ;;;
 
-;;;;;; TODO: problema: como metemos planetas prohibidos?
 
 (defun expand-operator (node operator problem)
     (mapcar #'(lambda (actn) 
@@ -659,25 +658,61 @@
 ;;; 
 ;;;    BEGIN Exercise 8: Search algorithm
 ;;;
-(defun graph-search-rec (problem strategy open)
+(defun graph-search-rec (problem strategy open closed)
   (let 
     ((first (first open))
-     (test (problem:f-search-state-equal problem)))
-    (unless
-      (null open)
-      ())))
+     (test (problem-f-goal-test problem))
+     (found (find
+              first
+              closed 
+              :test '(problem-f-search-state-equal problem))))
+    (cond
+      ; No quedan nodos donde probar: terminamos
+      ((null open) NIL)
+      ; Hemos alcanzado objetivo: terminamos
+      ((funcall test first) first)
+      ; Si el nodo no esta en cerrados o si que
+      ; esta pero 'mejora' el valor g del cerrado:
+      ; exploracion + llamada recursiva
+      ((or
+         (null found)
+         (< (node-g found) (node-g first)))
+       ;Llamada recursiva
+       (graph-search-rec
+         ;El problema y la estrategia no cambian
+         problem
+         strategy
+         ;A los abiertos hay que retirar el nodo explorado
+         ;y añadir todos los que resultan de explorarlo
+         (insert-nodes-strategy 
+           (expand-node first problem)
+           (rest open)
+           strategy)
+         ;Y a los cerrados hay que añadir el explorado
+         (cons first closed)))
+      ; En otro caso: llamada recursiva sin explorar
+      (T
+        (graph-search-rec
+          problem
+          strategy
+          (rest open)
+          closed)))))
 
 (defun graph-search (problem strategy)
   (graph-search-rec
     problem
     strategy
-    (list (problem:initial-state problem)))
+    (list (problem-initial-state problem))
+    NIL))
 
 
 ;
 ;  Solve a problem using the A* strategy
 ;
-(defun a-star-search (problem)...)
+(defun a-star-search (problem)
+  (graph-search 
+    problem
+    *A-star*))
 
 
 (graph-search *galaxy-M35* *A-star*);->
