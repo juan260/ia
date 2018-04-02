@@ -344,7 +344,7 @@
    :states               *planets*          
    :initial-state        *planet-origin*
    :f-h                  #'(lambda (state) (f-h-galaxy state *sensors*))
-   :f-goal-test          #'(lambda (node)  (f-goal-test 
+   :f-goal-test          #'(lambda (node)  (f-goal-test-galaxy 
                                              node
                                              *planets-destination*
                                              *planets-mandatory*))
@@ -614,16 +614,16 @@
 ;; us which nodes should be analyzed first. In the A* strategy, the first 
 ;; node to be analyzed is the one with the smallest value of g+h
 ;;
-
+;; A* explora nodos en funcion de su coste f = g+h
+(defun node-f-<= (node-1 node-2)
+  (<= (node-f node-1)
+      (node-f node-2)))
+      
 (defparameter *A-star*
   (make-strategy
     :name 'A-star
     :node-compare-p #'node-f-<=))
 
-;; A* explora nodos en funcion de su coste f = g+h
-(defun node-f-<= (node-1 node-2)
-  (<= (node-f node-1)
-      (node-f node-2)))
 ;;
 ;; END: Exercise 7 -- Definition of the A* strategy
 ;;
@@ -635,25 +635,81 @@
 ;;; 
 ;;;    BEGIN Exercise 8: Search algorithm
 ;;;
-(defun graph-search-rec (problem strategy open)
-  (let 
-    ((first (first open))
-     (test (problem:f-search-state-equal problem)))
-    (unless
-      (null open)
-      ())))
+; OPCION 1
+            (find
+              frst
+              closed 
+              :test #'(lambda (x y) 
+                              (funcall
+                                (problem-f-search-state-equal problem)
+                                x
+                                y)))
+; OPCION 2
+            (find
+              frst
+              closed 
+              :test '(problem-f-search-state-equal problem))
+
+(defun graph-search-rec (problem strategy open closed)
+  (let* 
+    ((frst (first open))
+     (test (problem-f-goal-test problem))
+     (found (find
+              frst
+              closed 
+              :test #'(lambda (x y) 
+                              (funcall
+                                (problem-f-search-state-equal problem)
+                                x
+                                y)))))
+    (cond
+      ; No quedan nodos donde probar: terminamos
+      ((null open) NIL)
+      ; Hemos alcanzado objetivo: terminamos
+      ((funcall test frst) frst)
+      ; Si el nodo no esta en cerrados o si que
+      ; esta pero 'mejora' el valor g del cerrado:
+      ; exploracion + llamada recursiva
+      ((or
+         (null found)
+         (< (node-g found) (node-g frst)))
+       ;Llamada recursiva
+       (graph-search-rec
+         ;El problema y la estrategia no cambian
+         problem
+         strategy
+         ;A los abiertos hay que retirar el nodo explorado
+         ;y añadir todos los que resultan de explorarlo
+         (insert-nodes-strategy 
+           (expand-node frst problem)
+           (rest open)
+           strategy)
+         ;Y a los cerrados hay que añadir el explorado
+         (cons frst closed)))
+      ; En otro caso: llamada recursiva sin explorar
+      (T
+        (graph-search-rec
+          problem
+          strategy
+          (rest open)
+          closed)))))
 
 (defun graph-search (problem strategy)
   (graph-search-rec
     problem
     strategy
-    (list (problem:initial-state problem)))
+    (list 
+      (make-node :state (problem-initial-state problem)))
+    NIL))
 
 
 ;
 ;  Solve a problem using the A* strategy
 ;
-(defun a-star-search (problem)...)
+(defun a-star-search (problem)
+  (graph-search 
+    problem
+    *A-star*))
 
 
 (graph-search *galaxy-M35* *A-star*);->
@@ -681,9 +737,9 @@
 ;;;
 (defun solution-path (node)
     (if (null (node-parent node))
-        (list (node-name node))
-        (cons (node-name node)
-              (solution-path (node-parent node))))))
+        (list (node-state node))
+        (append (solution-path (node-parent node))
+              (list (node-state node)))))
 
 (solution-path nil) ;;; -> NIL 
 (solution-path (a-star-search *galaxy-M35*))  ;;;-> (MALLORY ...)
@@ -691,8 +747,8 @@
 (defun action-sequence (node)
         (if (null (node-parent node))
         (list (node-action node))
-        (cons (node-action node)
-              (action-secuence (node-parent node)))))
+        (append (action-sequence (node-parent node))
+              (list (node-action node)))))
 
 (action-sequence (a-star-search *galaxy-M35*))
 ;;; ->
@@ -709,24 +765,28 @@
 ;;;    BEGIN Exercise 10: depth-first / breadth-first
 ;;;
 
+(defun depth-first-node-compare-p (node-1 node-2)
+  (>= (node-depth node-1) (node-depth node-2)))
+
 (defparameter *depth-first*
   (make-strategy
    :name 'depth-first
    :node-compare-p #'depth-first-node-compare-p))
 
-(defun depth-first-node-compare-p (node-1 node-2)
-  (>= (node-depth node-1) (node-depth node-2)))
+
 
 (solution-path (graph-search *galaxy-M35* *depth-first*))
 ;;; -> (MALLORY ... )
+
+(defun breadth-first-node-compare-p (node-1 node-2)
+  (<= (node-depth node-1) (node-depth node-2)))
 
 (defparameter *breadth-first*
   (make-strategy
    :name 'breadth-first
    :node-compare-p #'breadth-first-node-compare-p))
 
-(defun breadth-first-node-compare-p (node-1 node-2)
-  (<= (node-depth node-1) (node-depth node-2)))
+
 
 (solution-path (graph-search *galaxy-M35* *breadth-first*))
 ;; -> (MALLORY ... )
