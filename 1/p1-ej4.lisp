@@ -801,7 +801,7 @@
     (let ((firstEl (first cnf)))
     (cond ((n-ary-connector-p firstEl)      ;; Si el argumento de entrada
                                             ;; es una expresion n-aria 
-                                            ;; eliminamos conectoresde todos
+                                            ;; eliminamos conectores de todos
                                             ;; sus operandos
                 (eliminate-connectors (rest cnf)))
         ((listp firstEl)                    ;; Si es una expresion elimino sus conectores
@@ -890,8 +890,8 @@
 (defun eliminate-repeated-literals (k)
     (unless (null k)
         (if (search-literal-p (rest k) (first k))   ;; Busco el primer
-                                                    ;; elemento en el resto.
-            (eliminate-repeated-literals (rest k))  ;; Si esta continuo la
+                                                    ;; elemento de la lista en el resto.
+            (eliminate-repeated-literals (rest k))  ;; Si esta, continuo la
                                                     ;; recursion sin añadirlo.
                                                     ;; Si no esta repetido, lo añado 
                                         ;; a la lista que devolvere al final.

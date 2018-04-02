@@ -372,7 +372,6 @@
 ;;
 ;;;
 
-
 (defun expand-operator (node operator problem)
     (mapcar #'(lambda (actn) 
             (make-node 
@@ -508,19 +507,11 @@
 ;;;         :ACTION NIL 
 ;;;         :DEPTH 12 :G 10 :H 0 :F 20)
 
-
-
-
 ;;; #S(NODE :STATE AVALON
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 
-
-
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL AVALON :COST 8.6)
 ;;;         :DEPTH 13    :G 18.6    :H 15    :F 33.6)
-
-
-
 
 ;;; #S(NODE :STATE DAVION
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
@@ -529,42 +520,28 @@
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL DAVION :COST 5)
 ;;;         :DEPTH 13    :G 15      :H 5     :F 20)
 
-
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 15)
 ;;;         :DEPTH 13    :G 25      :H 12    :F 37)
 
-
-
-
-
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 0     :F 22)
-
-
-
 ;;; #S(NODE :STATE KENTARES
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL KENTARES :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 14    :F 36)
-
-
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 11)
 ;;;         :DEPTH 13    :G 21      :H 12    :F 33)
 
-
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
 ;;;         :DEPTH 13    :G 19      :H 0     :F 19)
-
-
-
 ;;; #S(NODE :STATE KENTARES 
 ;;;         :PARENT NIL 
 ;;;         :ACTION NIL 
@@ -767,9 +744,9 @@
 ;;;
 (defun solution-path (node)
     (if (null (node-parent node))
-        (list (node-name node))
-        (cons (node-name node)
-              (solution-path (node-parent node))))))
+        (list (node-state node))
+        (append (solution-path (node-parent node))
+              (list (node-state node)))))
 
 (solution-path nil) ;;; -> NIL 
 (solution-path (a-star-search *galaxy-M35*))  ;;;-> (MALLORY ...)
@@ -777,8 +754,8 @@
 (defun action-sequence (node)
         (if (null (node-parent node))
         (list (node-action node))
-        (cons (node-action node)
-              (action-secuence (node-parent node))))))
+        (append (action-sequence (node-parent node))
+              (list (node-action node)))))
 
 (action-sequence (a-star-search *galaxy-M35*))
 ;;; ->
@@ -795,24 +772,28 @@
 ;;;    BEGIN Exercise 10: depth-first / breadth-first
 ;;;
 
+(defun depth-first-node-compare-p (node-1 node-2)
+  (>= (node-depth node-1) (node-depth node-2)))
+
 (defparameter *depth-first*
   (make-strategy
    :name 'depth-first
    :node-compare-p #'depth-first-node-compare-p))
 
-(defun depth-first-node-compare-p (node-1 node-2)
-  (>= (node-depth node-1) (node-depth node-2)))
+
 
 (solution-path (graph-search *galaxy-M35* *depth-first*))
 ;;; -> (MALLORY ... )
+
+(defun breadth-first-node-compare-p (node-1 node-2)
+  (<= (node-depth node-1) (node-depth node-2)))
 
 (defparameter *breadth-first*
   (make-strategy
    :name 'breadth-first
    :node-compare-p #'breadth-first-node-compare-p))
 
-(defun breadth-first-node-compare-p (node-1 node-2)
-  (<= (node-depth node-1) (node-depth node-2)))
+
 
 (solution-path (graph-search *galaxy-M35* *breadth-first*))
 ;; -> (MALLORY ... )
