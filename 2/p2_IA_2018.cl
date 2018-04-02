@@ -372,8 +372,6 @@
 ;;
 ;;;
 
-;;;;;; TODO: problema: como metemos planetas prohibidos?
-
 (defun expand-operator (node operator problem)
     (mapcar #'(lambda (actn) 
             (make-node 
@@ -509,19 +507,11 @@
 ;;;         :ACTION NIL 
 ;;;         :DEPTH 12 :G 10 :H 0 :F 20)
 
-
-
-
 ;;; #S(NODE :STATE AVALON
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 
-
-
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL AVALON :COST 8.6)
 ;;;         :DEPTH 13    :G 18.6    :H 15    :F 33.6)
-
-
-
 
 ;;; #S(NODE :STATE DAVION
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
@@ -530,42 +520,28 @@
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL DAVION :COST 5)
 ;;;         :DEPTH 13    :G 15      :H 5     :F 20)
 
-
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 15)
 ;;;         :DEPTH 13    :G 25      :H 12    :F 37)
 
-
-
-
-
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 0     :F 22)
-
-
-
 ;;; #S(NODE :STATE KENTARES
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL KENTARES :COST 12)
 ;;;         :DEPTH 13    :G 22      :H 14    :F 36)
-
-
 ;;; #S(NODE :STATE MALLORY
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 11)
 ;;;         :DEPTH 13    :G 21      :H 12    :F 33)
 
-
 ;;; #S(NODE :STATE SIRTIS
 ;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
 ;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
 ;;;         :DEPTH 13    :G 19      :H 0     :F 19)
-
-
-
 ;;; #S(NODE :STATE KENTARES 
 ;;;         :PARENT NIL 
 ;;;         :ACTION NIL 
@@ -716,7 +692,7 @@
         (if (null (node-parent node))
         (list (node-action node))
         (cons (node-action node)
-              (action-secuence (node-parent node))))))
+              (action-secuence (node-parent node)))))
 
 (action-sequence (a-star-search *galaxy-M35*))
 ;;; ->
