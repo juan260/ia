@@ -344,7 +344,7 @@
    :states               *planets*          
    :initial-state        *planet-origin*
    :f-h                  #'(lambda (state) (f-h-galaxy state *sensors*))
-   :f-goal-test          #'(lambda (node)  (f-goal-test 
+   :f-goal-test          #'(lambda (node)  (f-goal-test-galaxy 
                                              node
                                              *planets-destination*
                                              *planets-mandatory*))
@@ -637,16 +637,16 @@
 ;; us which nodes should be analyzed first. In the A* strategy, the first 
 ;; node to be analyzed is the one with the smallest value of g+h
 ;;
-
+;; A* explora nodos en funcion de su coste f = g+h
+(defun node-f-<= (node-1 node-2)
+  (<= (node-f node-1)
+      (node-f node-2)))
+      
 (defparameter *A-star*
   (make-strategy
     :name 'A-star
     :node-compare-p #'node-f-<=))
 
-;; A* explora nodos en funcion de su coste f = g+h
-(defun node-f-<= (node-1 node-2)
-  (<= (node-f node-1)
-      (node-f node-2)))
 ;;
 ;; END: Exercise 7 -- Definition of the A* strategy
 ;;
@@ -658,25 +658,40 @@
 ;;; 
 ;;;    BEGIN Exercise 8: Search algorithm
 ;;;
+; OPCION 1
+            (find
+              frst
+              closed 
+              :test #'(lambda (x y) 
+                              (funcall
+                                (problem-f-search-state-equal problem)
+                                x
+                                y)))
+; OPCION 2
+            (find
+              frst
+              closed 
+              :test '(problem-f-search-state-equal problem))
+
 (defun graph-search-rec (problem strategy open closed)
-  (let 
-    ((first (first open))
+  (let* 
+    ((frst (first open))
      (test (problem-f-goal-test problem))
      (found (find
-              first
+              frst
               closed 
               :test '(problem-f-search-state-equal problem))))
     (cond
       ; No quedan nodos donde probar: terminamos
       ((null open) NIL)
       ; Hemos alcanzado objetivo: terminamos
-      ((funcall test first) first)
+      ((funcall test frst) frst)
       ; Si el nodo no esta en cerrados o si que
       ; esta pero 'mejora' el valor g del cerrado:
       ; exploracion + llamada recursiva
       ((or
          (null found)
-         (< (node-g found) (node-g first)))
+         (< (node-g found) (node-g frst)))
        ;Llamada recursiva
        (graph-search-rec
          ;El problema y la estrategia no cambian
@@ -685,11 +700,11 @@
          ;A los abiertos hay que retirar el nodo explorado
          ;y añadir todos los que resultan de explorarlo
          (insert-nodes-strategy 
-           (expand-node first problem)
+           (expand-node frst problem)
            (rest open)
            strategy)
          ;Y a los cerrados hay que añadir el explorado
-         (cons first closed)))
+         (cons frst closed)))
       ; En otro caso: llamada recursiva sin explorar
       (T
         (graph-search-rec
