@@ -680,7 +680,11 @@
      (found (find
               frst
               closed 
-              :test '(problem-f-search-state-equal problem))))
+              :test #'(lambda (x y) 
+                              (funcall
+                                (problem-f-search-state-equal problem)
+                                x
+                                y)))))
     (cond
       ; No quedan nodos donde probar: terminamos
       ((null open) NIL)
@@ -717,7 +721,8 @@
   (graph-search-rec
     problem
     strategy
-    (list (problem-initial-state problem))
+    (list 
+      (make-node :state (problem-initial-state problem)))
     NIL))
 
 
