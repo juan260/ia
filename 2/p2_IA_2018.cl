@@ -157,7 +157,14 @@
 ;; indicará el nombre que se le da a la accion (white hole o black hole)
 ;;;;
 (defun navigate-holes (type state holes)
-    (mapcar #'(lambda(x) (make-action :name type :origin (first x) :final (second x) :cost (third x))) holes))
+  (mapcar #'(lambda
+              (x)
+              (make-action 
+                :name type 
+                :origin (first x) 
+                :final (second x) 
+                :cost (third x)))
+          holes))
     
 ;;;;
 ;; Devuelve una lista de acciones que se pueden realizar desde el estado actual hacia
@@ -176,21 +183,22 @@
 ;; negros desde el estado actual. Descarta los panetas prohibidos.
 ;;;;    
 (defun navigate-worm-hole (state worm-holes planets-forbidden)
-    (navigate-holes 'navigate-worm-hole state
-        (mapcan #'(lambda(y) 
-            (cond 
-                ((eql (first y) state)
-                    (if (null (member (second y) 
-                                      planets-forbidden)) 
-                        (list y)))
-                ((eql (second y) state)
-                    (if (null (member (first y) 
-                                      planets-forbidden))
-                    (list (list state 
-                                (first y) 
-                                (third y)))))))
-            
-            worm-holes)))
+  (navigate-holes 'navigate-worm-hole state
+    (mapcan 
+      #'(lambda(y) 
+          (cond
+            ((eql (first y) state)
+             (if 
+               (null (member (second y)
+                             planets-forbidden))
+               (list y)))
+            ((eql (second y) state)
+             (if (null (member (first y)
+                               planets-forbidden))
+               (list (list state 
+                           (first y) 
+                           (third y)))))))
+      worm-holes)))
 
 
 (navigate-worm-hole 'Mallory *worm-holes* *planets-forbidden*)  ;-> 
@@ -725,11 +733,34 @@
 ;;   #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
 ;;   :DEPTH 4 :G 24 :H 0 :F 24)
 
-(print (a-star-search *galaxy-M35*));->
-;;;#S(NODE :STATE ...
-;;;        :PARENT #S(NODE :STATE ...
-;;;                        :PARENT #S(NODE :STATE ...)) 
 
+
+(a-star-search *galaxy-M35*);->
+;;#S(NODE :STATE SIRTIS
+;;   :PARENT
+;;   #S(NODE :STATE PROSERPINA
+;;      :PARENT
+;;      #S(NODE :STATE DAVION
+;;         :PARENT
+;;         #S(NODE :STATE KATRIL
+;;            :PARENT
+;;            #S(NODE :STATE MALLORY :PARENT NIL :ACTION NIL :DEPTH 0 :G 0 :H 0
+;;               :F 0)
+;;            :ACTION
+;;            #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN MALLORY :FINAL KATRIL
+;;               :COST 5)
+;;            :DEPTH 1 :G 5 :H 9 :F 14)
+;;         :ACTION
+;;         #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN KATRIL :FINAL DAVION
+;;            :COST 5)
+;;         :DEPTH 2 :G 10 :H 5 :F 15)
+;;      :ACTION
+;;      #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN DAVION :FINAL PROSERPINA
+;;         :COST 5)
+;;      :DEPTH 3 :G 15 :H 7 :F 22)
+;;   :ACTION
+;;   #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
+;;   :DEPTH 4 :G 24 :H 0 :F 24) 
 
 ;;; 
 ;;;    END Exercise 8: Search algorithm
