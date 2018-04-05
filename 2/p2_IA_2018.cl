@@ -444,17 +444,11 @@
 ;;;  BEGIN Exercise 6 -- Node list management
 ;;;  
 
-(defun insert-node-strategy (node lst-nodes strategy)
-    (if (null lst-nodes)
-        (list node)
-        (if (funcall (strategy-node-compare-p strategy) 
-                    node 
-                    (first lst-nodes))
-            (cons node lst-nodes)
-            (cons (first lst-nodes) 
-                (insert-node-strategy node (rest lst-nodes) strategy)))))
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Funcion auxiliar que inserta en la lista de nodos recibida como 
+;; segundo argumento el nodo recibido omo primero segun la estrategia
+;; de ordenacion recibida como tercero.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun insert-node-strategy (node lst-nodes strategy)
     (cond ((null lst-nodes)
         (list node))
@@ -466,6 +460,10 @@
         (t (cons (first lst-nodes) 
                 (insert-node-strategy node (rest lst-nodes) strategy)))))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Funcion principal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun insert-nodes-strategy (nodes lst-nodes strategy)
     (if (null nodes) 
         lst-nodes
@@ -490,62 +488,6 @@
 (defparameter node-02
    (make-node :state 'Kentares :depth 2 :g 50 :f 50) )
 
-(print (insert-nodes-strategy (list node-00 node-01 node-02) 
-                        lst-nodes-00 
-                        *uniform-cost*));->
-;;;(#S(NODE :STATE AVALON 
-;;;         :PARENT NIL 
-;;;         :ACTION NIL 
-;;;         :DEPTH 0 :G 0 :H 0 :F 0)
-
-
-
-
-
-;;; #S(NODE :STATE PROSERPINA 
-;;;         :PARENT NIL 
-;;;         :ACTION NIL 
-;;;         :DEPTH 12 :G 10 :H 0 :F 20)
-
-;;; #S(NODE :STATE AVALON
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL AVALON :COST 8.6)
-;;;         :DEPTH 13    :G 18.6    :H 15    :F 33.6)
-
-;;; #S(NODE :STATE DAVION
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-
-
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL DAVION :COST 5)
-;;;         :DEPTH 13    :G 15      :H 5     :F 20)
-
-;;; #S(NODE :STATE MALLORY
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 15)
-;;;         :DEPTH 13    :G 25      :H 12    :F 37)
-
-;;; #S(NODE :STATE SIRTIS
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WHITE-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 12)
-;;;         :DEPTH 13    :G 22      :H 0     :F 22)
-;;; #S(NODE :STATE KENTARES
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL KENTARES :COST 12)
-;;;         :DEPTH 13    :G 22      :H 14    :F 36)
-;;; #S(NODE :STATE MALLORY
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL MALLORY :COST 11)
-;;;         :DEPTH 13    :G 21      :H 12    :F 33)
-
-;;; #S(NODE :STATE SIRTIS
-;;;         :PARENT #S(NODE :STATE PROSERPINA :PARENT NIL :ACTION NIL :DEPTH 12 :G 10 :H 0 :F 20)
-;;;         :ACTION #S(ACTION :NAME NAVIGATE-WORM-HOLE :ORIGIN PROSERPINA :FINAL SIRTIS :COST 9)
-;;;         :DEPTH 13    :G 19      :H 0     :F 19)
-;;; #S(NODE :STATE KENTARES 
-;;;         :PARENT NIL 
-;;;         :ACTION NIL 
-;;;         :DEPTH 2 :G 50 :H 0 :F 50)) 
 
 
 (print 
@@ -741,8 +683,8 @@
         (append (solution-path (node-parent node))
               (list (node-state node)))))
 
-(solution-path nil) ;;; -> NIL 
-(solution-path (a-star-search *galaxy-M35*))  ;;;-> (MALLORY ...)
+(solution-path nil) 
+(solution-path (a-star-search *galaxy-M35*))  
 
 (defun action-sequence (node)
         (if (null (node-parent node))
@@ -751,8 +693,7 @@
               (list (node-action node)))))
 
 (action-sequence (a-star-search *galaxy-M35*))
-;;; ->
-;;;(#S(ACTION :NAME ...)) 
+
 
 ;;; 
 ;;;    END Exercise 9: Solution path / action sequence
@@ -776,7 +717,6 @@
 
 
 (solution-path (graph-search *galaxy-M35* *depth-first*))
-;;; -> (MALLORY ... )
 
 (defun breadth-first-node-compare-p (node-1 node-2)
   (<= (node-depth node-1) (node-depth node-2)))
@@ -789,7 +729,6 @@
 
 
 (solution-path (graph-search *galaxy-M35* *breadth-first*))
-;; -> (MALLORY ... )
 
 ;;; 
 ;;;    END Exercise 10: depth-first / breadth-first
