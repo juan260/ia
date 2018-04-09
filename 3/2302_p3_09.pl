@@ -51,8 +51,26 @@ L = [].
 ?- invierte([1, 2], L).
 L = [2, 1].
 */
+1 2 4 5
+3
+/* Ejercicio 3 */
+/* Si no hay lista en la que insertar,  la lista contendra
+*  unicamente el propio elemento a insertar */
+insert(L, [], L).
+/* Si el elemento a insertar es menor
+* que el primer elemento de la lista, hemos encontrado su lugar
+* y devolvemos true si el ultimo elemento de la lista es el
+* resultado de concatenar el elemento y el resto de la lista */
+insert([X-A], [Y-B|R1], L) :- A<B, concatena([X-A], [Y-B|R1], L).
+/* Si el elemento a insertar es mayor que el primer
+* elemento de la lista seguimos buscando y devolvemos true
+* si el ultimo argumento es el resultado de concatenar
+* el primer elemento de la lista con el resultado de
+* continuar la recursion con el resto de la lista, es decir,
+* con el resto de la lista con el elemento insertado */
+insert([X-A], [Y-B|R1], [Y-B|L]) :- A>B , insert([X-A], R1, L).
 
-/*  EJERCICIO 4.1*/
+/*  EJERCICIO 4.1 */
 
 /*
 * El numero de veces que aparece cualquier elemento en la lista vacia
@@ -86,3 +104,20 @@ false.
 list_count([], [], []).
 list_count([X|Y], L, [X-N|Z]):- elem_count(X, L, N), list_count(Y, L, Z).
 list_count([X|Y], L, [T-N|Z]):- T\=X, list_count([X|Y], L, Z).
+
+/* Ejercicio 5 */
+concatena([], L, L).
+concatena([X|L1], L2, [X|L3]) :-
+concatena(L1, L2, L3).
+
+% Falta usar la funcion concatena en insertar
+
+insert(X, [], X).
+insert([C-A], [Y-B|R1], X) :- A=<B, concatena([C-A], [Y-B|R1], X).
+insert([C-A], [Y-B|R1], [Y-B|X]) :- A>B , insert([C-A], R1, X).
+
+sort_list([], []).
+sort_list([C-A], [C-A]).
+sort_list([C-A|[Y-B|R1]], X) :- 
+          sort_list([Y-B|R1], L), 
+          insert([C-A], L, X).
