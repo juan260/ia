@@ -119,7 +119,3 @@ sort_list([C-A], [C-A]).
 sort_list([C-A|[D-B|R1]], X) :- 
           sort_list([D-B|R1], L), 
           insert([C-A], L, X).
-
-/* Ejercicio 6 */
-
-
