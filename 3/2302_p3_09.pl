@@ -105,16 +105,13 @@ list_count([], [], []).
 list_count([X|Y], L, [X-N|Z]):- elem_count(X, L, N), list_count(Y, L, Z).
 list_count([X|Y], L, [T-N|Z]):- T\=X, list_count([X|Y], L, Z).
 
-/* Ejercicio 5 */
-concatena([], L, L).
-concatena([X|L1], L2, [X|L3]) :-
-concatena(L1, L2, L3).
 
+/* Ejercicio 5 */
 % Falta usar la funcion concatena en insertar
 
 insert(X, [], X).
-insert([C-A], [Y-B|R1], X) :- A=<B, concatena([C-A], [Y-B|R1], X).
-insert([C-A], [Y-B|R1], [Y-B|X]) :- A>B , insert([C-A], R1, X).
+insert([C-A], [D-B|R1], X) :- A=<B, concatena([C-A], [D-B|R1], X).
+insert([C-A], [D-B|R1], [D-B|X]) :- A>B , insert([C-A], R1, X).
 
 sort_list([], []).
 sort_list([C-A], [C-A]).
