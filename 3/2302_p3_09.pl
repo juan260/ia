@@ -121,5 +121,10 @@ sort_list([C-A|[D-B|R1]], X) :-
           insert([C-A], L, X).
 
 /* Ejercicio 6 */
+build_tree([A-B|R1], tree(1, Y, X)) :- build_tree(R1, X), build_tree([A-B], Y).
+build_tree([A-_], tree(A, nil, nil)).
+
+/* Ejercio 7.1 */
+encode_elem(X1,,)
 
 
