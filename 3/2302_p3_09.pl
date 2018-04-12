@@ -121,10 +121,48 @@ sort_list([C-A|[D-B|R1]], X) :-
           insert([C-A], L, X).
 
 /* Ejercicio 6 */
-build_tree([A-B|R1], tree(1, Y, X)) :- build_tree(R1, X), build_tree([A-B], Y).
+/* El arbol asociado a una lista con dos o mas elementos
+*  sera el que tenga como
+* campo 'info' un 1, como hijo izquierdo el resultado
+* de generar un arbol solo con el elemento actual
+* y como hijo derecho el resultado de continuar
+* la recursion con el resto de elementos de la lista */
+build_tree([A-B|R1], tree(1, Y, X)) :- 
+    build_tree(R1, X), build_tree([A-B], Y).
+/* El arbol asociado a una lista de un unico elemento
+* es el que lleva como campo 'info' el propio elemento
+* y como hijos izquierdo y derecho nil */
 build_tree([A-_], tree(A, nil, nil)).
 
 /* Ejercio 7.1 */
-encode_elem(X1,,)
+/* El elemento codificado de X en el arbol 
+* tree(X, nil, nil) es una lista vacia, ya que no
+* tenemos que tomar ni hijo izquierdo ni hijo derecho 
+* (caso base de la recursion) */
+encode_elem(X, [], tree(X, nil, nil)).
+/* El elemento X codificado en el arbol, si no esta en el
+* hijo izquierdo, sera un 1 seguido del resultado de
+* continuar la recursion por el hijo derecho */
+encode_elem(X, [1|R1], tree(1, _, RTree)) :- encode_elem(X, R1, RTree).
+/* El elemento X codificado en un arbol de la forma
+* tree(1, tree(X, nil, nil)), es decir, que su hijo
+* izquierdo es un arbol cuyo campo 'info' es X
+* es una lista que solo contiene un [0] */
+encode_elem(X, [0], tree(1, tree(X, nil, nil), _)).
+
+/* Ejercicio 7.2 */
+/* El resultado de codificar una lista vacia
+* es una lista vacia sin importar el arbol */
+encode_list([], [], _).
+/* El resultado de codificar una lista no vacia
+* es una lista que contiene como primer elemento
+* la codificacion del primer elemento de la lista 
+* recibida como argumento
+* y como resto de elementos el resultado de continuar
+* la recursion por el resto de la lista recibida 
+* como argumento */
+encode_list([X|R], [EncX|Recursion], L) :-
+    	encode_elem(X, EncX, L), 
+    	encode_list(R, Recursion, L).
 
 
