@@ -128,6 +128,15 @@
                         :nombre   '|Ju-Nmx-Regular|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
+                        
+(defun f-eval-PUTOAMO (estado)
+  (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))))
+
+(defvar *jdr-nmx-PUTOAMO* (make-jugador
+                        :nombre   '|Ju-Nmx-PUTOAMO|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-PUTOAMO))
 
 ;;; ------------------------------------------------------------------------------------------
 ;;; EJEMPLOS DE PARTIDAS DE PRUEBA

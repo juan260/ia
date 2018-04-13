@@ -39,15 +39,15 @@
 (in-package mancala)
 
 ;; SBL
-;(declaim #+sbcl(sb-ext:muffle-conditions style-warning)))
-;(defmacro my-with-timeout ((seconds &body timeout-body) &body body)
-;  `(handler-case
-;      (sb-ext:with-timeout ,seconds ,@body)
-;      (sb-ext:timeout (e) ,@timeout-body))))
+(declaim #+sbcl(sb-ext:muffle-conditions style-warning))
+(defmacro my-with-timeout ((seconds &body timeout-body) &body body)
+  `(handler-case
+      (sb-ext:with-timeout ,seconds ,@body)
+      (sb-ext:timeout (e) ,@timeout-body)))
 
 ;; Allegro
-(defmacro my-with-timeout  ((seconds &body timeout-body) &body body)
-   `(sys:with-timeout (,seconds ,@timeout-body) ,@body))
+;(defmacro my-with-timeout  ((seconds &body timeout-body) &body body)
+;   `(sys:with-timeout (,seconds ,@timeout-body) ,@body))
 
 ;;; ==========================================================================================
 ;;; PRACTICAS IA. PRACTICA 4 (JUEGOS)
