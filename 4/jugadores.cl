@@ -191,7 +191,7 @@
 ;;; Ejemplos de partidas para pruebas
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-erroneo*))
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-bueno*))
-;;;(partida 0 2 (list *jdr-humano*      *jdr-nmx-Regular*))
+(partida 0 2 (list *jdr-humano*      *jdr-nmx-Regular*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-nmx-Bueno*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-1st-opt*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-last-opt*))
