@@ -130,9 +130,17 @@
                         :f-eval   #'f-eval-Regular))
                         
 (defun f-eval-PUTOAMO (estado)
-  (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))))
+    (print (-  
+         (get-fichas (estado-tablero estado) 
+            (estado-lado-sgte-jugador estado)
+            6)
+            (get-fichas (estado-tablero estado) 
+            (lado-contrario (estado-lado-sgte-jugador estado))
+            6))))
 
+
+        
+        
 (defvar *jdr-nmx-PUTOAMO* (make-jugador
                         :nombre   '|Ju-Nmx-PUTOAMO|
                         :f-juego  #'f-j-nmx
@@ -169,11 +177,11 @@
 ;;; Ajustes para facilitar el seguimiento paso a paso (pag. 11). Reduzcase el nivel de
 ;;; detalle cuando se vaya adquiriendo práctica.
 ;;; *debug-nmx* activa *verb* tambien para jugadores automaticos (normalmente desactivado).
-(setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
-(setq *verb* t)                ; Activa comentarios para seguir la evolucion de la partida
-(setq *verjugada*   t)         ; Activa la visualizacion de jugadas
-(setq *vermarcador* t)         ; Activa la visualizacion del marcador
-(setq *debug-nmx* nil)         ; Desactiva debuging de negamax
+;(setq *debug-level* 1)         ; Ajusta a 2 el nivel de detalle
+;(setq *verb* nil)                ; Activa comentarios para seguir la evolucion de la partida
+;(setq *verjugada*   nil)         ; Activa la visualizacion de jugadas
+;(setq *vermarcador* t)         ; Activa la visualizacion del marcador
+;(setq *debug-nmx* nil)         ; Desactiva debuging de negamax
 ;(partida 0 2 (list *jdr-humano*  *jdr-nmx-Regular*))
 
 ;;; Partida entre dos humanos a partir de una posicion determinada para analisis detallado
@@ -200,7 +208,7 @@
 ;;; Ejemplos de partidas para pruebas
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-erroneo*))
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-bueno*))
-(partida 0 2 (list *jdr-humano*      *jdr-nmx-Regular*))
+(partida 0 2 (list *jdr-nmx-PUTOAMO*      *jdr-nmx-Regular*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-nmx-Bueno*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-1st-opt*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-last-opt*))
