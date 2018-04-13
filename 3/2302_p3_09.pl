@@ -101,9 +101,8 @@ false.
 
 /*  EJERCICIO 4.2*/
 /*ESTO ESTA MAL. NI SIQUIERA ESTA PROBADO. ES UN INICIO DE IDEA*/
-list_count([], [], []).
+list_count([], [_|_], []).
 list_count([X|Y], L, [X-N|Z]):- elem_count(X, L, N), list_count(Y, L, Z).
-list_count([X|Y], L, [T-N|Z]):- T\=X, list_count([X|Y], L, Z).
 
 
 /* Ejercicio 5 */
