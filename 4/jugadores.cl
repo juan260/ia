@@ -130,13 +130,13 @@
                         :f-eval   #'f-eval-Regular))
                         
 (defun f-eval-PUTOAMO (estado)
-    (print (-  
+    (-  
          (get-fichas (estado-tablero estado) 
             (estado-lado-sgte-jugador estado)
             6)
             (get-fichas (estado-tablero estado) 
             (lado-contrario (estado-lado-sgte-jugador estado))
-            6))))
+            6)))
 
 
         
@@ -167,12 +167,12 @@
 ;;; *debug-nmx* activa *verb* tambien para jugadores automaticos (normalmente desactivado).
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
 (setq *verb*        nil)         ; Activa comentarios para seguir la evolucion de la partida
-(setq *verjugada*   t)         ; Activa la visualizacion de jugadas
+(setq *verjugada*   nil)         ; Activa la visualizacion de jugadas
 (setq *vermarcador* t)         ; Activa la visualizacion del marcador
 (setq *debug-nmx*   t)         ; Desactiva debuging de negamax
-
-(partida 1 2 (list *jdr-nmx-Regular* *jdr-nmx-Regular*))
-(partida 1 2 (list *jdr-aleatorio* *jdr-aleatorio*))
+(setq *verb* nil *debug-level* 2 *verjugada* nil *vermarcador* nil)
+;(partida 1 2 (list *jdr-nmx-Regular* *jdr-nmx-Regular*))
+;(partida 1 2 (list *jdr-aleatorio* *jdr-aleatorio*))
 
 ;;; Ajustes para facilitar el seguimiento paso a paso (pag. 11). Reduzcase el nivel de
 ;;; detalle cuando se vaya adquiriendo práctica.
