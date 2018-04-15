@@ -853,5 +853,5 @@
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
 
-(partida 0 2 (list *jdr-nmx-ponderation*      *jdr-nmx-Regular*))
+(partida 0 2 (list *jdr-nmx-ponderation*      *jdr-nmx-Bueno*))
 
