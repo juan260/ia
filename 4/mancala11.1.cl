@@ -600,13 +600,10 @@
                   ((> pts0 pts1) 1)
                   (t 0 ))))
     (when (and (> *debug-level* 1) (not *tournament*))
-      (format t "~2%  FIN DEL JUEGO por ~A en ~A Jugadas~%  Marcador:  ~A ~A - ~A ~A~%~%"
-        (if (= ganador 0) "TABLAS" "VICTORIA")
-        *njugada*
-        (jugador-nombre (first lst-jug))
+      (format t "~2%  ~A - ~A~%~%"
         pts0
         pts1
-        (jugador-nombre (second lst-jug))))
+        ))
     (values ganador nil)))
 
 ;;; ------------------------------------------------------------------------------------------
