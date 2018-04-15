@@ -1,3 +1,8 @@
+(defun f-j-nmx (estado profundidad-max f-eval)
+;;;(negamax-a-b estado profundidad-max f-eval))
+  (negamax estado profundidad-max f-eval))
+
+
 (defun ponderate (position ponderation lado tablero)
     (unless (null ponderation)
         (+ (* (first ponderation)
