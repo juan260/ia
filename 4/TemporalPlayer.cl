@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '((100 4 3 4 5 6) (7 8 7 10 22 )))
+(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -852,6 +852,21 @@
                         :nombre   '|Ju-Nmx-Regular|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
+                        
+;;; f-juego para un jugador que realiza movimientos aleatorios
+;;; ------------------------------------------------------------------------------------------
+(defun f-j-aleatorio (estado &optional profundidad-max f-eval)
+  (and profundidad-max f-eval)      ; dummy to avoid compiler warnings
+  (let ((lst-acciones (acciones-posibles estado)))
+    (ejecuta-accion estado (nth (random (length lst-acciones)) lst-acciones))))
 
-(partida 0 2 (list *jdr-nmx-ponderation*      *jdr-nmx-Bueno*))
+;;; Jugador que no evalua y juega aleatoriamente
+;;; ------------------------------------------------------------------------------------------
+(defvar *jdr-aleatorio* (make-jugador
+                        :nombre   '|Ju-Aleatorio|
+                        :f-juego  #'f-j-aleatorio
+                        :f-eval   nil))
+
+
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
 
