@@ -7,5 +7,11 @@ cat jugadores.cl >> TemporalPlayer.cl
 #OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl | tail -n 1)
 OUTPUT=$(sbcl --script TemporalPlayer.cl)
 OUTPUT=$(expr $OUTPUT)
-echo $OUTPUT
+#echo $OUTPUT
+if [ "0" -gt "$OUTPUT" ]
+then
+        OUTPUT=0
+fi
+
+return $OUTPUT 
 

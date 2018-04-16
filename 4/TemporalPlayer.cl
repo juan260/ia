@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '(           ))
+(defvar *ponderations* '(0 0 0 25 50 150 0 0 0 75 125 100))
 (use-package 'mancala)
 
 ;(declaim #+sbcl(sb-ext:muffle-conditions style-warning))
