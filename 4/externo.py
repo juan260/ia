@@ -21,9 +21,10 @@ def main():
         #Llamamos al script guardand resultado en una variable
         results += args
         results += '\t'
-        results += str(os.system(llamada))
-        #results += sys.stdin.readline()
-        #os.system(llamada)
+        res = subprocess.run(['./CreateAndExecute.sh', args], stdout=subprocess.PIPE)
+        results = res.stdout.decode('utf-8')
+        #results += str(os.system(llamada))
+        
         results += '\n'
     outputName = 'salida_' + sys.argv[1]
     outputFile = open(outputName, 'w')
@@ -32,5 +33,6 @@ def main():
 #    i = 0
 #    longActual = len(perms)
 #    while longActual != 0:
-    
+
+
 main()

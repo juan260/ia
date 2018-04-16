@@ -139,12 +139,37 @@
             6)))
 
 
-        
+(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))        
         
 (defvar *jdr-nmx-PUTOAMO* (make-jugador
                         :nombre   '|Ju-Nmx-PUTOAMO|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-PUTOAMO))
+                        
+                        
+(defun ponderate (position ponderation lado tablero)
+    (unless (null ponderation)
+        (+ (* (first ponderation)
+            (get-fichas tablero lado position))
+            (ponderate (+ position 1)
+                (rest ponderation)
+                lado tablero))))
+
+(defun f-eval-ponderation (estado)
+    (+ (ponderate 0 (first *ponderations*) 
+            (estado-lado-sgte-jugador estado)
+            (estado-tablero estado))
+            
+       (ponderate 0 (second *ponderations*) 
+            (lado-contrario (estado-lado-sgte-jugador estado)) 
+            (estado-tablero estado))))
+
+        
+        
+(defvar *jdr-nmx-ponderation* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-ponderation))
 
 ;;; ------------------------------------------------------------------------------------------
 ;;; EJEMPLOS DE PARTIDAS DE PRUEBA
@@ -208,7 +233,7 @@
 ;;; Ejemplos de partidas para pruebas
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-erroneo*))
 ;;;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-bueno*))
-(partida 0 2 (list *jdr-nmx-PUTOAMO*      *jdr-nmx-Regular*))
+(partida 0 2 (list *jdr-nmx-ponderation*      *jdr-nmx-Regular*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-nmx-Bueno*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-1st-opt*))
 ;;;(partida 0 2 (list *jdr-humano*      *jdr-last-opt*))
