@@ -23,9 +23,8 @@ def main():
         results += '\t'
         res = subprocess.run(['./CreateAndExecute.sh', args], stdout=subprocess.PIPE)
         results = res.stdout.decode('utf-8')
-        #results += str(os.system(llamada))
-        
         results += '\n'
+    
     outputName = 'salida_' + sys.argv[1]
     outputFile = open(outputName, 'w')
     outputFile.write(results)

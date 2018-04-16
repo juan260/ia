@@ -785,7 +785,7 @@ ia/4/TemporalPlayer.cl
          (if contline
              (format *logfile* "~A" msg)
            (multiple-value-bind (ss mn hh dd mm yy) (get-decoded-time)
-             (if (= lvl 0)
+(defvar *ponderations* '((0 0 0 25 50 150 0 0 0 75 125 100     ) (     )))
                  (format *logfile* "~%~2,'0D~2,'0D~2,'0D ~2,'0D~2,'0D~2,'0D ~A"
                    hh mn ss (- yy 2000) mm dd msg)
                (format *logfile* "~%~2,'0D~2,'0D~2,'0D ~A" hh mn ss msg))))
