@@ -1,7 +1,7 @@
+import random
 import itertools
 import subprocess
 import sys, os
-import randint
 
 def main():
     
@@ -13,17 +13,22 @@ def main():
 
     results = ''
     perms = itertools.permutations(l)
-    for perm, i in zip(perms, range(20)):
-    #for perm in perms:
+    #for perm, i in zip(perms, range(20)):
+    for perm in perms:
         #String de llamada al script
-        args = '0 0 0 ' + str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2]) + ' 0 0 0 ' + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5]) 
-        llamada = './CreateAndExecute.sh ' + args
-        
-        #Llamamos al script guardand resultado en una variable
+        args = '0 0 0 ' + str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2]) + ' 0 0 0 ' + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5])         
         results += args
         results += '\t'
-        res = subprocess.run(['./CreateAndExecute.sh', args], stdout=subprocess.PIPE)
-        results = res.stdout.decode('utf-8')
+
+        #Llamamos loop veces al script guardand la media de los resultados en una variable        
+        loop = 10
+        media = 0
+        for i in range(loop):
+            res = subprocess.run(['./CreateAndExecute.sh', '0', '0', '0', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5])], stdout=subprocess.PIPE)
+            intres = int(res.stdout.decode('utf-8'))
+            media += intres/loop
+        
+        results += str(media)
         results += '\n'
     
     outputName = 'salida_' + sys.argv[1]
@@ -40,7 +45,7 @@ def main():
         longActual -=1
         
         # Jugador 2: oponente aleatorio de la lista. Extraemos. 
-        randOpo = randint(0, longActual)       
+        randOpo = random.randint(0, longActual)       
         perm2 = perms[randOpo]
         del(perms[randOpo])
         longActual -= 1

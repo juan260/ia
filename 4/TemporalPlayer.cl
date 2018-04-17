@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
+(defvar *ponderations* '((0 0 0 25 50 125) (0 0 0 100 75 150sort)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
