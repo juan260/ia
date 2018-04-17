@@ -1,30 +1,3 @@
-
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Marketplace
-    Explore
-
-    @luciaasen
-
-1
-1
-
-    0
-
-juan260/ia
-Code
-Issues 0
-Pull requests 0
-Projects 0
-Wiki
-Insights
-ia/4/TemporalPlayer.cl
-6873abe an hour ago
-@juan260 juan260 asdf
-873 lines (773 sloc) 42 KB
 (defpackage :mancala
   (:use :common-lisp)
   (:export :*debug-level*
@@ -785,7 +758,7 @@ ia/4/TemporalPlayer.cl
          (if contline
              (format *logfile* "~A" msg)
            (multiple-value-bind (ss mn hh dd mm yy) (get-decoded-time)
-(defvar *ponderations* '((0 0 0 25 50 150 0 0 0 75 125 100     ) (     )))
+             (if (= lvl 0)
                  (format *logfile* "~%~2,'0D~2,'0D~2,'0D ~2,'0D~2,'0D~2,'0D ~A"
                    hh mn ss (- yy 2000) mm dd msg)
                (format *logfile* "~%~2,'0D~2,'0D~2,'0D ~A" hh mn ss msg))))
@@ -896,20 +869,3 @@ ia/4/TemporalPlayer.cl
 
 
 (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-
-    © 2018 GitHub, Inc.
-    Terms
-    Privacy
-    Security
-    Status
-    Help
-
-    Contact GitHub
-    API
-    Training
-    Shop
-    Blog
-    About
-
-Press h to open a hovercard with more details.
-
