@@ -9,22 +9,21 @@ def main():
     # mas lejanos al mankala (se llama asi?)
     # A los otros 6 hoyos, damos aleatoriamente las ponderaciones 
     # 25i i = 1...6
-    l = range(25, 151, 25)
+    l = range(25, 301, 25)
 
     results = ''
     perms = itertools.permutations(l)
-    #for perm, i in zip(perms, range(20)):
     for perm in perms:
         #String de llamada al script
-        args = '0 0 0 ' + str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2]) + ' 0 0 0 ' + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5])         
+        args = str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2])   + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5]) + ' ' + str(perm[6]) + ' ' + str(perm[7]) + ' ' + str(perm[8])  + str(perm[9]) + ' ' + str(perm[10]) + ' ' + str(perm[11])         
         results += args
         results += '\t'
 
         #Llamamos loop veces al script guardand la media de los resultados en una variable        
-        loop = 20
+        loop = 10
         media = 0
         for i in range(loop):
-            res = subprocess.run(['./CreateAndExecute.sh', '0', '0', '0', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5])], stdout=subprocess.PIPE)
+            res = subprocess.run(['./CreateAndExecute.sh', str(perm[0]), str(perm[1]), str(perm[2]), str(perm[3]), str(perm[4]), str(perm[5]), str(perm[6]), str(perm[7]), str(perm[8]), str(perm[9]), str(perm[10]), str(perm[11]) ], stdout=subprocess.PIPE)
             intres = int(res.stdout.decode('utf-8'))
             media += intres/loop
         
@@ -78,3 +77,4 @@ def main():
 
 '''
 main()
+
