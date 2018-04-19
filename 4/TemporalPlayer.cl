@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
+(defvar *ponderations* '((100 4 3 4 5 6) (7 8 7 10 22 0)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -811,7 +811,7 @@
 
         
         
-(defvar *jdr-nmx-ponderation* (make-jugador
+(defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
@@ -852,6 +852,7 @@
                         :nombre   '|Ju-Nmx-Regular|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
+
                         
 ;;; f-juego para un jugador que realiza movimientos aleatorios
 ;;; ------------------------------------------------------------------------------------------
@@ -868,4 +869,4 @@
                         :f-eval   nil))
 
 
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
