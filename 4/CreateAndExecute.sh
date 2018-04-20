@@ -22,7 +22,7 @@ sed -i "$sedcommand" TemporalPlayer.cl
 #cat DefaultPlayer.cl >> TemporalPlayer.cl
 #cat jugadores.cl >> TemporalPlayer.cl
 #sbcl --noinform --disable-ldb --script TemporalPlayer.cl
-OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
+OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl | awk '{SUM += ($1 - $3) } END {print SUM}
 
 #OUTPUT=$(sbcl --script TemporalPlayer.cl)
 
