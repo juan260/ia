@@ -807,7 +807,12 @@
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
-            (estado-tablero estado))))
+            (estado-tablero estado))
+	(if  (estado-terminado-p estado)
+		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
+		    -1000
+		    1000))))
 
 ; Parameters tiene 7 eltos: 
 ; 1. El coeficiente en caso de que tu hoyo_i tenga > i semillas
@@ -877,4 +882,14 @@
                         :f-eval   nil))
 
 
+
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Bueno*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
