@@ -808,7 +808,7 @@
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
-	(if  (estado-terminado-p estado)
+	(if  (juego-terminado-p estado)
 		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
 			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
 		    -1000
