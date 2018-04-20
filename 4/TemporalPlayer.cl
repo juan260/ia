@@ -868,4 +868,14 @@
                         :f-eval   nil))
 
 
+
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Bueno*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
