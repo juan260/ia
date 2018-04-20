@@ -809,7 +809,16 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))))
 
-        
+; Parameters tiene 7 eltos: 
+; 1. El coeficiente en caso de que tu hoyo_i tenga > i semillas
+; 2. El coeficiente en caso de que tu hoyo_i tenga < i semillas
+; 3. El coeficiente en caso de que tu hoyo_i tenga = i semillas
+; 4. El coeficiente en caso de que el otro hoyo_i tenga > i semillas
+; 5. El coeficiente en caso de que el otro hoyo_i tenga < i semillas
+; 6. El coeficiente en caso de que el otro hoyo_i tenga = i semillas
+; 7. El coeficiente para (num_semillas_mi_kajala - sum_semillas_enemigo_kajala)
+
+(defun f-eval-ponderation-2 (estado parameters))
         
 (defvar *jdr-nmx-ponderation* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
