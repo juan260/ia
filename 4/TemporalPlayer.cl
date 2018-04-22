@@ -950,24 +950,24 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))1
 (print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*))1
 (print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))1
 (print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))1
 (print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))1
 (print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))1
 (print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))1
 (print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))1
 (print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))1
 (print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))1
 (print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))1
