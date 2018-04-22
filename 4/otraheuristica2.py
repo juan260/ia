@@ -3,7 +3,8 @@ import subprocess
 import sys, os
 
 def main():
-
+    
+    numrepes = 4
     # En ppio, este tiene 4^6 = 4096 ejecs
     results = ''
       
@@ -32,9 +33,9 @@ def main():
                     for p4 in opciones4:
                         for p5 in opciones5:
                             # Llamar al script con argumentos: p1 p2 maxpunct p4 p5 -maxpunct2
-                            #res = subprocess...
-                            #results += res
-                            #results += '\n'        
+                            res = subprocess.run.(['./CreateAndExecute-2.sh', str(p1), str(p2), str(maxpunct) str(p4), str(p5), str(-1*maxpunct2), str(numrepes)], stdout=subprocess.PIPE)
+                            results += res
+                            results += '\n'        
     
     outputName = 'salida_' + sys.argv[1]
     outputFile = open(outputName, 'w')

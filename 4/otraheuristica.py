@@ -4,7 +4,8 @@ import sys, os
 
 def main():
 
-    # En ppio esta tiene 13*10*10 repes 
+    numrepes = 7
+    # En ppio esta tiene 13*10*10 repe
     results = ''
       
     # Puntuaciones para cuando acabas en kajala (>> 0)
@@ -29,9 +30,9 @@ def main():
         for p1 in opciones1:
             for p2 in opciones2:
                 # Llamar al script con argumentos: p1 p2 maxpunct -p1 -p2 -maxpunct
-                #res = subprocess...
-                #results += res
-                #results += '\n'        
+                res = subprocess.run.(['./CreateAndExecute-2.sh', str(p1), str(p2), str(maxpunct) str(-1*p1), str(-1*p2), str(-1*maxpunct), str(numrepes)], stdout=subprocess.PIPE)
+                results += res
+                results += '\n'        
     
     outputName = 'salida_' + sys.argv[1]
     outputFile = open(outputName, 'w')
