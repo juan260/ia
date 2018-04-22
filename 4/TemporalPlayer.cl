@@ -599,8 +599,8 @@
                   ((< pts0 pts1) 2)
                   ((> pts0 pts1) 1)
                   (t 0 ))))
-        (list pts0 pts1)))
-        ;;(- pts0 pts1)))
+        ;;(list pts0 pts1)))
+        (- pts0 pts1)))
 
 ;;; ------------------------------------------------------------------------------------------
 ;;; FUNCION PRINCIPAL PARA REALIZAR UNA PARTIDA ENTRE DOS JUGADORES
@@ -779,6 +779,10 @@
   (setq *verjugada* t)
   (let ((accion (pide-accion (acciones-posibles estado))))
     (unless (null accion) (ejecuta-accion estado accion))))
+
+
+
+
 
 
 (defvar *ponderations* '((0 0 0 150 125 100) (0 0 0 75 50 25)))
