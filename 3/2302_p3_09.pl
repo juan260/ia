@@ -113,7 +113,13 @@ false.
 */
 
 /*  EJERCICIO 4.2*/
+/* Si no hay elementos que buscar, la lista con el numero de veces 
+* que aparece cada elemento esta vacia
+*/
 list_count([], [_|_], []).
+/* Si N es el num de veces que aparece X en L, y Z lleva la cuenta de
+* las apariciones de los elementos de Y en L
+*/
 list_count([X|Y], L, [X-N|Z]):-
     elem_count(X, L, N),
     list_count(Y, L, Z).

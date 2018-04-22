@@ -25,6 +25,7 @@ sed -i "$sedcommand" TemporalPlayer.cl
 OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
 
 #OUTPUT=$(sbcl --script TemporalPlayer.cl)
+echo $OUTPUT
 OUTPUT=$(expr $OUTPUT)
 echo $OUTPUT
 #if [ "0" -gt "$OUTPUT" ]

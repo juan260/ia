@@ -16,15 +16,15 @@ def main():
     #for perm, i in zip(perms, range(20)):
     for perm in perms:
         #String de llamada al script
-        args = '0 0 0 ' + str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2]) + ' 0 0 0 ' + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5])         
+        args = str(perm[0]) + ' ' + str(perm[1]) + ' ' + str(perm[2]) + ' 0 0 0 ' + str(perm[3]) + ' ' + str(perm[4]) + ' ' + str(perm[5]) + '0 0 0 '          
         results += args
         results += '\t'
 
         #Llamamos loop veces al script guardand la media de los resultados en una variable        
-        loop = 20
+        loop = 10
         media = 0
         for i in range(loop):
-            res = subprocess.run(['./CreateAndExecute.sh', '0', '0', '0', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5])], stdout=subprocess.PIPE)
+            res = subprocess.run(['./CreateAndExecute.sh', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5]), '0', '0', '0'], stdout=subprocess.PIPE)
             intres = int(res.stdout.decode('utf-8'))
             media += intres/loop
         
@@ -78,3 +78,4 @@ def main():
 
 '''
 main()
+
