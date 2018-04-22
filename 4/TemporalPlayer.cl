@@ -599,12 +599,8 @@
                   ((< pts0 pts1) 2)
                   ((> pts0 pts1) 1)
                   (t 0 ))))
-    (when (and (> *debug-level* 1) (not *tournament*))
-      (format t "~2%  ~A - ~A~%~%"
-        pts0
-        pts1
-        ))
-    (values ganador nil)))
+        ;;(list pts0 pts1)))
+        (- pts0 pts1)))
 
 ;;; ------------------------------------------------------------------------------------------
 ;;; FUNCION PRINCIPAL PARA REALIZAR UNA PARTIDA ENTRE DOS JUGADORES
@@ -785,6 +781,10 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
+
+
+
+
 (defvar *ponderations* '((0 0 0 150 125 100) (0 0 0 75 50 25)))
 
 
@@ -950,24 +950,14 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
-(print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*))
-(print '+)
+(setf x (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)))
+(if (< x 0) -1000
+(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(print '+)
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(print '+)
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(print '+)
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(print '+)
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(print '+)
 (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
