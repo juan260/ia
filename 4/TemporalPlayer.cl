@@ -815,15 +815,19 @@
 		    1000)
 		 0)))
 
-; Parameters tiene 3 eltos:
-; En el caso de que side sea tu lado, 
-; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
-; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
-; 3. El coeficiente en caso de que tu hoyo_i tenga = i+1 semillas        (>> 0)
-; En el caso de que side sea el lado del oponente:
-; 1. El coeficiente en caso de que el otro hoyo_i tenga > i+1 semillas   (>0 ?)
-; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
-; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
+(defvar *jdr-nmx-helado* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
+                        
+
+
+
+
+
+
+
+
 
 (defun f-eval-ponderation-2 (estado parameters)
   (+ 
@@ -838,7 +842,7 @@
       '+
       (calc-ponderations 
         (estado-tablero estado)
-        (first parameters)
+        (second parameters)
         (estado-lado-sgte-jugador estado)
         0))
     (if
@@ -863,41 +867,41 @@
 ; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
 ; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
 
-;(defun calc-ponderations (tablero parameters side posicion)
-;  (if 
-;    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
-;    ()
-;    (cons                       ; Si no, devolvemos un cons de :
-;      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
-;        tablero
-;        parameters
-;        side 
-;        posicion)
-;      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
-;        tablero
-;        parameters
-;        (+ 1 side)
-;        posicion))))
+(defun calc-ponderations (tablero parameters side posicion)
+  (if 
+    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
+    ()
+    (cons                       ; Si no, devolvemos un cons de :
+      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
+        tablero
+        parameters
+        side 
+        posicion)
+      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
+        tablero
+        parameters
+        (+ 1 side)
+        posicion))))
 
-;(defun calc-ponderation (tablero parameters side posicion)
-;  (let 
-;    ((numfichas (get-fichas tablero lado posicion)))
-;    (cond
-;      ; Si numfichas > 1+posicion, 1er coeficiente
-;      ((> num-fichas (1 + posicion))
-;       (first  parameters))
-;      ; Si numfichas < 1+posicion, 2o coeficiente
-;      ((< num-fichas (1 + posicion))
-;       (second parameters))
-;      ; Si numfichas = 1+posicion, 3er coeficiente
-;      ((t)
-;       (third parameters)))))
+(defun calc-ponderation (tablero parameters side posicion)
+  (let 
+    ((numfichas (get-fichas tablero lado posicion)))
+    (cond
+      ; Si numfichas > 1+posicion, 1er coeficiente
+      ((> num-fichas (1 + posicion))
+       (first  parameters))
+      ; Si numfichas < 1+posicion, 2o coeficiente
+      ((< num-fichas (1 + posicion))
+       (second parameters))
+      ; Si numfichas = 1+posicion, 3er coeficiente
+      ((t)
+       (third parameters)))))
 
-(defvar *jdr-nmx-helado* (make-jugador
-                        :nombre   '|tu-cree-que-yo-soi-guapa|
+
+(defvar *jdr-nmx-verano* (make-jugador
+                        :nombre   '|oso-panda|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
-                        
+                        :f-eval   #'(lambda (x) (f-eval-ponderation-2 x *parameters*))))
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
 (setq *verb*        nil)         ; Activa comentarios para seguir la evolucion de la partida
@@ -950,14 +954,37 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-(setf x (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)))
-(if (< x 0) -1000
-(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;(setf x (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)))
+;(if (< x 0) -1000
+;(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+   
+(defun suma (jug1 jug2 nveces)
+  (if 
+    (equal nveces 0)
+    0
+    (+ 
+      (partida 0 2 (list jug1 jug2))
+      (suma jug2 jug1 (- nveces 1)))))
+
+(defun (media jug1 jug2  nveces)
+  (print
+    (/ (suma jug1 jug2 nveces) nveces)))
+
+(defun evaluador (jugador nveces)
+  (cond
+    ((< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
+     (print '-1000))
+    ((< 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+     (print '-1000))
+    ((t)
+     (media jugador *jdr-aleatorio* nveces))))
+
+
