@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '((50 100 30 0 0 0) (150 75 100 0 0 0)))
+(defvar *ponderations* '((100 50 75 0 0 0) (125 25 150 0 0 0)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -812,7 +812,8 @@
 		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
 			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
 		    -1000
-		    1000))))
+		    1000)
+		 0)))
 
 ; Parameters tiene 3 eltos:
 ; En el caso de que side sea tu lado, 
@@ -891,7 +892,7 @@
       ((t)
        (third parameters)))))
 
-(defvar *jdr-nmx-ponderation* (make-jugador
+(defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
@@ -932,6 +933,7 @@
                         :nombre   '|Ju-Nmx-Regular|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
+
                         
 ;;; f-juego para un jugador que realiza movimientos aleatorios
 ;;; ------------------------------------------------------------------------------------------
@@ -947,15 +949,24 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-
-
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Bueno*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
-(partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
