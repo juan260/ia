@@ -785,7 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-(defvar *ponderations* '((150 75 100 0 0 0) (125 50 25 0 0 0)))
+(defvar *ponderations* '((0 0 0 150 125 100) (0 0 0 75 50 25)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -850,7 +850,8 @@
 		  (suma-fila (estado-tablero estado) 
                      (lado-contrario (estado-lado-sgte-jugador estado))))
         -10000
-        10000))))
+        10000)
+        0)))
         
 ; Parameters tiene 3 eltos:
 ; En el caso de que side sea tu lado, 
@@ -862,35 +863,35 @@
 ; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
 ; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
 
-(defun calc-ponderations (tablero parameters side posicion)
-  (if 
-    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
-    ()
-    (cons                       ; Si no, devolvemos un cons de :
-      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
-        tablero
-        parameters
-        side 
-        posicion)
-      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
-        tablero
-        parameters
-        (+ 1 side)
-        posicion))))
+;(defun calc-ponderations (tablero parameters side posicion)
+;  (if 
+;    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
+;    ()
+;    (cons                       ; Si no, devolvemos un cons de :
+;      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
+;        tablero
+;        parameters
+;        side 
+;        posicion)
+;      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
+;        tablero
+;        parameters
+;        (+ 1 side)
+;        posicion))))
 
-(defun calc-ponderation (tablero parameters side posicion)
-  (let 
-    ((numfichas (get-fichas tablero lado posicion)))
-    (cond
-      ; Si numfichas > 1+posicion, 1er coeficiente
-      ((> num-fichas (1 + posicion))
-       (first  parameters))
-      ; Si numfichas < 1+posicion, 2o coeficiente
-      ((< num-fichas (1 + posicion))
-       (second parameters))
-      ; Si numfichas = 1+posicion, 3er coeficiente
-      ((t)
-       (third parameters)))))
+;(defun calc-ponderation (tablero parameters side posicion)
+;  (let 
+;    ((numfichas (get-fichas tablero lado posicion)))
+;    (cond
+;      ; Si numfichas > 1+posicion, 1er coeficiente
+;      ((> num-fichas (1 + posicion))
+;       (first  parameters))
+;      ; Si numfichas < 1+posicion, 2o coeficiente
+;      ((< num-fichas (1 + posicion))
+;       (second parameters))
+;      ; Si numfichas = 1+posicion, 3er coeficiente
+;      ((t)
+;       (third parameters)))))
 
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|

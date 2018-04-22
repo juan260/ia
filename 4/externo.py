@@ -10,7 +10,7 @@ def main():
     # A los otros 6 hoyos, damos aleatoriamente las ponderaciones 
     # 25i i = 1...6
     l = range(25, 151, 25)
-
+    print(list(l))
     results = ''
     perms = itertools.permutations(l)
     #for perm, i in zip(perms, range(20)):
@@ -27,7 +27,7 @@ def main():
         #media += intres/loop
         
         #results += str(media)
-        results += res
+        results += str(res)
         results += '\n'
     
     outputName = 'salida_' + sys.argv[1]

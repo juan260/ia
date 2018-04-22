@@ -29,6 +29,7 @@ WINSREG=$(expr $WINSREG)
 if [ $WINSREG -gt 0 ]
 then
     OUTPUT=$(expr $OUTPUT - $WINSREG)
+    #OUTPUT=$(echo "scale= 14; $OUTOUT / 10" | bc)
     echo $OUTPUT
 else
     echo "-1000"
