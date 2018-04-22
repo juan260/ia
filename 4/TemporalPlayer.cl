@@ -600,6 +600,7 @@
                   ((> pts0 pts1) 1)
                   (t 0 ))))
         (list pts0 pts1)))
+        ;;(- pts0 pts1)))
 
 ;;; ------------------------------------------------------------------------------------------
 ;;; FUNCION PRINCIPAL PARA REALIZAR UNA PARTIDA ENTRE DOS JUGADORES
@@ -945,8 +946,9 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
-(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(setf x (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)))
+(if (< x 0) -1000
+(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
