@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((0 0 0 150 125 100) (0 0 0 75 50 25)))
+(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -950,14 +950,14 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-(setf x (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)))
-(if (< x 0) -1000
-(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print (if (> (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*)) 0)
+(- (+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
 (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*)))
+(+ (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))))
+-100000))

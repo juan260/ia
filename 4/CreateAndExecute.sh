@@ -23,17 +23,19 @@ sed -i "$sedcommand" TemporalPlayer.cl
 #cat jugadores.cl >> TemporalPlayer.cl
 #sbcl --noinform --disable-ldb --script TemporalPlayer.cl
 OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
-WINSREG=$(echo $OUTPUT | cut -d ' ' -f 1,2,3)
 
-WINSREG=$(expr $WINSREG)
-if [ $WINSREG -gt 0 ]
-then
-    OUTPUT=$(expr $OUTPUT - $WINSREG)
-    #OUTPUT=$(echo "scale= 14; $OUTOUT / 10" | bc)
-    echo $OUTPUT
-else
-    echo "-1000"
-fi
+#WINSREG=$(echo $OUTPUT | cut -d ' ' -f 1,2,3)
+
+#WINSREG=$(expr $WINSREG)
+#if [ $WINSREG -gt 0 ]
+#then
+#    OUTPUT=$(expr $OUTPUT - $WINSREG)
+echo "scale= 14; $OUTPUT / 10" | bc
+#echo $OUTPUT
+#    echo $OUTPUT
+#else
+#    echo "-1000"
+#fi
 
 #OUTPUT=$(sbcl --script TemporalPlayer.cl)
 #OUTPUT=$(expr $OUTPUT)
