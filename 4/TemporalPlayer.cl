@@ -815,17 +815,83 @@
 		    1000)
 		 0)))
 
-; Parameters tiene 7 eltos: 
-; 1. El coeficiente en caso de que tu hoyo_i tenga > i semillas
-; 2. El coeficiente en caso de que tu hoyo_i tenga < i semillas
-; 3. El coeficiente en caso de que tu hoyo_i tenga = i semillas
-; 4. El coeficiente en caso de que el otro hoyo_i tenga > i semillas
-; 5. El coeficiente en caso de que el otro hoyo_i tenga < i semillas
-; 6. El coeficiente en caso de que el otro hoyo_i tenga = i semillas
-; 7. El coeficiente para (num_semillas_mi_kajala - sum_semillas_enemigo_kajala)
+; Parameters tiene 3 eltos:
+; En el caso de que side sea tu lado, 
+; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
+; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
+; 3. El coeficiente en caso de que tu hoyo_i tenga = i+1 semillas        (>> 0)
+; En el caso de que side sea el lado del oponente:
+; 1. El coeficiente en caso de que el otro hoyo_i tenga > i+1 semillas   (>0 ?)
+; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
+; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
 
-(defun f-eval-ponderation-2 (estado parameters))
+(defun f-eval-ponderation-2 (estado parameters)
+  (+ 
+    (apply
+      '+
+      (calc-ponderations 
+        (estado-tablero estado)
+        (first parameters)
+        (lado-contrario (estado-lado-sgte-jugador estado))
+        0))
+    (apply
+      '+
+      (calc-ponderations 
+        (estado-tablero estado)
+        (first parameters)
+        (estado-lado-sgte-jugador estado)
+        0))
+    (if
+      (juego-terminado-p estado)
+      (if 
+        (> 
+          (suma-fila (estado-tablero estado) 
+                     (estado-lado-sgte-jugador estado))
+		  (suma-fila (estado-tablero estado) 
+                     (lado-contrario (estado-lado-sgte-jugador estado))))
+        -10000
+        10000))))
         
+; Parameters tiene 3 eltos:
+; En el caso de que side sea tu lado, 
+; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
+; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
+; 3. El coeficiente en caso de que tu hoyo_i tenga = i+1 semillas        (>> 0)
+; En el caso de que side sea el lado del oponente:
+; 1. El coeficiente en caso de que el otro hoyo_i tenga > i+1 semillas   (>0 ?)
+; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
+; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
+
+(defun calc-ponderations (tablero parameters side posicion)
+  (if 
+    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
+    ()
+    (cons                       ; Si no, devolvemos un cons de :
+      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
+        tablero
+        parameters
+        side 
+        posicion)
+      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
+        tablero
+        parameters
+        (+ 1 side)
+        posicion))))
+
+(defun calc-ponderation (tablero parameters side posicion)
+  (let 
+    ((numfichas (get-fichas tablero lado posicion)))
+    (cond
+      ; Si numfichas > 1+posicion, 1er coeficiente
+      ((> num-fichas (1 + posicion))
+       (first  parameters))
+      ; Si numfichas < 1+posicion, 2o coeficiente
+      ((< num-fichas (1 + posicion))
+       (second parameters))
+      ; Si numfichas = 1+posicion, 3er coeficiente
+      ((t)
+       (third parameters)))))
+
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx

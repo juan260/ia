@@ -22,13 +22,12 @@ def main():
 
         #Llamamos loop veces al script guardand la media de los resultados en una variable        
         loop = 10
-        media = 0
-        for i in range(loop):
-            res = subprocess.run(['./CreateAndExecute.sh', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5]), '0', '0', '0'], stdout=subprocess.PIPE)
-            intres = int(res.stdout.decode('utf-8'))
-            media += intres/loop
+        res = subprocess.run(['./CreateAndExecute.sh', str(perm[0]), str(perm[1]), str(perm[2]), '0', '0', '0', str(perm[3]), str(perm[4]), str(perm[5]), '0', '0', '0'], stdout=subprocess.PIPE)
+        #intres = int(res.stdout.decode('utf-8'))
+        #media += intres/loop
         
-        results += str(media)
+        #results += str(media)
+        results += res
         results += '\n'
     
     outputName = 'salida_' + sys.argv[1]
