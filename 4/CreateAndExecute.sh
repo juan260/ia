@@ -23,11 +23,21 @@ sed -i "$sedcommand" TemporalPlayer.cl
 #cat jugadores.cl >> TemporalPlayer.cl
 #sbcl --noinform --disable-ldb --script TemporalPlayer.cl
 OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
+WINSREG=$(echo $OUTPUT | cut -d ' ' -f 1,2,3)
+
+WINSREG=$(expr $WINSREG)
+if [ $WINSREG -gt 0 ]
+then
+    OUTPUT=$(expr $OUTPUT - $WINSREG)
+    echo $OUTPUT
+else
+    echo "-1000"
+fi
 
 #OUTPUT=$(sbcl --script TemporalPlayer.cl)
-echo $OUTPUT
-OUTPUT=$(expr $OUTPUT)
-echo $OUTPUT
+#OUTPUT=$(expr $OUTPUT)
+#echo $WINSREG
+
 #if [ "0" -gt "$OUTPUT" ]
 #then
 #        OUTPUT=0

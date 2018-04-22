@@ -785,8 +785,7 @@
     (unless (null accion) (ejecuta-accion estado accion))))
 
 
-
-
+(defvar *ponderations* '((100 50 75 0 0 0) (125 25 150 0 0 0)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -808,9 +807,24 @@
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
-            (estado-tablero estado))))
+            (estado-tablero estado))
+	(if  (juego-terminado-p estado)
+		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
+		    -1000
+		    1000)
+		 0)))
 
-        
+; Parameters tiene 7 eltos: 
+; 1. El coeficiente en caso de que tu hoyo_i tenga > i semillas
+; 2. El coeficiente en caso de que tu hoyo_i tenga < i semillas
+; 3. El coeficiente en caso de que tu hoyo_i tenga = i semillas
+; 4. El coeficiente en caso de que el otro hoyo_i tenga > i semillas
+; 5. El coeficiente en caso de que el otro hoyo_i tenga < i semillas
+; 6. El coeficiente en caso de que el otro hoyo_i tenga = i semillas
+; 7. El coeficiente para (num_semillas_mi_kajala - sum_semillas_enemigo_kajala)
+
+(defun f-eval-ponderation-2 (estado parameters))
         
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
@@ -869,5 +883,24 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-
 (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+(print '+)
+(partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
