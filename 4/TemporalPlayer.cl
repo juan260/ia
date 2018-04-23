@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((0 0 0 150 125 100) (0 0 0 75 50 25)))
+(defvar *ponderations* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -822,7 +822,11 @@
                         
 
 
+<<<<<<< HEAD
 (defvar *parameters* '((-1900 1900 1900) (1900 -1900 -1900)))
+=======
+(defvar *parameters* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
+>>>>>>> 3495f2d854f9fd0762e3729f483cf78d0ac4daa1
 
 
 
@@ -965,7 +969,7 @@
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;(print  (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
-   
+
 (defun suma (jug1 jug2 nveces)
   (if 
     (equal nveces 0)
@@ -987,6 +991,5 @@
      (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
-;(trace partida)
 (evaluador *jdr-nmx-verano* 5)
 ;(evaluador *jdr-nmx-helado* 6)
