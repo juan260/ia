@@ -822,11 +822,10 @@
                      
 
 
-<<<<<<< HEAD
-(defvar *parameters* '((-1900 1900 1900) (1900 -1900 -1900)))
-=======
-(defvar *parameters* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
->>>>>>> 3495f2d854f9fd0762e3729f483cf78d0ac4daa1
+(defvar *parameters* '((-87 87 350) (261 0 -350)))
+
+
+
 
 
 
@@ -991,5 +990,6 @@
      (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
-(evaluador *jdr-nmx-verano* 5)
+
+(evaluador *jdr-nmx-verano* 100)
 ;(evaluador *jdr-nmx-helado* 6)
