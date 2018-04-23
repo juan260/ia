@@ -819,7 +819,7 @@
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
-                        
+                     
 
 
 (defvar *parameters* '((1 2 3 4 5 6) (7 8 9 10 11 12)))
