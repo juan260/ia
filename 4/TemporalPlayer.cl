@@ -822,7 +822,7 @@
                         
 
 
-
+(defvar *parameters* '((-1900 1900 1900) (1900 -1900 -1900)))
 
 
 
@@ -857,7 +857,7 @@
         10000)
         0)))
         
-; Parameters tiene 3 eltos:
+; Parameters tiene 6 (3+3) eltos:
 ; En el caso de que side sea tu lado, 
 ; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
 ; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
@@ -880,21 +880,21 @@
       (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
         tablero
         parameters
-        (+ 1 side)
-        posicion))))
+        side
+        (+ 1 posicion)))))
 
 (defun calc-ponderation (tablero parameters side posicion)
   (let 
-    ((numfichas (get-fichas tablero lado posicion)))
+    ((num-fichas (get-fichas tablero side posicion)))
     (cond
       ; Si numfichas > 1+posicion, 1er coeficiente
-      ((> num-fichas (1 + posicion))
+      ((> num-fichas (+ 1 posicion))
        (first  parameters))
       ; Si numfichas < 1+posicion, 2o coeficiente
-      ((< num-fichas (1 + posicion))
+      ((< num-fichas (+ 1 posicion))
        (second parameters))
       ; Si numfichas = 1+posicion, 3er coeficiente
-      ((t)
+      (t
        (third parameters)))))
 
 
@@ -939,7 +939,7 @@
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-Regular))
 
-                        
+                       
 ;;; f-juego para un jugador que realiza movimientos aleatorios
 ;;; ------------------------------------------------------------------------------------------
 (defun f-j-aleatorio (estado &optional profundidad-max f-eval)
@@ -964,7 +964,7 @@
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;(print  (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
    
 (defun suma (jug1 jug2 nveces)
   (if 
@@ -974,9 +974,10 @@
       (partida 0 2 (list jug1 jug2))
       (suma jug2 jug1 (- nveces 1)))))
 
-(defun (media jug1 jug2  nveces)
+(defun media (jug1 jug2  nveces)
   (print
-    (/ (suma jug1 jug2 nveces) nveces)))
+    (float
+      (/ (suma jug1 jug2 nveces) nveces))))
 
 (defun evaluador (jugador nveces)
   (cond
@@ -984,7 +985,8 @@
      (print '-1000))
     ((< 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
      (print '-1000))
-    ((t)
+    (t
      (media jugador *jdr-aleatorio* nveces))))
-
-
+;(trace partida)
+(evaluador *jdr-nmx-verano* 5)
+;(evaluador *jdr-nmx-helado* 6)
