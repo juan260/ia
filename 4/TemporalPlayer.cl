@@ -890,13 +890,13 @@
   (let 
     ((num-fichas (get-fichas tablero side posicion)))
     (cond
-      ; Si numfichas > 1+posicion, 1er coeficiente
-      ((> num-fichas (+ 1 posicion))
+      ; Si numfichas > 6 - posicion, 1er coeficiente
+      ((> num-fichas (- 6 posicion))
        (first  parameters))
-      ; Si numfichas < 1+posicion, 2o coeficiente
-      ((< num-fichas (+ 1 posicion))
+      ; Si numfichas < 6 - posicion, 2o coeficiente
+      ((< num-fichas (- 6 posicion))
        (second parameters))
-      ; Si numfichas = 1+posicion, 3er coeficiente
+      ; Si numfichas = 6 - posicion, 3er coeficiente
       (t
        (third parameters)))))
 
