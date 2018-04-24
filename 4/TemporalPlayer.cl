@@ -822,7 +822,6 @@
                      
 
 
-(defvar *parameters* '((-1101 -1101 1101) (549 549 -1101)))
 
 
 
@@ -840,14 +839,14 @@
         (estado-tablero estado)
         (first parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        0))
+        3))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (estado-lado-sgte-jugador estado)
-        0))
+        3))
     (if
       (juego-terminado-p estado)
       (if 
@@ -994,11 +993,15 @@
   (cond
     ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
          (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-         (>= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
-         (>= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
+         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
      (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
 
 (evaluador *jdr-nmx-verano* 5)
+;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
+;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
+;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
+;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
 ;(evaluador *jdr-nmx-helado* 6)
