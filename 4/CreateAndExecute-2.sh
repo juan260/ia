@@ -12,8 +12,8 @@
 ###################################################################
 
 
-echo "(defvar *parameters* '(($1 $2 $3 $4) ($5 $6 $7 $8)))"
-replacementline=$(echo "(defvar *parameters* '(($1 $2 $3 $4) ($5 $6 $7 $8)))")
+#echo "(defvar *parameters* '(($1 $2 $3) ($4 $5 $6)))"
+replacementline=$(echo "(defvar *parameters* '(($1 $2 $3) ($4 $5 $6)))")
 sedcommand="825s/.*/${replacementline}/"
 sed -i "$sedcommand" TemporalPlayer.cl
 OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)

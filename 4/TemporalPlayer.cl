@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((100 2 3 4 5 6) (7 8 9 10 110 10)))
+(defvar *ponderations* '((0 0 25 50 75 150) (0 0 0 125 175 100)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -822,7 +822,7 @@
                      
 
 
-(defvar *parameters* '((-100 100 100 50) (100 -100 -100 -50)))
+(defvar *parameters* '((-1101 -1101 1101) (549 549 -1101)))
 
 
 
@@ -862,13 +862,13 @@
         
 ; Parameters tiene 6 (3+3) eltos:
 ; En el caso de que side sea tu lado, 
-; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
-; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
-; 3. El coeficiente en caso de que tu hoyo_i tenga = i+1 semillas        (>> 0)
+; 1. El coeficiente en caso de que tu hoyo_i tenga > 6-i semillas        (<0 ?)
+; 2. El coeficiente en caso de que tu hoyo_i tenga < 6-i semillas        (>0 ?)
+; 3. El coeficiente en caso de que tu hoyo_i tenga = 6-i semillas        (>> 0)
 ; En el caso de que side sea el lado del oponente:
-; 1. El coeficiente en caso de que el otro hoyo_i tenga > i+1 semillas   (>0 ?)
-; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
-; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
+; 1. El coeficiente en caso de que el otro hoyo_i tenga > 6-i semillas   (>0 ?)
+; 2. El coeficiente en caso de que el otro hoyo_i tenga < 6-i semillas   (<0 ?)
+; 3. El coeficiente en caso de que el otro hoyo_i tenga = 6-i semillas   (<< 0)
 
 (defun calc-ponderations (tablero parameters side posicion)
   (if 
@@ -902,7 +902,7 @@
       ; Si numfichas < 6 - posicion, 2o coeficiente
       ((< num-fichas (- 6 posicion))
        (second parameters))
-      ; Si numfichas = 6 - posicion, 3er coeficiente
+      ; Si numfichas = 6 - posicion, 3er coeficiente (maxima ganancia/perdida)
       (t
        (third parameters)))))
 
@@ -1000,5 +1000,5 @@
     (t
      (media jugador *jdr-aleatorio* nveces))))
 
-(evaluador *jdr-nmx-verano* 50)
+(evaluador *jdr-nmx-verano* 5)
 ;(evaluador *jdr-nmx-helado* 6)
