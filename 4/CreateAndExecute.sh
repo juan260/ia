@@ -23,14 +23,14 @@ sed -i "$sedcommand" TemporalPlayer.cl
 #cat jugadores.cl >> TemporalPlayer.cl
 #sbcl --noinform --disable-ldb --script TemporalPlayer.cl
 OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
-
+echo $OUTPUT
 #WINSREG=$(echo $OUTPUT | cut -d ' ' -f 1,2,3)
 
 #WINSREG=$(expr $WINSREG)
 #if [ $WINSREG -gt 0 ]
 #then
 #    OUTPUT=$(expr $OUTPUT - $WINSREG)
-echo "scale= 14; $OUTPUT / 10" | bc
+#echo "scale= 14; $OUTPUT / 10" | bc
 #echo $OUTPUT
 #    echo $OUTPUT
 #else

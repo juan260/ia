@@ -33,6 +33,7 @@ def main():
                 # Llamar al script con argumentos: p1 p2 maxpunct -p1 -p2 -maxpunct
                 res = subprocess.run(['./CreateAndExecute-2.sh', str(p1), str(p2), str(maxpunct), str(-1*p1), str(-1*p2), str(-1*maxpunct), str(numrepes)], stdout=subprocess.PIPE)
                 results += res.stdout.decode('utf-8')
+                print(res.stdout.decode('utf-8'))
                 #results += '\n'        
     
     outputName = 'salida_' + sys.argv[1]
