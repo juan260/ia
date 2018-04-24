@@ -822,7 +822,7 @@
                      
 
 
-(defvar *parameters* '((0 000 0 400000) (-10000 0 -0 -100000)))
+(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
 
 
 
@@ -839,14 +839,14 @@
       (calc-ponderations 
         (estado-tablero estado)
         (first parameters)
-        (lado-contrario (estado-lado-sgte-jugador estado))
+        (estado-lado-sgte-jugador estado)
         3))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
-        (estado-lado-sgte-jugador estado)
+        (lado-contrario (estado-lado-sgte-jugador estado))
         3))
     (if
       (juego-terminado-p estado)

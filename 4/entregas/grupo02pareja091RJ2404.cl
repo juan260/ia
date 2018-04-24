@@ -5,7 +5,7 @@
 (in-package grupo02pareja091RJ2304)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation-2 estado '((-280 70 700 350) (280 -70 -700 -350)))) ; función de evaluación heurística a implementar
+    (f-eval-ponderation-2 estado '((0 0 0 400000) (-10000 0 0 100000)))) ; función de evaluación heurística a implementar
 
 (defvar *alias* '|oso_panda_oooso_panda|) ; alias que aparecerá en el ranking
 
