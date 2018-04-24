@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((100 2 3 4 5 6) (7 8 9 10 110 10)))
+(defvar *ponderations* '((0 0 25 50 100 75) (0 0 0 125 150 175)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -822,7 +822,9 @@
                      
 
 
+
 (defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
+
 
 
 
@@ -862,13 +864,13 @@
         
 ; Parameters tiene 6 (3+3) eltos:
 ; En el caso de que side sea tu lado, 
-; 1. El coeficiente en caso de que tu hoyo_i tenga > i+1 semillas        (<0 ?)
-; 2. El coeficiente en caso de que tu hoyo_i tenga < i+1 semillas        (>0 ?)
-; 3. El coeficiente en caso de que tu hoyo_i tenga = i+1 semillas        (>> 0)
+; 1. El coeficiente en caso de que tu hoyo_i tenga > 6-i semillas        (<0 ?)
+; 2. El coeficiente en caso de que tu hoyo_i tenga < 6-i semillas        (>0 ?)
+; 3. El coeficiente en caso de que tu hoyo_i tenga = 6-i semillas        (>> 0)
 ; En el caso de que side sea el lado del oponente:
-; 1. El coeficiente en caso de que el otro hoyo_i tenga > i+1 semillas   (>0 ?)
-; 2. El coeficiente en caso de que el otro hoyo_i tenga < i+1 semillas   (<0 ?)
-; 3. El coeficiente en caso de que el otro hoyo_i tenga = i+1 semillas   (<< 0)
+; 1. El coeficiente en caso de que el otro hoyo_i tenga > 6-i semillas   (>0 ?)
+; 2. El coeficiente en caso de que el otro hoyo_i tenga < 6-i semillas   (<0 ?)
+; 3. El coeficiente en caso de que el otro hoyo_i tenga = 6-i semillas   (<< 0)
 
 (defun calc-ponderations (tablero parameters side posicion)
   (if 
@@ -902,7 +904,7 @@
       ; Si numfichas < 6 - posicion, 2o coeficiente
       ((< num-fichas (- 6 posicion))
        (second parameters))
-      ; Si numfichas = 6 - posicion, 3er coeficiente
+      ; Si numfichas = 6 - posicion, 3er coeficiente (maxima ganancia/perdida)
       (t
        (third parameters)))))
 
@@ -981,7 +983,7 @@
   (if 
     (equal nveces 0)
     0
-    (+ 
+    (- 
       (partida 0 2 (list jug1 jug2))
       (suma jug2 jug1 (- nveces 1)))))
 
@@ -993,15 +995,17 @@
 (defun evaluador (jugador nveces)
   (cond
     ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+         ;(>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+         ;(<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
          (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
      (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
+
+;(evaluador *jdr-nmx-verano* 5)
 ;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
 ;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
 ;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
 ;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
-(evaluador *jdr-nmx-verano* 50)
-;(evaluador *jdr-nmx-helado* 6)
+(evaluador *jdr-nmx-helado* 6)
+;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))

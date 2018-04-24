@@ -8,6 +8,8 @@ def main():
     # En ppio, este tiene 4^6 = 4096 ejecs
     results = ''
       
+    outputName = 'salida_' + sys.argv[1]
+    outputFile = open(outputName, 'w')
     # Puntuaciones para cuando acabas en kajala (>> 0)
     # Esta puntuacion no deberia acercarse a 10000 (lo que se suma/resta en caso de haber
     # ganado o perdido la partida)
@@ -38,10 +40,8 @@ def main():
                             res = subprocess.run(['./CreateAndExecute-2.sh', str(p1), str(p2), str(maxpunct), str(p4), str(p5), str(-1*maxpunct2), str(numrepes)], stdout=subprocess.PIPE)
                             results += res.stdout.decode('utf-8')
                             #results += '\n'        
-    
-    outputName = 'salida_' + sys.argv[1]
-    outputFile = open(outputName, 'w')
-    outputFile.write(results)
+            outputFile.write(results)
+                
 
 main()
 
