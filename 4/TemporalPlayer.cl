@@ -822,7 +822,7 @@
                      
 
 
-(defvar *parameters* '((2000 0 3) (10 50 60)))
+(defvar *parameters* '((-100 100 100 50) (100 -100 -100 -50)))
 
 
 
@@ -890,6 +890,12 @@
   (let 
     ((num-fichas (get-fichas tablero side posicion)))
     (cond
+      ;Si podemos efectuar un robo 4to coeficiente * numero de fichas robables
+      ((and (< num-fichas (- 6 posicion))
+            (eql (get-fichas tablero side (+ posicion num-fichas)) 0))
+            
+            (* (get-fichas tablero (lado-contrario side) (- 5 (+ posicion num-fichas)))
+                (fourth parameters)))
       ; Si numfichas > 6 - posicion, 1er coeficiente
       ((> num-fichas (- 6 posicion))
        (first  parameters))
@@ -994,5 +1000,5 @@
     (t
      (media jugador *jdr-aleatorio* nveces))))
 
-;(evaluador *jdr-nmx-verano* 100)
+(evaluador *jdr-nmx-verano* 50)
 ;(evaluador *jdr-nmx-helado* 6)
