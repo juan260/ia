@@ -5,9 +5,9 @@
 (in-package grupo02pareja091RJ2304)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation-2 estado '((-1100 825 1100) (550 -275 -1100)))) ; función de evaluación heurística a implementar
+    (f-eval-ponderation-2 estado '((-280 70 700 350) (280 -70 -700 -350)))) ; función de evaluación heurística a implementar
 
-(defvar *alias* '|me_queme_tomando_el_sol|) ; alias que aparecerá en el ranking
+(defvar *alias* '|oso_panda_oooso_panda|) ; alias que aparecerá en el ranking
 
 (defun f-eval-ponderation-2 (estado parameters)
   (+ 
@@ -57,13 +57,19 @@
   (let 
     ((num-fichas (get-fichas tablero side posicion)))
     (cond
-      ; Si numfichas > 1+posicion, 1er coeficiente
-      ((> num-fichas (+ 1 posicion))
+      ;Si podemos efectuar un robo 4to coeficiente * numero de fichas robables
+      ((and (< num-fichas (- 6 posicion))
+            (eql (get-fichas tablero side (+ posicion num-fichas)) 0))
+            
+            (* (get-fichas tablero (lado-contrario side) (- 5 (+ posicion num-fichas)))
+                (fourth parameters)))
+      ; Si numfichas > 6 - posicion, 1er coeficiente
+      ((> num-fichas (- 6 posicion))
        (first  parameters))
-      ; Si numfichas < 1+posicion, 2o coeficiente
-      ((< num-fichas (+ 1 posicion))
+      ; Si numfichas < 6 - posicion, 2o coeficiente
+      ((< num-fichas (- 6 posicion))
        (second parameters))
-      ; Si numfichas = 1+posicion, 3er coeficiente
+      ; Si numfichas = 6 - posicion, 3er coeficiente
       (t
        (third parameters)))))
                   
