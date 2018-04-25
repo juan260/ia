@@ -785,7 +785,6 @@
 
 
 
-(defvar *ponderations* '((0 0 25 50 150 100) (0 0 0 175 125 75)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -822,7 +821,9 @@
                      
 
 
-(defvar *parameters* '((-1101 -1101 1101) (-1 -276 -1101)))
+
+(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
+
 
 
 
@@ -838,14 +839,14 @@
       (calc-ponderations 
         (estado-tablero estado)
         (first parameters)
-        (lado-contrario (estado-lado-sgte-jugador estado))
+        (estado-lado-sgte-jugador estado)
         3))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
-        (estado-lado-sgte-jugador estado)
+        (lado-contrario (estado-lado-sgte-jugador estado))
         3))
     (if
       (juego-terminado-p estado)
@@ -980,7 +981,7 @@
   (if 
     (equal nveces 0)
     0
-    (+ 
+    (- 
       (partida 0 2 (list jug1 jug2))
       (suma jug2 jug1 (- nveces 1)))))
 
@@ -992,16 +993,17 @@
 (defun evaluador (jugador nveces)
   (cond
     ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+         ;(>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+         ;(<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
          (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
      (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
 
-(evaluador *jdr-nmx-verano* 5)
+;(evaluador *jdr-nmx-verano* 5)
 ;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
 ;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
 ;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
 ;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
-;(evaluador *jdr-nmx-helado* 6)
+(evaluador *jdr-nmx-helado* 6)
+;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))

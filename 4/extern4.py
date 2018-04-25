@@ -28,7 +28,8 @@ def main():
         
         results += res.stdout.decode('utf-8')
         results += '\n'
-    
+        
+        print(args + ' ' + res.stdout.decode('utf-8'))
     outputFile.write(results)
 '''
     perms = list(itertools.permutations(l))
