@@ -7,12 +7,12 @@
 ###################################################################
 
 
-replacementline=$1
 echo $1
+replacementline=$1
 echo $@
 sedcommand="788s/.*/${replacementline}/"
 
-echo "${sedcommand}"
+#echo "${sedcommand}"
 
 
 #sed -i "$sedcommand" TemporalPlayer.cl
