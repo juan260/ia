@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((0 0 25 50 75 150) (0 0 0 125 175 100)))
+(defvar *ponderations* '((0 0 25 50 150 100) (0 0 0 175 125 75)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -822,7 +822,7 @@
                      
 
 
-
+(defvar *parameters* '((-1101 -1101 1101) (-1 -276 -1101)))
 
 
 
