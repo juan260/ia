@@ -785,7 +785,7 @@
 
 
 
-
+(defvar *ponderations* '((175 150 125 100 0 0) (75 50 25 0 0 0)))
 
 (defun f-j-nmx (estado profundidad-max f-eval)
 ;;;(negamax-a-b estado profundidad-max f-eval))
@@ -990,6 +990,17 @@
     (float
       (/ (suma jug1 jug2 nveces) nveces))))
 
+
+; Funcion para saber si un jugador determinado gana o no al aleatorio
+(defun pasa-regular(jugador)
+  (if 
+    (and
+      (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
+      (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
+    (print 'pasa)
+    (print 'nopasa)))
+
+
 (defun evaluador (jugador nveces)
   (cond
     ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
@@ -1005,5 +1016,15 @@
 ;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
 ;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
 ;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
-(evaluador *jdr-nmx-helado* 6)
+;(evaluador *jdr-nmx-helado* 6)
 ;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
+; (partida 0 2 (list *jdr-nmx-ponderation*  *jdr-nmx-Regular*))
+; (partida 0 2 (list  *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
+; (partida 0 2 (list  *jdr-aleatorio* *jdr-nmx-ponderation* ))
+; (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*  ))
+; (partida 0 2 (list *jdr-aleatorio*  *jdr-nmx-helado*))
+; (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-helado*   ))
+;(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Regular*))
+;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
+
+(pasa-regular *jdr-nmx-helado*)
