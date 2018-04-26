@@ -839,14 +839,14 @@
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        3))
+        0))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        3))
+        0))
     (if
       (juego-terminado-p estado)
       (if 
@@ -963,7 +963,7 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
-;(print (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*)))
+;(print (partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Bueno*)))
 ;(print (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
 ;(if (< x 0) -1000
 ;(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
@@ -1015,10 +1015,10 @@
 
 
 (evaluador *jdr-nmx-helado* 200)
-;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
-;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
-;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
-;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
+(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
+         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
+         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
+         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
 ;(evaluador *jdr-nmx-helado* 6)
 ;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
 ; (partida 0 2 (list *jdr-nmx-ponderation*  *jdr-nmx-Regular*))

@@ -844,14 +844,14 @@
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        3))
+        0))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        3))
+        0))
     (if
       (juego-terminado-p estado)
       (if 
