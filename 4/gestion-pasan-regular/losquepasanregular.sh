@@ -7,16 +7,12 @@
 ###################################################################
 
 
-echo $1
-replacementline=$1
-#echo $@
-sedcommand="788s/.*/${replacementline}/"
+
+replacementline="$1"
+sedcommand="788s/.*/${1}/"
+
 sed -i "$sedcommand" TemporalPlayer.cl
-#echo "${sedcommand}"
-
-
-#sed -i "$sedcommand" TemporalPlayer.cl
 
 #OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
 
-#echo $OUTPUT
+echo $OUTPUT
