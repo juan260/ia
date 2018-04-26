@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((150 125 100 0 0 0)(75 50 25 0 0 0)))
+(defvar *ponderations* '((175 150 125 100 0 0)(50 25 75 0 0 0)))
 
 
 
@@ -1032,5 +1032,5 @@
 
 ;(pasa-regular *jdr-nmx-helado*)
 
-(evaluador *jdr-nmx-helado* 15)
+(evaluador *jdr-nmx-helado* 30)
 
