@@ -1032,5 +1032,5 @@
 
 ;(pasa-regular *jdr-nmx-helado*)
 
-(evaluador *jdr-nmx-helado* 10)
+(evaluador *jdr-nmx-helado* 15)
 
