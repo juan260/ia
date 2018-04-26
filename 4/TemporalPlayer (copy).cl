@@ -787,9 +787,6 @@
 
 
 
-
-
-
 (defun f-j-nmx (estado profundidad-max f-eval)
 ;;;(negamax-a-b estado profundidad-max f-eval))
   (negamax estado profundidad-max f-eval))
@@ -837,28 +834,22 @@
 
 (defun f-eval-ponderation-2 (estado parameters)
   (+ 
-    (apply
-      '+
-      (calc-ponderations 
+    (calc-ponderations 
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        3))
-    (apply
-      '+
-      (calc-ponderations 
+        3)
+    (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        3))
+        3)
     (if
       (juego-terminado-p estado)
       (if 
         (> 
-          (suma-fila (estado-tablero estado) 
-                     (estado-lado-sgte-jugador estado))
-		  (suma-fila (estado-tablero estado) 
-                     (lado-contrario (estado-lado-sgte-jugador estado))))
+          (get-pts 1) 
+		  (get-pts 0))
         -10000
         10000)
         0)))
@@ -993,24 +984,13 @@
     (float
       (/ (suma jug1 jug2 nveces) nveces))))
 
-
-; Funcion para saber si un jugador determinado gana o no al aleatorio
-(defun pasa-regular(jugador)
-  (if 
-    (and
-      (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-      (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-    (print 'pasa)
-    (print 'nopasa)))
-
-
 (defun evaluador (jugador nveces)
   (cond
-;    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-;         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-;     (print '-1000))
+    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
+         ;(>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+         ;(<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
+     (print '-1000))
     (t
      (media jugador *jdr-aleatorio* nveces))))
 
@@ -1019,18 +999,5 @@
 ;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
 ;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
 ;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
-;(evaluador *jdr-nmx-helado* 6)
+(evaluador *jdr-nmx-helado* 30)
 ;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
-; (partida 0 2 (list *jdr-nmx-ponderation*  *jdr-nmx-Regular*))
-; (partida 0 2 (list  *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
-; (partida 0 2 (list  *jdr-aleatorio* *jdr-nmx-ponderation* ))
-; (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*  ))
-; (partida 0 2 (list *jdr-aleatorio*  *jdr-nmx-helado*))
-; (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-helado*   ))
-;(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Regular*))
-;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
-
-;(pasa-regular *jdr-nmx-helado*)
-
-(evaluador *jdr-nmx-helado* 10)
-

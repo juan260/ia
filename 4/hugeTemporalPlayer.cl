@@ -785,10 +785,7 @@
 
 
 
-
-
-
-
+(defvar *ponderations* '((175 150 125 100 0 0) (75 50 25 0 0 0)))
 
 (defun f-j-nmx (estado profundidad-max f-eval)
 ;;;(negamax-a-b estado profundidad-max f-eval))
@@ -1006,13 +1003,17 @@
 
 (defun evaluador (jugador nveces)
   (cond
-;    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-;         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-;     (print '-1000))
+    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*))))
+         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+        (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador)))
+
+     (print '-1000))
     (t
-     (media jugador *jdr-aleatorio* nveces))))
+     (media jugador *jdr-nmx-Regular* nveces))))
+     
+     
+
 
 ;(evaluador *jdr-nmx-verano* 5)
 ;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
@@ -1030,7 +1031,11 @@
 ;(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Regular*))
 ;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
 
-;(pasa-regular *jdr-nmx-helado*)
-
-(evaluador *jdr-nmx-helado* 10)
+;(print (media *jdr-nmx-helado* *jdr-aleatorio* 30))
+(defvar *ponderations* '((0 0 0 150 125 75)(0 0 0 50 25 100)))
+(defvar *jdr-nmx-helado* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
+(evaluador *jdr-nmx-helado* 30)
 

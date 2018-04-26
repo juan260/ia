@@ -9,14 +9,14 @@
 
 echo $1
 replacementline=$1
-echo $@
+#echo $@
 sedcommand="788s/.*/${replacementline}/"
-
+sed -i "$sedcommand" TemporalPlayer.cl
 #echo "${sedcommand}"
 
 
 #sed -i "$sedcommand" TemporalPlayer.cl
 
-OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
+#OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
 
 #echo $OUTPUT
