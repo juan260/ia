@@ -1,0 +1,3 @@
+(defvar *ponderations* '((0 0 0 25 150 50)(0 0 0 125 100 75)))
+(defvar *ponderations* '((0 0 0 50 25 75)(0 0 0 100 150 125)))
+(defvar *ponderations* '((0 0 0 50 150 25)(0 0 0 125 100 75)))
