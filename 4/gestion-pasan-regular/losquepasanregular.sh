@@ -11,8 +11,8 @@
 replacementline="$1"
 sedcommand="788s/.*/${1}/"
 
-sed -i "$sedcommand" TemporalPlayer.cl
+sed -i "$sedcommand" TemporalPlayerb.cl
 
-#OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
+OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayerb.cl)
 
 echo $OUTPUT

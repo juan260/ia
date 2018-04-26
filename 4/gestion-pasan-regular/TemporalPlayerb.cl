@@ -785,8 +785,7 @@
 
 
 
-(defvar *ponderations* '((200 175 150 125 0 0) (100 75 50 25 0 0)))
-
+(defvar *ponderations* '((200 175 150 125 0 0)(100 75 50 25 0 0)))
 
 
 
@@ -844,14 +843,14 @@
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        0))
+        3))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        0))
+        3))
     (if
       (juego-terminado-p estado)
       (if 
@@ -1031,7 +1030,8 @@
 ;(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Regular*))
 ;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
 
-(pasa-regular *jdr-nmx-helado*)
+;(pasa-regular *jdr-nmx-helado*)
 
-;(evaluador *jdr-nmx-helado* 15)
+(evaluador *jdr-nmx-helado* 15)
+
 
