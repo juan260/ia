@@ -1,0 +1,6 @@
+0.44 (defvar *ponderations* '((0 0 0 150 100 50)(0 0 0 75 25 125)))
+-0.72 (defvar *ponderations* '((0 0 0 50 150 25)(0 0 0 125 100 75)))
+-0.96 (defvar *ponderations* '((0 0 0 150 125 75)(0 0 0 50 25 100)))
+-1.48 (defvar *ponderations* '((0 0 0 25 150 50)(0 0 0 125 100 75)))
+-3.02 (defvar *ponderations* '((0 0 0 150 100 25)(0 0 0 125 75 50)))
+-3.2 (defvar *ponderations* '((0 0 0 50 25 75)(0 0 0 100 150 125)))
