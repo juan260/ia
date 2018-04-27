@@ -21,6 +21,11 @@ maxsize = sys.maxsize/2
 for path in sys.argv[2:]:
     infile = open(path, "r")
     for line in infile:
+        splittedLine = line.split("\t")
+        if len(splittedLine)==2:
+            if float(splittedLine[1]) < 12:
+                continue
+        
         res=replaceLine(str(line)[:-1])
         cola.put(((-1.0*res), str(line)))
         if total > maxsize or i > maxsize:

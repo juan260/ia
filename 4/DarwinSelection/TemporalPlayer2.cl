@@ -782,10 +782,10 @@
 
 
 
+(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
 
 
-
-(defvar *ponderations* '((175 150 125 100 0 0)(50 25 75 0 0 0)))
+(defvar *ponderations* '((50 25 75 125 0 0)(200 150 175 100 0 0)))
 
 (defun f-j-nmx (estado profundidad-max f-eval)
   (negamax estado profundidad-max f-eval))
@@ -799,7 +799,7 @@
                 (rest ponderation)
                 lado tablero))))
 
-(defun f-eval-ponderation (estado ponderations)
+(defun f-eval-ponderation (estado ponderations parameters)
     (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
@@ -809,14 +809,90 @@
 	(if  (juego-terminado-p estado)
 		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
 			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
-		    -1000
-		    1000)
-		 0)))
+		    -10000
+		    10000)
+		 0)
+    (f-eval-ponderation-2 parameters))
+		 
+(defun f-eval-ponderation-2 (estado parameters)
+  (+ 
+    (apply
+      '+
+      (calc-ponderations 
+        (estado-tablero estado)
+        (first parameters)
+        (estado-lado-sgte-jugador estado)
+        0))
+    (apply
+      '+
+      (calc-ponderations 
+        (estado-tablero estado)
+        (second parameters)
+        (lado-contrario (estado-lado-sgte-jugador estado))
+        0))
+    (if
+      (juego-terminado-p estado)
+      (if 
+        (> 
+          (suma-fila (estado-tablero estado) 
+                     (estado-lado-sgte-jugador estado))
+		  (suma-fila (estado-tablero estado) 
+                     (lado-contrario (estado-lado-sgte-jugador estado))))
+        -10000
+        10000)
+        0)))
+        
+; Parameters tiene 6 (3+3) eltos:
+; En el caso de que side sea tu lado, 
+; 1. El coeficiente en caso de que tu hoyo_i tenga > 6-i semillas        (<0 ?)
+; 2. El coeficiente en caso de que tu hoyo_i tenga < 6-i semillas        (>0 ?)
+; 3. El coeficiente en caso de que tu hoyo_i tenga = 6-i semillas        (>> 0)
+; En el caso de que side sea el lado del oponente:
+; 1. El coeficiente en caso de que el otro hoyo_i tenga > 6-i semillas   (>0 ?)
+; 2. El coeficiente en caso de que el otro hoyo_i tenga < 6-i semillas   (<0 ?)
+; 3. El coeficiente en caso de que el otro hoyo_i tenga = 6-i semillas   (<< 0)
 
+(defun calc-ponderations (tablero parameters side posicion)
+  (if 
+    (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
+    ()
+    (cons                       ; Si no, devolvemos un cons de :
+      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
+        tablero
+        parameters
+        side 
+        posicion)
+      (calc-ponderations        ; Y la lista ponderacion correspondiente a demas posiciciones
+        tablero
+        parameters
+        side
+        (+ 1 posicion)))))
+
+(defun calc-ponderation (tablero parameters side posicion)
+  (let 
+    ((num-fichas (get-fichas tablero side posicion)))
+    (cond
+      ;Si podemos efectuar un robo 4to coeficiente * numero de fichas robables
+      ((and (< num-fichas (- 6 posicion))
+            (eql (get-fichas tablero side (+ posicion num-fichas)) 0))
+            
+            (* (get-fichas tablero (lado-contrario side) (- 5 (+ posicion num-fichas)))
+                (fourth parameters)))
+      ; Si numfichas > 6 - posicion, 1er coeficiente
+      ((> num-fichas (- 6 posicion))
+       (first  parameters))
+      ; Si numfichas < 6 - posicion, 2o coeficiente
+      ((< num-fichas (- 6 posicion))
+       (second parameters))
+      ; Si numfichas = 6 - posicion, 3er coeficiente (maxima ganancia/perdida)
+      (t
+       (third parameters)))))
+       
+       
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *parameters*))))
 
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
