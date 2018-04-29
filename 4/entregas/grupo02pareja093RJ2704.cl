@@ -1,13 +1,13 @@
-(defpackage :grupo02pareja091RJ1804 ; se declara un paquete lisp que usa common-lisp
+(defpackage :grupo02pareja093RJ2704 ; se declara un paquete lisp que usa common-lisp
 	(:use :common-lisp :mancala) ; y mancala, y exporta la función de evaluación
 	(:export :heuristica :*alias*)) ; heurística y un alias para el torneo
 
-(in-package grupo02pareja009RJDIAMES)
+(in-package grupo02pareja093RJ2704)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation estado '(0 0 0 75 25 150) (0 0 0 50 125 100))) ; función de evaluación heurística a implementar
+    (f-eval-ponderation estado '((26 60 22 28 12 6) (2 52 34 34 8 20)))) ; función de evaluación heurística a implementar
 
-(defvar *alias* '|chocolate_a_la_taza|) ; alias que aparecerá en el ranking
+(defvar *alias* '|lala|) ; alias que aparecerá en el ranking
 
 (defun ponderate (position ponderation lado tablero)
     (if (null ponderation)
@@ -24,5 +24,15 @@
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
-            (estado-tablero estado))))
-                  
+            (estado-tablero estado))
+	(if  (juego-terminado-p estado)
+		(if 
+          (< (suma-fila 
+                 (estado-tablero estado) 
+                 (estado-lado-sgte-jugador estado))
+               (suma-fila
+                 (estado-tablero estado) 
+                 (lado-contrario (estado-lado-sgte-jugador estado))))
+		  -1000
+		  1000)
+		 0)))

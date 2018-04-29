@@ -15,6 +15,7 @@
 	   :estado-lado-sgte-jugador
 	   :estado-tablero
 	   :estado-tablero
+	   :f-j-humano
 	   :generar-sucesores
 	   :get-fichas
 	   :get-pts
@@ -29,6 +30,7 @@
 	   :make-jugador
 	   :negamax
 	   :partida
+	   :pide-accion
 	   :posiciones-con-fichas-lado
 	   :put-tablero-aux
 	   :reset-tablero-aux
@@ -523,6 +525,24 @@
   (unless (juego-terminado-p estado)
     (mapcar #'(lambda(x) (ejecuta-accion estado x)) (acciones-posibles estado))))
 
+;;; Pide una accion al usuario entre las posibles
+(defun pide-accion (posibles-acc)
+  (format t "~%Jugador Humano. ~%  Elija entre: ~A~%  o en modo abreviado: ~A~%  Introduzca jugada o x para terminar : "
+    posibles-acc (abreviado posibles-acc))
+  (let ((input (read)))
+    (unless (eq 'x input)
+      (let ((accion (if (numberp input)
+                        (list (if (>= (signum input) 0) 'r 'l) (abs input))
+                      input)))
+        (cond
+         ((and (listp accion)
+               (or (eq (car accion) 'setq) (eq (car accion) 'setf))
+               (member (second accion) '(*verb* *verjugada* *vermarcador*)))
+          (eval accion) (format t "~%OK")
+          (pide-accion posibles-acc))
+         ((member accion posibles-acc :test #'equal) accion)
+         (t (format t "~%Sintaxis: (S P)|PA  Donde S=sentido siembra, P=posicion valida, PA=posicion en modo abreviado ~%~10TModo abreviado: n>=0 = (R |n|), n<0 = (L |n|)" )
+            (pide-accion posibles-acc)))))))
 
 ;;; Presenta en modo abreviado las posibles acciones
 (defun abreviado (posibles-acc)
@@ -658,7 +678,7 @@
 
 (defun get-timeout (plyr)
   (cond
-   ((eq (jugador-f-juego plyr) #'+) *thumano*)
+   ((eq (jugador-f-juego plyr) #'f-j-humano) *thumano*)
    (t *timeout*)))
 
 (defun winner (loser lst-jug)
@@ -752,42 +772,27 @@
  (handler-bind ((error #'invoke-debugger))
                       (error msg)))
 
+;;; f-juego controlado por un humano
+;;; ------------------------------------------------------------------------------------------
+(defun f-j-humano (estado &optional profundidad-max f-eval)
+  (and profundidad-max f-eval)      ; dummy to avoid compiler warnings
+  (setq *verjugada* t)
+  (let ((accion (pide-accion (acciones-posibles estado))))
+    (unless (null accion) (ejecuta-accion estado accion))))
 
 
 
 
 
 
+(defvar *ponderations1* '((96 20 -28 12 112 -96) (-20 -60 44 0 -12 -120)))
+(defvar *ponderations2* '((108 24 -84 112 -76 72) (84 -108 -24 -64 -8 36)))
+(defvar *parameters1* '((56 -116 -20 -56) (104 -112 -112 -56)))
+(defvar *parameters2* '((104 4 -8 76) (96 72 72 88)))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
-
-
-(defvar *ponderations* '((50 25 75 125 0 0)(200 150 175 100 0 0)))
 
 (defun f-j-nmx (estado profundidad-max f-eval)
+;;;(negamax-a-b estado profundidad-max f-eval))
   (negamax estado profundidad-max f-eval))
   
 (defun ponderate (position ponderation lado tablero)
@@ -807,13 +812,40 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
 	(if  (juego-terminado-p estado)
-		(if (< (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
-		    -10000
-		    10000)
+		(if 
+          (< (suma-fila 
+                 (estado-tablero estado) 
+                 (estado-lado-sgte-jugador estado))
+               (suma-fila
+                 (estado-tablero estado) 
+                 (lado-contrario (estado-lado-sgte-jugador estado))))
+		  -1000
+		  1000)
 		 0)
-    (f-eval-ponderation-2 parameters))
-		 
+    (f-eval-ponderation-2 estado parameters)))
+
+(defvar *jdr-nmx-helado1* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations1* *parameters1*))))
+                        
+(defvar *jdr-nmx-helado2* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2*))))
+                     
+
+
+
+
+
+
+
+
+
+
+
+
 (defun f-eval-ponderation-2 (estado parameters)
   (+ 
     (apply
@@ -833,7 +865,7 @@
     (if
       (juego-terminado-p estado)
       (if 
-        (> 
+        (< 
           (suma-fila (estado-tablero estado) 
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
@@ -887,13 +919,13 @@
       ; Si numfichas = 6 - posicion, 3er coeficiente (maxima ganancia/perdida)
       (t
        (third parameters)))))
-       
-       
-(defvar *jdr-nmx-helado* (make-jugador
-                        :nombre   '|tu-cree-que-yo-soi-guapa|
-                        :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *parameters*))))
 
+
+;(defvar *jdr-nmx-verano* (make-jugador
+                        ;:nombre   '|oso-panda|
+                        ;:f-juego  #'f-j-nmx
+                        ;;:f-eval   #'heuristica))
+                        ;:f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
 (setq *verb*        nil)         ; Activa comentarios para seguir la evolucion de la partida
@@ -901,16 +933,128 @@
 (setq *vermarcador* nil)         ; Activa la visualizacion del marcador
 (setq *debug-nmx*   t)         ; Desactiva debuging de negamax
 
+(defun f-eval-Bueno (estado)
+  (if (juego-terminado-p estado)
+      -50                              ;; Condicion especial de juego terminado
+    ;; Devuelve el maximo del numero de fichas del lado enemigo menos el numero de propias
+    (max-list (mapcar #'(lambda(x)
+                          (- (suma-fila (estado-tablero x) (lado-contrario (estado-lado-sgte-jugador x)))
+                             (suma-fila (estado-tablero x) (estado-lado-sgte-jugador x))))
+                (generar-sucesores estado)))))
 
+(defvar *jdr-nmx-Bueno* (make-jugador
+                        :nombre   '|Ju-Nmx-Bueno|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-Bueno))
+
+
+
+;;; Devuelve el top segun test de una lista de nos. y su posicion
+(defun max-list (l &key (test #'max))
+  (let ((m (reduce test l)))
+    (values m (position m l))))
+    
+(defun f-eval-Regular (estado)
+  (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))))
+
+(defvar *jdr-nmx-Regular* (make-jugador
+                        :nombre   '|Ju-Nmx-Regular|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-Regular))
+
+                       
+;;; f-juego para un jugador que realiza movimientos aleatorios
+;;; ------------------------------------------------------------------------------------------
 (defun f-j-aleatorio (estado &optional profundidad-max f-eval)
   (and profundidad-max f-eval)      ; dummy to avoid compiler warnings
   (let ((lst-acciones (acciones-posibles estado)))
     (ejecuta-accion estado (nth (random (length lst-acciones)) lst-acciones))))
 
+;;; Jugador que no evalua y juega aleatoriamente
+;;; ------------------------------------------------------------------------------------------
 (defvar *jdr-aleatorio* (make-jugador
                         :nombre   '|Ju-Aleatorio|
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
+
+;;; Funcion de evaluacion que da al estado recibido una puntuacion aleatoria
+;;; ------------------------------------------------------------------------------------------
+(defun f-eval-aleatoria (estado)
+  (when estado t)                   ; dummy para evitar warnings de compilador
+  (random 100) )
+
+;;; f-juego que utiliza busqueda negamax pero evalua aleatoriamente
+;;; ------------------------------------------------------------------------------------------
+(defvar *jdr-nmx-eval-aleatoria* (make-jugador
+                        :nombre   '|Ju-Nmx-Eval-Aleatoria|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-aleatoria))
+
+;(print (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*)))
+;(print (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
+;(if (< x 0) -1000
+;(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
+;(print  (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
+
+
+
+;;;;;;;;; FUNCIONES PARA EL PORCENTAJE ;;;;;;;;;;;
+
+; Devuelve un 1 si gano el jugador indicado por
+; whoareyou un 0 en caso contrario
+(defun did-i-won (jug1 jug2 whoareyou)
+  (if 
+    (equal whoareyou 'first-jug-is-me)
+    (if
+      ; Si jug1 gana, devuelve 1. Si no, 0
+      (> (partida 0 2 (list jug1 jug2)) 0)
+      1
+      0)
+    (if
+      ; Si jug2 gana, devuelve 1. Si no, 0
+      (< (partida 0 2 (list jug2 jug1)) 0)
+      1
+      0)))
+
+; Hace la suma que resulta de llamar nveces a did-i-won
+(defun did-i-won-nveces (jug1 jug2 nveces whoareyou)
+  (if
+    (equal nveces 0)
+    0
+    (+ 
+      (did-i-won jug1 jug2 whoareyou)
+      (did-i-won-nveces jug1 jug2 (- nveces 1) whoareyou))))
+
+
+; JUGADOR 1 ERES TU
+; Hace jugar al jug1 con el jug2 2*nveces
+; y devuelve el porcentaje de veces que gana jug1
+(defun percentage (jug1 jug2 nveces)
+  (print 
+    (float
+      (/ 
+        (+
+          (did-i-won-nveces jug1 jug2 nveces 'first-jug-is-me)
+          (did-i-won-nveces jug2 jug1 nveces 'second-jug-is-me))
+        (* 2 nveces)))))
+
+; Devuelve el porcentaje de veces q jugador gana a nmx aleatoria
+; jugando 2*nveces
+(defun evaluador-percentage (jugador nveces)
+  (if 
+    (equal 0 (pasa-regular jugador))
+    (print 0)
+    (percentage jugador *jdr-nmx-eval-aleatoria* nveces)))
+
+;;;;;;;;; FUNCIONES PARA LA MEDIA ;;;;;;;;;;;
 
 (defun suma (jug1 jug2 nveces)
   (if 
@@ -926,6 +1070,31 @@
       (/ (suma jug1 jug2 nveces) nveces))))
 
 
+; Funcion para saber si un jugador determinado gana o no al aleatorio
+(defun pasa-regular(jugador)
+  (if 
+    (and
+      (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
+      (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
+    1 
+    0))
 
-(media *jdr-nmx-helado* *jdr-aleatorio* 100)
+
+(defun evaluador (jugador nveces)
+  (cond
+;    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
+;         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
+;         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
+;         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
+;     (print '-1000))
+    (t
+     (media jugador *jdr-nmx-eval-aleatoria* nveces))))
+
+
+
+;(pasa-regular *jdr-nmx-helado*)
+(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
+(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
+;(evaluador-percentage *jdr-nmx-helado* 50)
+
 

@@ -783,7 +783,7 @@
 
 
 
-(defvar *ponderations* '((0 0 0 150 125 75)(0 0 0 50 25 100)))
+(defvar *ponderations* '((50 25 150 175 0 0)(200 100 75 125 0 0)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -807,10 +807,10 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
 	(if  (juego-terminado-p estado)
-		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+		(if (< (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
 			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
-		    -1000
-		    1000)
+		    -10000
+		    10000)
 		 0)))
 
 (defvar *jdr-nmx-helado* (make-jugador
@@ -850,7 +850,7 @@
     (if
       (juego-terminado-p estado)
       (if 
-        (> 
+        (< 
           (suma-fila (estado-tablero estado) 
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 

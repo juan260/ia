@@ -5,7 +5,7 @@
 (in-package grupo02pareja091RJ2204)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation estado '((0 0 0 125 50 150) (0 0 0 100 25 75)))) ; función de evaluación heurística a implementar
+    (f-eval-ponderation estado '(0 0 0 125 50 150) (0 0 0 100 25 75))) ; función de evaluación heurística a implementar
 
 (defvar *alias* '|y_la_navidad|) ; alias que aparecerá en el ranking
 
@@ -31,9 +31,4 @@
 		    -1000
 		    1000)
 		 0)))
-		 
-(defvar *jdr-nmx-helado2* (make-jugador
-                        :nombre   '|tu-cree-que-yo-soi-guapa3|
-                        :f-juego  #'f-j-nmx
-                        :f-eval   #'heuristica))   
                   
