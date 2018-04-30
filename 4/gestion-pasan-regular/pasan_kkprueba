@@ -1,3 +1,0 @@
-(defvar *ponderations* '((25 50 75 0 0 0)(100 125 150 0 0 0)))	
-(defvar *ponderations* '((25 50 75 0 0 0)(100 150 125 0 0 0)))	
-(defvar *ponderations* '((25 50 75 0 0 0)(125 100 150 0 0 0)))	

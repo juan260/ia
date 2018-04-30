@@ -807,7 +807,7 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
 	(if  (juego-terminado-p estado)
-		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+		(if (< (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
 			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
 		    -1000
 		    1000)
@@ -851,5 +851,5 @@
 
 
 
-(media *jdr-nmx-helado* *jdr-aleatorio* 100)
+(media *jdr-nmx-helado* *jdr-nmx-eval-aleatoria* 100)
 

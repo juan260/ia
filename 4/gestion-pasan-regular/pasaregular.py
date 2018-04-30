@@ -8,15 +8,12 @@ def main():
     outputName = 'salida_' + sys.argv[1]
     outputFile = open(outputName, 'w')
     
- #   outputNameKK = 'kk_' + sys.argv[1]
- #   outputFileKK = open(outputNameKK, 'w')
     # Primero, vamos a poner a 0 las ponderaciones de los 3 hoyos 
     # mas lejanos al mankala (se llama asi?)
     # A los otros 6 hoyos, damos aleatoriamente las ponderaciones 
     # 25i i = 1...6
     l = range(25, 151, 25)
     
-#    resultsKK = ''
     results = ''
     perms = itertools.permutations(l)
     #for perm, i in zip(perms, range(20)):
@@ -29,11 +26,6 @@ def main():
         pasa = res.stdout.decode('utf-8')
         if pasa == 'PASA' or pasa == 'PASA\n':      
             results += args 
-#        else:
-#            resultsKK += pasa
-#            resultsKK += '\t'
-#            resultsKK += args 
-#    outputFileKK.write(resultsKK)
     outputFile.write(results)
 
 main()

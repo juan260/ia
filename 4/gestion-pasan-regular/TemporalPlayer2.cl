@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((200 175 150 125 0 0)(100 75 50 25 0 0)))
+(defvar *ponderations* '((60 28 4 52 14 50) (2 50 8 6 16 42)))
 
 
 
@@ -811,10 +811,15 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
 	(if  (juego-terminado-p estado)
-		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
-		    -1000
-		    1000)
+		(if 
+          (< (suma-fila 
+                 (estado-tablero estado) 
+                 (estado-lado-sgte-jugador estado))
+               (suma-fila
+                 (estado-tablero estado) 
+                 (lado-contrario (estado-lado-sgte-jugador estado))))
+		  -1000
+		  1000)
 		 0)))
 
 (defvar *jdr-nmx-helado* (make-jugador
@@ -854,7 +859,7 @@
     (if
       (juego-terminado-p estado)
       (if 
-        (> 
+        (< 
           (suma-fila (estado-tablero estado) 
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
@@ -967,6 +972,19 @@
                         :f-juego  #'f-j-aleatorio
                         :f-eval   nil))
 
+;;; Funcion de evaluacion que da al estado recibido una puntuacion aleatoria
+;;; ------------------------------------------------------------------------------------------
+(defun f-eval-aleatoria (estado)
+  (when estado t)                   ; dummy para evitar warnings de compilador
+  (random 100) )
+
+;;; f-juego que utiliza busqueda negamax pero evalua aleatoriamente
+;;; ------------------------------------------------------------------------------------------
+(defvar *jdr-nmx-eval-aleatoria* (make-jugador
+                        :nombre   '|Ju-Nmx-Eval-Aleatoria|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'f-eval-aleatoria))
+
 ;(print (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*)))
 ;(print (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
 ;(if (< x 0) -1000
@@ -979,6 +997,55 @@
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
 ;(print  (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
+
+
+
+;;;;;;;;; FUNCIONES PARA EL PORCENTAJE ;;;;;;;;;;;
+
+; Devuelve un 1 si gano el jugador indicado por
+; whoareyou un 0 en caso contrario
+(defun did-i-won (jug1 jug2 whoareyou)
+  (if 
+    (equal whoareyou 'first-jug-is-me)
+    (if
+      ; Si jug1 gana, devuelve 1. Si no, 0
+      (> (partida 0 2 (list jug1 jug2)) 0)
+      1
+      0)
+    (if
+      ; Si jug2 gana, devuelve 1. Si no, 0
+      (< (partida 0 2 (list jug2 jug1)) 0)
+      1
+      0)))
+
+; Hace la suma que resulta de llamar nveces a did-i-won
+(defun did-i-won-nveces (jug1 jug2 nveces whoareyou)
+  (if
+    (equal nveces 0)
+    0
+    (+ 
+      (did-i-won jug1 jug2 whoareyou)
+      (did-i-won-nveces jug1 jug2 (- nveces 1) whoareyou))))
+
+
+; JUGADOR 1 ERES TU
+; Hace jugar al jug1 con el jug2 2*nveces
+; y devuelve el porcentaje de veces que gana jug1
+(defun percentage (jug1 jug2 nveces)
+  (print 
+    (float
+      (/ 
+        (+
+          (did-i-won-nveces jug1 jug2 nveces 'first-jug-is-me)
+          (did-i-won-nveces jug2 jug1 nveces 'second-jug-is-me))
+        (* 2 nveces)))))
+
+; Devuelve el porcentaje de veces q jugador gana a nmx aleatoria
+; jugando 2*nveces
+(defun evaluador-percentage (jugador nveces)
+  (percentage jugador *jdr-nmx-eval-aleatoria* nveces))
+
+;;;;;;;;; FUNCIONES PARA LA MEDIA ;;;;;;;;;;;
 
 (defun suma (jug1 jug2 nveces)
   (if 
@@ -1012,26 +1079,13 @@
 ;         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
 ;     (print '-1000))
     (t
-     (media jugador *jdr-aleatorio* nveces))))
+     (media jugador *jdr-nmx-eval-aleatoria* nveces))))
 
-;(evaluador *jdr-nmx-verano* 5)
-;(print (list (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Regular*))
-;         (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*))
-;         (partida 0 2 (list *jdr-nmx-Bueno* *jdr-nmx-verano*))
-;         (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-verano*))))
-;(evaluador *jdr-nmx-helado* 6)
-;(partida 0 2 (list *jdr-nmx-helado* *jdr-nmx-Regular*))
-; (partida 0 2 (list *jdr-nmx-ponderation*  *jdr-nmx-Regular*))
-; (partida 0 2 (list  *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
-; (partida 0 2 (list  *jdr-aleatorio* *jdr-nmx-ponderation* ))
-; (partida 0 2 (list *jdr-nmx-ponderation* *jdr-aleatorio*  ))
-; (partida 0 2 (list *jdr-aleatorio*  *jdr-nmx-helado*))
-; (partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-helado*   ))
-;(partida 0 2 (list *jdr-nmx-ponderation* *jdr-nmx-Regular*))
-;(partida 0 2 (list *jdr-nmx-Regular* *jdr-nmx-ponderation* ))
 
-;(pasa-regular *jdr-nmx-helado*)
 
-(evaluador *jdr-nmx-helado* 15)
+(pasa-regular *jdr-nmx-helado*)
+
+;(evaluador-percentage *jdr-nmx-helado* 50)
+
 
 

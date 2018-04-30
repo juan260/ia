@@ -807,8 +807,12 @@
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
 	(if  (juego-terminado-p estado)
-		(if (> (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-			(suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
+		(if (< (suma-fila 
+                 (estado-tablero estado) 
+                 (estado-lado-sgte-jugador estado))
+			   (suma-fila 
+                 (estado-tablero estado)
+                 (lado-contrario (estado-lado-sgte-jugador estado))))
 		    -10000
 		    10000)
 		 0)
@@ -833,7 +837,7 @@
     (if
       (juego-terminado-p estado)
       (if 
-        (> 
+        (< 
           (suma-fila (estado-tablero estado) 
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
@@ -857,7 +861,7 @@
     (equal posicion 6)          ; Si ya hemos ponderado las 5 posiciones, terminamos lista
     ()
     (cons                       ; Si no, devolvemos un cons de :
-      (calc-ponderation         ; La ponderacion correspondiente a ese lado y posicion
+      (simple-calc-ponderation  ; La ponderacion correspondiente a ese lado y posicion
         tablero
         parameters
         side 
@@ -867,6 +871,20 @@
         parameters
         side
         (+ 1 posicion)))))
+
+(defun simple-calc-ponderation (tablero parameters side posicion)
+  (let 
+    ((num-fichas (get-fichas tablero side posicion)))
+    (cond
+      ; Si numfichas > 6 - posicion, 1er coeficiente
+      ((> num-fichas (- 6 posicion))
+       (first  parameters))
+      ; Si numfichas < 6 - posicion, 2o coeficiente
+      ((< num-fichas (- 6 posicion))
+       (second parameters))
+      ; Si numfichas = 6 - posicion, 3er coeficiente (maxima ganancia/perdida)
+      (t
+       (third parameters)))))
 
 (defun calc-ponderation (tablero parameters side posicion)
   (let 
@@ -927,5 +945,5 @@
 
 
 
-(media *jdr-nmx-helado* *jdr-aleatorio* 100)
+(media *jdr-nmx-helado* *jdr-nmx-eval-aleatoria* 100)
 
