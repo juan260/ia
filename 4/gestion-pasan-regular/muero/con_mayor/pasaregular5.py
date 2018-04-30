@@ -25,6 +25,7 @@ def main():
             results = args
             results += perc
             outputFile.write(results)
+            print('\t\t Hemos conseguido uno de ' + perc)
 
         if k%1000 == 0:
             print(k)
