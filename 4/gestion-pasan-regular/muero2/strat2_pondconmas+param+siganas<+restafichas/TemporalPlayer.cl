@@ -783,12 +783,19 @@
 
 
 
+<<<<<<< HEAD
 (defvar *ponderations* '((270 180 240 270 60 300) (300 270 180 180 120 60)))
 (defvar *parameters* '((120 60 300 150) (270 120 150 90)))
+=======
+
+
+(defvar *ponderations* '((210 240 210 180 240 210) (30 210 30 240 120 270)))
+(defvar *parameters* '((30 60 270 180) (300 90 120 150)))
+>>>>>>> f8104848741a564c38510bf3c60f65f68fb8dc97
 (defvar *ponderations1* '((-92 -44 -44 -100 32 -60) (-116 -60 -8 0 -40 -84)))
 (defvar *ponderations2* '((-80 72 40 -80 -40 -60) (-108 -60 -8 -4 44 -36)))
 (defvar *parameters1* '((-72 -100 84 -16) (-68 72 72 -96)))
-(defvar *parameters2* '((100 40 -68 -60) (-12 -8 -8 -48)))
+
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
