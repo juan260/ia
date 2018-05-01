@@ -785,9 +785,12 @@
 
 
 
-(defvar *ponderations* '((75 150 50 100 0 0)(200 125 25 175 0 0)))
-
-
+(defvar *ponderations* '((300 90 90 120 90 90) (30 60 30 270 60 30)))
+(defvar *parameters* '((120 120 180 120) (270 210 120 180)))
+(defvar *ponderations1* '((270 300 300 180 240 30) (300 300 120 120 240 90)))
+(defvar *ponderations2* '((96 28 16 -28 -12 -20) (-64 -32 -88 28 -72 32)))
+(defvar *parameters1* '((-4 28 -32 72) (-16 -20 -20 -20)))
+(defvar *parameters2* '((4 -12 12 0) (-36 68 68 16)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -803,7 +806,7 @@
                 (rest ponderation)
                 lado tablero))))
 
-(defun f-eval-ponderation (estado ponderations)
+(defun f-eval-ponderation (estado ponderations parameters)
     (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
@@ -818,19 +821,29 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
-		 0)))
+		  -50000
+		  50000)
+		 0)
+		 (- (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))
+            (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado)))))
+
+(defvar *jdr-nmx-helado1* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations1* *parameters1*))))
+                        
+(defvar *jdr-nmx-helado2* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2*))))
 
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
-                     
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *parameters*))))
 
 
 
-(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
 
 
 
@@ -848,14 +861,14 @@
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        3))
+        0))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        3))
+        0))
     (if
       (juego-terminado-p estado)
       (if 
@@ -915,11 +928,11 @@
        (third parameters)))))
 
 
-(defvar *jdr-nmx-verano* (make-jugador
-                        :nombre   '|oso-panda|
-                        :f-juego  #'f-j-nmx
+;(defvar *jdr-nmx-verano* (make-jugador
+                        ;:nombre   '|oso-panda|
+                        ;:f-juego  #'f-j-nmx
                         ;;:f-eval   #'heuristica))
-                        :f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
+                        ;:f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
 (setq *verb*        nil)         ; Activa comentarios para seguir la evolucion de la partida
@@ -1043,7 +1056,10 @@
 ; Devuelve el porcentaje de veces q jugador gana a nmx aleatoria
 ; jugando 2*nveces
 (defun evaluador-percentage (jugador nveces)
-  (percentage jugador *jdr-nmx-eval-aleatoria* nveces))
+  (if 
+    (equal 0 (pasa-regular jugador))
+    (print 0)
+    (percentage jugador *jdr-nmx-eval-aleatoria* nveces)))
 
 ;;;;;;;;; FUNCIONES PARA LA MEDIA ;;;;;;;;;;;
 
@@ -1067,8 +1083,8 @@
     (and
       (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
       (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-    (print 'pasa)
-    (print 'nopasa)))
+    1 
+    0))
 
 
 (defun evaluador (jugador nveces)
@@ -1083,8 +1099,7 @@
 
 
 
-;(pasa-regular *jdr-nmx-helado*)
 
-(evaluador-percentage *jdr-nmx-helado* 50)
+(evaluador-percentage *jdr-nmx-helado* 100)
 
 

@@ -783,11 +783,12 @@
 
 
 
-
-
-(defvar *ponderations* '((75 150 50 100 0 0)(200 125 25 175 0 0)))
-
-
+(defvar *ponderations* '((40 60 80 50 60 50) (30 34 40 80 70 70)))
+(defvar *parameters* '((40 100 20 50) (80 80 100 70)))
+(defvar *ponderations1* '((40 30 80 100 90 50) (20 100 30 20 30 60)))
+(defvar *ponderations2* '((40 100 90 20 30 30) (20 10 70 40 40 70)))
+(defvar *parameters1* '((20 60 70 10) (30 50 10 50)))
+(defvar *parameters2* '((40 100 20 50) (80 80 100 70)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -803,34 +804,45 @@
                 (rest ponderation)
                 lado tablero))))
 
-(defun f-eval-ponderation (estado ponderations)
+(defun f-eval-ponderation (estado ponderations parameters)
     (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
-            (estado-tablero estado))
-	(if  (juego-terminado-p estado)
-		(if 
-          (< (suma-fila 
-                 (estado-tablero estado) 
-                 (estado-lado-sgte-jugador estado))
-               (suma-fila
-                 (estado-tablero estado) 
-                 (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
-		 0)))
+            (estado-tablero estado))))
+;   	   (if  (juego-terminado-p estado)
+;   		 (if
+;           (< (suma-fila 
+;                    (estado-tablero estado) 
+;                    (estado-lado-sgte-jugador estado))
+;              (suma-fila
+;                    (estado-tablero estado) 
+;                    (lado-contrario (estado-lado-sgte-jugador estado))))
+;   		   -1000
+;   		   1000)
+;         0)
+;       (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+;          (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))
 
+
+(defvar *jdr-nmx-helado1* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations1* *parameters1*))))
+                        
+(defvar *jdr-nmx-helado2* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2*))))
+                     
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
-                     
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *parameters*))))
 
 
 
-(defvar *parameters* '((-1900 1900 1900 1900) (1900 -1900 -1900 -1900)))
 
 
 
@@ -848,14 +860,14 @@
         (estado-tablero estado)
         (first parameters)
         (estado-lado-sgte-jugador estado)
-        3))
+        0))
     (apply
       '+
       (calc-ponderations 
         (estado-tablero estado)
         (second parameters)
         (lado-contrario (estado-lado-sgte-jugador estado))
-        3))
+        0))
     (if
       (juego-terminado-p estado)
       (if 
@@ -915,11 +927,11 @@
        (third parameters)))))
 
 
-(defvar *jdr-nmx-verano* (make-jugador
-                        :nombre   '|oso-panda|
-                        :f-juego  #'f-j-nmx
+;(defvar *jdr-nmx-verano* (make-jugador
+                        ;:nombre   '|oso-panda|
+                        ;:f-juego  #'f-j-nmx
                         ;;:f-eval   #'heuristica))
-                        :f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
+                        ;:f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
 (setq *verb*        nil)         ; Activa comentarios para seguir la evolucion de la partida
@@ -984,22 +996,6 @@
                         :nombre   '|Ju-Nmx-Eval-Aleatoria|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'f-eval-aleatoria))
-
-;(print (partida 0 2 (list *jdr-nmx-verano* *jdr-nmx-Bueno*)))
-;(print (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
-;(if (< x 0) -1000
-;(+ (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-;   (partida 0 2 (list *jdr-nmx-helado* *jdr-aleatorio*))
-;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-;   (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-helado*))
-;(print  (partida 0 2 (list *jdr-aleatorio* *jdr-nmx-verano*)))
-
-
-
 ;;;;;;;;; FUNCIONES PARA EL PORCENTAJE ;;;;;;;;;;;
 
 ; Devuelve un 1 si gano el jugador indicado por
@@ -1043,48 +1039,19 @@
 ; Devuelve el porcentaje de veces q jugador gana a nmx aleatoria
 ; jugando 2*nveces
 (defun evaluador-percentage (jugador nveces)
-  (percentage jugador *jdr-nmx-eval-aleatoria* nveces))
-
-;;;;;;;;; FUNCIONES PARA LA MEDIA ;;;;;;;;;;;
-
-(defun suma (jug1 jug2 nveces)
   (if 
-    (equal nveces 0)
-    0
-    (- 
-      (partida 0 2 (list jug1 jug2))
-      (suma jug2 jug1 (- nveces 1)))))
-
-(defun media (jug1 jug2  nveces)
-  (print
-    (float
-      (/ (suma jug1 jug2 nveces) nveces))))
-
+    (equal 0 (pasa-regular jugador))
+    (print 0)
+    (percentage jugador *jdr-nmx-eval-aleatoria* nveces)))
 
 ; Funcion para saber si un jugador determinado gana o no al aleatorio
 (defun pasa-regular(jugador)
-  (if 
+  (if
     (and
       (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
       (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-    (print 'pasa)
-    (print 'nopasa)))
+    1 
+    0))
 
-
-(defun evaluador (jugador nveces)
-  (cond
-;    ((or (>= 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
-;         (>= 0 (partida 0 2 (list jugador *jdr-nmx-Bueno*)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Bueno* jugador)))
-;         (<= 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-;     (print '-1000))
-    (t
-     (media jugador *jdr-nmx-eval-aleatoria* nveces))))
-
-
-
-;(pasa-regular *jdr-nmx-helado*)
-
-(evaluador-percentage *jdr-nmx-helado* 50)
-
-
+;(percentage *jdr-nmx-helado1* *jdr-nmx-helado2* 20)
+(evaluador-percentage *jdr-nmx-helado* 100)

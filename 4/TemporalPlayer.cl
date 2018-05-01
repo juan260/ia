@@ -1009,7 +1009,7 @@
 
      (print '-1000))
     (t
-     (media jugador *jdr-aleatorio* nveces))))
+     (media jugador *jdr-nmx-eval-aleatoria* nveces))))
      
      
 

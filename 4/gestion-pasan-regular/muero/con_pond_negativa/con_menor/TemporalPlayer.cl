@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((75 150 50 100 0 0)(200 125 25 175 0 0)))
+(defvar *ponderations* '((90 -180 -120 -240 -150 -300) (-150 120 240 -60 30 -240)))
 
 
 
@@ -1043,7 +1043,10 @@
 ; Devuelve el porcentaje de veces q jugador gana a nmx aleatoria
 ; jugando 2*nveces
 (defun evaluador-percentage (jugador nveces)
-  (percentage jugador *jdr-nmx-eval-aleatoria* nveces))
+  (if 
+    (equal 0 (pasa-regular jugador))
+    (print 0)
+    (percentage jugador *jdr-nmx-eval-aleatoria* nveces)))
 
 ;;;;;;;;; FUNCIONES PARA LA MEDIA ;;;;;;;;;;;
 
@@ -1067,8 +1070,8 @@
     (and
       (< 0 (partida 0 2 (list jugador *jdr-nmx-Regular*)))
       (> 0 (partida 0 2 (list *jdr-nmx-Regular* jugador))))
-    (print 'pasa)
-    (print 'nopasa)))
+    1 
+    0))
 
 
 (defun evaluador (jugador nveces)
