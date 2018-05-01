@@ -34,7 +34,7 @@ def main():
         res = subprocess.run(['./CreateAndExecute2.sh', perm[0], perm[1], perm[2], perm[3], perm[4],perm[5], perm[6],perm[7], perm[8],perm[9], perm[10], perm[11], perm[12], perm[13], perm[14],perm[15], perm[16],perm[17], perm[18],perm[19] ], stdout = subprocess.PIPE)
         
         perc = res.stdout.decode('utf-8')
-        if float(perc) > 0.63:
+        if float(perc) > 0.57:
             results = args
             results += perc
             outputFile.write(results)
