@@ -783,12 +783,12 @@
 
 
 
-
-
-(defvar *ponderations1* '((-84 -92 -96 -108 4 -40) (60 20 -48 -116 -52 56)))
-(defvar *ponderations2* '((96 28 16 -28 -12 -20) (-64 -32 -88 28 -72 32)))
-(defvar *parameters1* '((-4 28 -32 72) (-16 -20 -20 -20)))
-(defvar *parameters2* '((4 -12 12 0) (-36 68 68 16)))
+(defvar *ponderations* '((30 90 210 150 240 120) (240 30 300 30 270 270)))
+(defvar *parameters* '((180 240 270 90) (210 30 150 120)))
+(defvar *ponderations1* '((-92 -44 -44 -100 32 -60) (-116 -60 -8 0 -40 -84)))
+(defvar *ponderations2* '((-80 72 40 -80 -40 -60) (-108 -60 -8 -4 44 -36)))
+(defvar *parameters1* '((-72 -100 84 -16) (-68 72 72 -96)))
+(defvar *parameters2* '((100 40 -68 -60) (-12 -8 -8 -48)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -805,7 +805,7 @@
                 lado tablero))))
 
 (defun f-eval-ponderation (estado ponderations parameters)
-    (+ (ponderate 0 (first ponderations)
+    (- (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
@@ -819,11 +819,12 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
+		  -50000
+		  50000)
 		 0)
-		 (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))))
+    (f-eval-ponderation-2 estado parameters)
+    (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+       (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))))
 
 (defvar *jdr-nmx-helado1* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
@@ -834,7 +835,11 @@
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
                         :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2*))))
-                     
+(defvar *jdr-nmx-helado* (make-jugador
+                        :nombre   '|tu-cree-que-yo-soi-guapa|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *parameters*))))
+
 
 
 
@@ -866,7 +871,7 @@
     (if
       (juego-terminado-p estado)
       (if 
-        (< 
+        (>
           (suma-fila (estado-tablero estado) 
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
@@ -1093,9 +1098,6 @@
 
 
 
-;(pasa-regular *jdr-nmx-helado*)
-(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
-(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
-;(evaluador-percentage *jdr-nmx-helado* 50)
+(evaluador-percentage *jdr-nmx-helado* 100)
 
 

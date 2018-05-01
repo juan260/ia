@@ -5,7 +5,7 @@ import sys, os
 
 def main():
     
-    outputName = 'salida_' + sys.argv[1]
+    outputName = 'pond_ganas_' + sys.argv[1]
     outputFile = open(outputName, 'a')
     
     perm = []
