@@ -785,9 +785,9 @@
 
 
 
-(defvar *ponderations1* '((-64 112 40 104 76 -52) (-52 120 20 -40 -32 -72)))
+(defvar *ponderations1* '((0 -68 -4 16 112 108) (52 96 24 -4 -60 -100)))
 (defvar *ponderations2* '((-32 -72 60 96 -76 108) (-72 -96 -68 -80 16 -112)))
-(defvar *parameters1* '((-92 -44 36 12) (-8 -68 -68 48)))
+(defvar *parameters1* '((-104 72 80 -8) (-80 76 -56 56)))
 (defvar *parameters2* '((48 104 -4 8) (-8 -92 -92 -104)))
 
 
@@ -1095,8 +1095,8 @@
 
 
 ;(pasa-regular *jdr-nmx-helado*)
-(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
-(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
+;(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
+;(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
 ;(evaluador-percentage *jdr-nmx-helado* 50)
 
-
+(evaluador-percentage *jdr-nmx-helado1* 1000)
