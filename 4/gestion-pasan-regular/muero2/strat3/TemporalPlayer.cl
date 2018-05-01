@@ -785,10 +785,10 @@
 
 
 
-(defvar *ponderations1* '((-84 -92 -96 -108 4 -40) (60 20 -48 -116 -52 56)))
-(defvar *ponderations2* '((96 28 16 -28 -12 -20) (-64 -32 -88 28 -72 32)))
-(defvar *parameters1* '((-4 28 -32 72) (-16 -20 -20 -20)))
-(defvar *parameters2* '((4 -12 12 0) (-36 68 68 16)))
+(defvar *ponderations1* '((-32 4 64 -24 52 116) (104 -40 -64 -44 -64 -68)))
+(defvar *ponderations2* '((-24 -72 -80 16 -96 -80) (-48 -120 -64 -88 100 28)))
+(defvar *parameters1* '((68 -96 -84 -12) (-112 -68 -68 -76)))
+(defvar *parameters2* '((76 -92 -44 -52) (48 28 28 -80)))
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
