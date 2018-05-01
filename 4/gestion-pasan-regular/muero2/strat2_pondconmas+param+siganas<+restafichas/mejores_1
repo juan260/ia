@@ -1,70 +1,70 @@
 (defvar *ponderations* '((300 180 60 150 180 180 )(30 270 60 180 120 180)))
-(defvar *parameters* '((270 270 180 180 )(180 270 30 60)))					0.555
+(defvar *parameters* '((270 270 180 180 )(180 270 30 60)))
 (defvar *ponderations* '((90 180 120 210 180 30 )(90 210 210 180 210 60)))
-(defvar *parameters* '((210 240 240 240 )(300 90 270 150)))					0.555
+(defvar *parameters* '((210 240 240 240 )(300 90 270 150)))
 (defvar *ponderations* '((210 150 90 90 240 150 )(30 270 60 300 240 180)))
-(defvar *parameters* '((270 60 210 240 )(150 270 180 240)))					0.555
+(defvar *parameters* '((270 60 210 240 )(150 270 180 240)))
 (defvar *ponderations* '((120 120 210 60 240 30 )(150 270 60 240 30 210)))
-(defvar *parameters* '((300 210 60 210 )(90 210 270 30)))					0.57
+(defvar *parameters* '((300 210 60 210 )(90 210 270 30)))
 (defvar *ponderations* '((300 210 120 30 300 150 )(120 90 120 300 120 240)))
-(defvar *parameters* '((90 90 90 300 )(300 270 120 180)))					0.595
+(defvar *parameters* '((90 90 90 300 )(300 270 120 180)))
 (defvar *ponderations* '((300 270 300 300 60 270 )(300 120 180 270 60 240)))
-(defvar *parameters* '((120 180 60 120 )(180 90 30 120)))					0.555
+(defvar *parameters* '((120 180 60 120 )(180 90 30 120)))
 (defvar *ponderations* '((30 180 240 270 60 270 )(120 120 150 210 150 240)))
-(defvar *parameters* '((90 60 210 90 )(270 90 210 300)))					0.58
+(defvar *parameters* '((90 60 210 90 )(270 90 210 300)))
 (defvar *ponderations* '((30 210 270 120 180 270 )(30 180 180 120 120 300)))
-(defvar *parameters* '((30 150 270 210 )(300 180 120 300)))					0.585
+(defvar *parameters* '((30 150 270 210 )(300 180 120 300)))
 (defvar *ponderations* '((180 180 210 300 300 270 )(150 60 270 30 180 90)))
-(defvar *parameters* '((150 240 270 270 )(90 270 120 120)))					0.6
+(defvar *parameters* '((150 240 270 270 )(90 270 120 120)))
 (defvar *ponderations* '((150 180 300 60 300 30 )(180 210 270 120 270 300)))
-(defvar *parameters* '((150 210 270 270 )(60 90 120 240)))					0.575
+(defvar *parameters* '((150 210 270 270 )(60 90 120 240)))
 (defvar *ponderations* '((240 90 150 210 270 270 )(120 90 90 210 150 180)))
-(defvar *parameters* '((90 120 120 210 )(90 60 30 30)))					0.575
+(defvar *parameters* '((90 120 120 210 )(90 60 30 30)))
 (defvar *ponderations* '((180 300 120 30 30 30 )(270 150 150 300 30 210)))
-(defvar *parameters* '((150 90 90 60 )(300 240 300 300)))					0.575
+(defvar *parameters* '((150 90 90 60 )(300 240 300 300)))
 (defvar *ponderations* '((270 30 270 210 150 210 )(180 300 60 180 240 210)))
-(defvar *parameters* '((270 210 270 180 )(30 180 90 180)))					0.58
+(defvar *parameters* '((270 210 270 180 )(30 180 90 180)))
 (defvar *ponderations* '((90 240 90 150 90 120 )(120 150 180 90 60 300)))
-(defvar *parameters* '((240 60 90 120 )(240 180 270 180)))					0.59
+(defvar *parameters* '((240 60 90 120 )(240 180 270 180)))
 (defvar *ponderations* '((150 30 240 240 150 60 )(150 270 270 300 90 270)))
-(defvar *parameters* '((90 270 30 180 )(90 60 240 240)))					0.585
+(defvar *parameters* '((90 270 30 180 )(90 60 240 240)))
 (defvar *ponderations* '((150 90 150 300 300 270 )(150 90 90 270 240 30)))
-(defvar *parameters* '((60 210 180 240 )(300 150 270 150)))					0.6
+(defvar *parameters* '((60 210 180 240 )(300 150 270 150)))
 (defvar *ponderations* '((210 120 210 210 300 270 )(300 240 240 180 270 150)))
-(defvar *parameters* '((30 300 210 30 )(150 120 240 270)))					0.59
+(defvar *parameters* '((30 300 210 30 )(150 120 240 270)))
 (defvar *ponderations* '((240 90 300 300 180 120 )(210 150 180 240 90 240)))
-(defvar *parameters* '((270 300 270 180 )(300 150 150 150)))					0.595
+(defvar *parameters* '((270 300 270 180 )(300 150 150 150)))
 (defvar *ponderations* '((210 90 30 60 240 150 )(240 150 210 240 300 30)))
-(defvar *parameters* '((240 210 270 180 )(30 270 150 240)))					0.585
+(defvar *parameters* '((240 210 270 180 )(30 270 150 240)))
 (defvar *ponderations* '((60 120 240 30 120 180 )(270 150 30 180 150 270)))
-(defvar *parameters* '((150 30 210 60 )(150 30 150 300)))					0.575
+(defvar *parameters* '((150 30 210 60 )(150 30 150 300)))
 (defvar *ponderations* '((270 240 210 30 270 180 )(210 150 120 150 300 240)))
-(defvar *parameters* '((180 240 30 240 )(60 300 90 60)))					0.58
+(defvar *parameters* '((180 240 30 240 )(60 300 90 60)))
 (defvar *ponderations* '((240 270 120 180 150 210 )(300 120 270 300 210 150)))
-(defvar *parameters* '((150 240 210 180 )(90 30 120 30)))					0.585
+(defvar *parameters* '((150 240 210 180 )(90 30 120 30)))
 (defvar *ponderations* '((90 270 300 150 150 270 )(30 90 30 120 300 300)))
-(defvar *parameters* '((210 120 210 180 )(30 90 240 180)))					0.595
+(defvar *parameters* '((210 120 210 180 )(30 90 240 180)))
 (defvar *ponderations* '((120 300 210 270 180 270 )(180 180 270 150 210 180)))
-(defvar *parameters* '((90 300 240 60 )(270 240 150 150)))					0.595
+(defvar *parameters* '((90 300 240 60 )(270 240 150 150)))
 (defvar *ponderations* '((210 30 180 240 150 90 )(150 30 240 270 270 90)))
-(defvar *parameters* '((90 210 300 30 )(120 210 240 240)))					0.575
+(defvar *parameters* '((90 210 300 30 )(120 210 240 240)))
 (defvar *ponderations* '((300 90 270 90 180 210 )(300 210 210 90 270 180)))
-(defvar *parameters* '((210 120 90 180 )(210 90 150 300)))					0.58
+(defvar *parameters* '((210 120 90 180 )(210 90 150 300)))
 (defvar *ponderations* '((150 150 30 30 240 60 )(180 210 150 120 90 30)))
-(defvar *parameters* '((120 150 120 150 )(30 150 300 60)))					0.585
+(defvar *parameters* '((120 150 120 150 )(30 150 300 60)))
 (defvar *ponderations* '((60 210 270 240 150 60 )(270 60 30 300 120 90)))
-(defvar *parameters* '((240 60 180 270 )(90 60 180 300)))					0.575
+(defvar *parameters* '((240 60 180 270 )(90 60 180 300)))
 (defvar *ponderations* '((300 30 180 60 30 30 )(270 90 150 180 270 90)))
-(defvar *parameters* '((210 240 210 90 )(210 150 60 300)))					0.595
+(defvar *parameters* '((210 240 210 90 )(210 150 60 300)))
 (defvar *ponderations* '((150 240 120 240 240 60 )(270 240 150 150 240 240)))
-(defvar *parameters* '((60 300 60 180 )(90 90 120 300)))					0.585
+(defvar *parameters* '((60 300 60 180 )(90 90 120 300)))
 (defvar *ponderations* '((90 60 240 150 60 90 )(210 270 120 120 210 210)))
-(defvar *parameters* '((150 240 30 30 )(300 300 90 240)))					0.58
+(defvar *parameters* '((150 240 30 30 )(300 300 90 240)))
 (defvar *ponderations* '((60 210 270 30 270 60 )(240 60 270 60 30 300)))
-(defvar *parameters* '((240 60 270 60 )(210 240 210 180)))					0.575
+(defvar *parameters* '((240 60 270 60 )(210 240 210 180)))
 (defvar *ponderations* '((300 150 120 150 90 240 )(210 30 300 270 270 150)))
-(defvar *parameters* '((240 120 180 210 )(60 180 150 90)))					0.605
+(defvar *parameters* '((240 120 180 210 )(60 180 150 90)))
 (defvar *ponderations* '((120 150 90 150 90 180 )(60 240 120 300 120 210)))
-(defvar *parameters* '((30 240 240 270 )(180 150 90 240)))					0.575
+(defvar *parameters* '((30 240 240 270 )(180 150 90 240)))
 (defvar *ponderations* '((150 270 120 240 300 210 )(30 180 180 240 60 180)))
-(defvar *parameters* '((150 150 30 90 )(120 150 270 120)))					0.585
+(defvar *parameters* '((150 150 30 90 )(120 150 270 120)))
