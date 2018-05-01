@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((90 -180 -120 -240 -150 -300) (-150 120 240 -60 30 -240)))
+(defvar *ponderations* '((30 270 210 300 240 210) (300 270 120 300 300 180)))
 
 
 
@@ -810,17 +810,18 @@
        (ponderate 0 (second ponderations)
             (estado-lado-sgte-jugador estado)
             (estado-tablero estado))
-	(if  (juego-terminado-p estado)
-		(if 
-          (< (suma-fila 
-                 (estado-tablero estado) 
-                 (estado-lado-sgte-jugador estado))
-               (suma-fila
-                 (estado-tablero estado) 
-                 (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
-		 0)))
+;	(if  (juego-terminado-p estado)
+;		(if 
+;          (< (suma-fila 
+;                 (estado-tablero estado) 
+;                 (estado-lado-sgte-jugador estado))
+;               (suma-fila
+;                 (estado-tablero estado) 
+;                 (lado-contrario (estado-lado-sgte-jugador estado))))
+;		  -1000
+;		  1000)
+;		 0)
+    ))
 
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
