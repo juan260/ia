@@ -785,12 +785,12 @@
 
 
 
-(defvar *ponderations1* '((4 -64 -8 19 115 110) (50 92 19 -7 -56 -103)))
-(defvar *ponderations2* '((9 -77 48 85 -90 -7) (78 -59 31 -74 -35 -49)))
-(defvar *parameters1* '((-102 73 80 -10) (-76 78 78 -52)))
-(defvar *parameters2* '((-86 61 -20 24) (-116 3 3 -47)))
-(defvar *peso1* 52)
-(defvar *peso2* 85)
+(defvar *ponderations1* '((2 -66 -3 18 113 108) (55 99 26 -5 -57 -98)))
+(defvar *ponderations2* '((1 -66 -1 13 114 108) (54 98 23 -6 -63 -97)))
+(defvar *parameters1* '((-107 72 83 -10) (-80 73 73 -58)))
+(defvar *parameters2* '((-103 71 77 -6) (-79 73 73 -55)))
+(defvar *peso1* 58)
+(defvar *peso2* 55)
 
 
 (defun f-j-nmx (estado profundidad-max f-eval)
@@ -807,7 +807,7 @@
                 lado tablero))))
 
 (defun f-eval-ponderation (estado ponderations parameters peso)
-    (+ (* (+ (ponderate 0 (first ponderations)
+    (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
        (ponderate 0 (second ponderations)
@@ -825,9 +825,9 @@
 		  1000)
 		 0)
     (f-eval-ponderation-2 estado parameters)
-        ) peso)
+        
     (* (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))) (- 1 peso))))
+     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))) peso)))
 
 (defvar *jdr-nmx-helado1* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|

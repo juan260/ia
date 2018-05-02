@@ -9,7 +9,7 @@ import numpy as np
 def add(l, count, line):
     if line in list(el[1] for el in l):
         return
-    
+    print("ADDING: " + line)
     for i in range(30):
         if l[i][0] < count:
             l[i] = (count, line)
@@ -35,7 +35,7 @@ def randomizeLine(line):
     splitted = line.split(" ")
     ret = list()
     for el in splitted:
-        ret.append(str(random.randint(-5, 5) + int(el)))
+        ret.append(str(random.randint(-3, 3) + int(el)))
     return ' '.join(ret)  
     
 def main():
@@ -51,17 +51,18 @@ def main():
     # 
     
     for line1 in lines:
-        for i in np.arange(-1, 1, 0.1):
+        for i in range(1, 500, 5):
             posibilidades.append(randomizeLine(line1) + ' ' + str(i))
     
     while True:
+        
         for p1 in posibilidades:
             readyPlayerSetPerm(p1.split(" "), './CreatePlayer1.sh')
             res = 0.0
             for p2 in posibilidades:
                 readyPlayerSetPerm(p2.split(" "), './CreatePlayer2.sh')
                 res += float(runGame()) 
-         
+            print(res)
             add(l, res, p1)
         
     
