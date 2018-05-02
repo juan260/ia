@@ -1,0 +1,162 @@
+(defvar *ponderations* '((3 3 9 30 9 9 )(15 6 15 3 6 24)))
+(defvar *parameters* '((3 21 30 21 )(9 24 24 6)))
+(defvar *peso* 27)						0.5475
+(defvar *ponderations* '((18 18 18 27 15 30 )(12 12 21 15 30 24)))
+(defvar *parameters* '((30 21 9 27 )(9 21 6 18)))
+(defvar *peso* 24)						0.57
+(defvar *ponderations* '((15 21 15 30 30 6 )(12 27 9 27 24 3)))
+(defvar *parameters* '((27 15 27 12 )(15 18 18 15)))
+(defvar *peso* 3)						0.5425
+(defvar *ponderations* '((18 6 9 6 24 27 )(15 12 9 15 12 30)))
+(defvar *parameters* '((12 9 27 9 )(12 15 27 27)))
+(defvar *peso* 6)						0.5525
+(defvar *ponderations* '((21 21 9 15 9 30 )(9 27 12 21 30 27)))
+(defvar *parameters* '((30 3 15 27 )(6 15 12 9)))
+(defvar *peso* 21)						0.5475
+(defvar *ponderations* '((6 6 9 30 6 27 )(15 27 30 27 27 30)))
+(defvar *parameters* '((15 30 9 12 )(18 6 18 24)))
+(defvar *peso* 3)						0.5475
+(defvar *ponderations* '((9 3 18 18 6 24 )(27 27 3 9 21 3)))
+(defvar *parameters* '((12 24 15 6 )(12 21 15 12)))
+(defvar *peso* 24)						0.5575
+(defvar *ponderations* '((9 30 18 6 18 9 )(15 24 6 3 27 15)))
+(defvar *parameters* '((12 12 27 3 )(9 24 6 12)))
+(defvar *peso* 6)						0.5475
+(defvar *ponderations* '((9 30 15 24 12 21 )(6 24 3 24 27 27)))
+(defvar *parameters* '((9 21 30 24 )(21 3 6 18)))
+(defvar *peso* 6)						0.5975
+(defvar *ponderations* '((24 18 27 18 3 9 )(9 6 6 24 12 30)))
+(defvar *parameters* '((6 3 6 24 )(6 30 30 9)))
+(defvar *peso* 30)						0.5425
+(defvar *ponderations* '((24 9 3 27 3 24 )(27 18 12 3 9 30)))
+(defvar *parameters* '((15 30 9 12 )(3 15 18 15)))
+(defvar *peso* 15)						0.555
+(defvar *ponderations* '((18 30 15 27 18 27 )(18 30 27 12 24 6)))
+(defvar *parameters* '((3 27 15 15 )(6 9 12 18)))
+(defvar *peso* 18)						0.545
+(defvar *ponderations* '((12 15 21 27 30 24 )(3 15 27 27 27 3)))
+(defvar *parameters* '((27 6 6 27 )(24 27 12 30)))
+(defvar *peso* 12)						0.5525
+(defvar *ponderations* '((12 21 6 15 30 6 )(15 12 6 6 21 24)))
+(defvar *parameters* '((3 24 18 6 )(30 6 27 12)))
+(defvar *peso* 9)						0.545
+(defvar *ponderations* '((21 24 18 6 30 21 )(18 18 24 27 21 18)))
+(defvar *parameters* '((6 9 18 18 )(12 9 21 12)))
+(defvar *peso* 12)						0.55
+(defvar *ponderations* '((9 24 27 18 12 6 )(15 21 15 21 15 27)))
+(defvar *parameters* '((15 18 30 6 )(18 9 27 18)))
+(defvar *peso* 12)						0.5575
+(defvar *ponderations* '((24 27 15 18 3 18 )(24 15 9 6 30 9)))
+(defvar *parameters* '((24 9 18 15 )(27 18 27 24)))
+(defvar *peso* 3)						0.5475
+(defvar *ponderations* '((21 27 27 24 3 9 )(3 9 12 12 21 24)))
+(defvar *parameters* '((3 6 21 21 )(3 18 30 12)))
+(defvar *peso* 9)						0.5675
+(defvar *ponderations* '((27 9 12 9 27 15 )(3 18 24 18 3 18)))
+(defvar *parameters* '((21 18 21 27 )(27 15 6 9)))
+(defvar *peso* 6)						0.55
+(defvar *ponderations* '((24 18 30 27 3 27 )(30 3 24 9 27 12)))
+(defvar *parameters* '((12 30 24 15 )(12 24 30 24)))
+(defvar *peso* 15)						0.5525
+(defvar *ponderations* '((30 15 30 21 27 9 )(3 18 24 3 15 3)))
+(defvar *parameters* '((3 27 15 30 )(3 12 6 30)))
+(defvar *peso* 21)						0.5425
+(defvar *ponderations* '((18 9 12 3 24 21 )(18 18 27 27 18 9)))
+(defvar *parameters* '((3 27 27 30 )(27 18 21 18)))
+(defvar *peso* 18)						0.545
+(defvar *ponderations* '((9 24 27 21 24 18 )(6 21 3 27 30 15)))
+(defvar *parameters* '((15 15 6 24 )(9 15 21 27)))
+(defvar *peso* 12)						0.5425
+(defvar *ponderations* '((30 6 12 21 9 12 )(18 18 12 21 15 24)))
+(defvar *parameters* '((3 27 9 27 )(12 18 12 18)))
+(defvar *peso* 27)						0.5425
+(defvar *ponderations* '((21 24 9 15 6 6 )(27 24 18 6 24 30)))
+(defvar *parameters* '((30 9 3 24 )(30 12 9 12)))
+(defvar *peso* 21)						0.545
+(defvar *ponderations* '((9 6 21 30 18 15 )(9 30 27 12 21 30)))
+(defvar *parameters* '((30 6 3 12 )(15 9 15 18)))
+(defvar *peso* 6)						0.5425
+(defvar *ponderations* '((15 18 12 21 24 18 )(18 24 21 3 30 24)))
+(defvar *parameters* '((21 12 9 15 )(27 12 15 9)))
+(defvar *peso* 21)						0.5425
+(defvar *ponderations* '((18 18 3 6 21 24 )(6 18 21 15 27 3)))
+(defvar *parameters* '((15 3 24 15 )(9 24 12 30)))
+(defvar *peso* 9)						0.5425
+(defvar *ponderations* '((30 3 6 21 18 18 )(6 21 9 21 21 21)))
+(defvar *parameters* '((12 9 30 21 )(6 21 24 21)))
+(defvar *peso* 3)						0.555
+(defvar *ponderations* '((15 15 30 27 21 3 )(12 27 15 21 30 15)))
+(defvar *parameters* '((3 30 21 30 )(21 3 12 24)))
+(defvar *peso* 12)						0.55
+(defvar *ponderations* '((3 21 12 21 24 12 )(30 24 30 6 24 27)))
+(defvar *parameters* '((12 18 24 12 )(3 15 12 12)))
+(defvar *peso* 27)						0.5425
+(defvar *ponderations* '((30 3 3 9 24 6 )(6 3 6 9 27 30)))
+(defvar *parameters* '((6 24 9 9 )(30 12 6 27)))
+(defvar *peso* 3)						0.5575
+(defvar *ponderations* '((3 27 9 21 21 24 )(15 3 21 6 12 12)))
+(defvar *parameters* '((18 3 9 24 )(27 27 15 30)))
+(defvar *peso* 24)						0.5425
+(defvar *ponderations* '((9 27 6 27 12 12 )(12 21 18 15 6 3)))
+(defvar *parameters* '((27 6 30 15 )(21 6 30 9)))
+(defvar *peso* 18)						0.555
+(defvar *ponderations* '((3 12 30 27 9 12 )(21 12 24 18 6 30)))
+(defvar *parameters* '((12 12 12 9 )(30 21 24 6)))
+(defvar *peso* 15)						0.5425
+(defvar *ponderations* '((3 21 6 3 18 24 )(30 3 12 27 21 3)))
+(defvar *parameters* '((30 27 30 24 )(9 12 18 3)))
+(defvar *peso* 15)						0.545
+(defvar *ponderations* '((9 12 3 12 9 24 )(27 21 15 6 24 6)))
+(defvar *parameters* '((12 24 30 21 )(3 27 6 30)))
+(defvar *peso* 24)						0.545
+(defvar *ponderations* '((27 9 3 24 6 3 )(15 30 24 30 18 30)))
+(defvar *parameters* '((21 21 3 24 )(3 21 24 9)))
+(defvar *peso* 24)						0.5475
+(defvar *ponderations* '((12 9 6 12 9 15 )(12 12 12 21 9 18)))
+(defvar *parameters* '((27 21 18 27 )(15 18 18 12)))
+(defvar *peso* 15)						0.5425
+(defvar *ponderations* '((18 18 18 18 9 12 )(3 24 6 24 27 24)))
+(defvar *parameters* '((9 24 15 18 )(18 3 21 3)))
+(defvar *peso* 3)						0.5425
+(defvar *ponderations* '((3 3 18 12 6 27 )(12 21 3 6 3 24)))
+(defvar *parameters* '((9 24 30 6 )(18 3 3 3)))
+(defvar *peso* 24)						0.5425
+(defvar *ponderations* '((27 30 15 18 27 3 )(27 3 3 18 6 6)))
+(defvar *parameters* '((21 21 12 3 )(12 27 9 6)))
+(defvar *peso* 27)						0.545
+(defvar *ponderations* '((30 30 15 9 9 30 )(9 27 18 9 21 27)))
+(defvar *parameters* '((18 24 24 15 )(3 6 30 9)))
+(defvar *peso* 27)						0.5425
+(defvar *ponderations* '((12 24 15 21 9 30 )(27 15 27 21 3 21)))
+(defvar *parameters* '((27 18 21 30 )(12 12 30 6)))
+(defvar *peso* 24)						0.55
+(defvar *ponderations* '((15 24 9 27 27 18 )(6 30 21 9 27 9)))
+(defvar *parameters* '((3 3 9 21 )(18 18 12 6)))
+(defvar *peso* 12)						0.5475
+(defvar *ponderations* '((12 30 18 30 30 9 )(6 6 12 21 27 6)))
+(defvar *parameters* '((9 9 21 12 )(9 27 27 24)))
+(defvar *peso* 12)						0.5625
+(defvar *ponderations* '((9 12 6 9 24 6 )(6 3 12 12 30 21)))
+(defvar *parameters* '((30 24 21 6 )(15 12 21 9)))
+(defvar *peso* 12)						0.55
+(defvar *ponderations* '((6 30 24 3 6 6 )(9 21 24 18 21 27)))
+(defvar *parameters* '((3 6 12 15 )(24 30 18 15)))
+(defvar *peso* 9)						0.545
+(defvar *ponderations* '((6 18 9 12 18 27 )(3 24 30 12 27 24)))
+(defvar *parameters* '((3 30 3 12 )(3 15 9 3)))
+(defvar *peso* 9)						0.5425
+(defvar *ponderations* '((21 24 6 15 21 15 )(18 6 3 9 21 18)))
+(defvar *parameters* '((3 9 30 24 )(24 30 24 3)))
+(defvar *peso* 21)						0.5475
+(defvar *ponderations* '((21 12 24 9 30 6 )(27 21 30 12 30 9)))
+(defvar *parameters* '((30 15 24 18 )(21 3 9 6)))
+(defvar *peso* 27)						0.5425
+(defvar *ponderations* '((18 3 21 15 3 27 )(27 12 12 27 24 27)))
+(defvar *parameters* '((15 3 6 18 )(18 12 27 30)))
+(defvar *peso* 21)						0.5525
+(defvar *ponderations* '((21 24 18 9 30 3 )(21 6 30 15 27 6)))
+(defvar *parameters* '((21 24 15 3 )(21 9 30 21)))
+(defvar *peso* 9)						0.545
+(defvar *ponderations* '((27 30 21 27 12 9 )(30 27 24 12 15 3)))
+(defvar *parameters* '((24 18 18 21 )(9 9 27 30)))
+(defvar *peso* 24)						0.5475
