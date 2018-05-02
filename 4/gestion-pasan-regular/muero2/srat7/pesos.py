@@ -36,7 +36,7 @@ def randomizeLine(line):
     ret = list()
     for el in splitted:
         ret.append(str(random.randint(-3, 3) + int(el)))
-    return ' '.join(ret)  
+    return str(' '.join(ret) + ' ' + str(random.randint(1, 500)))
     
 def main():
     
@@ -51,8 +51,7 @@ def main():
     # 
     
     for line1 in lines:
-        for i in range(1, 500, 5):
-            posibilidades.append(randomizeLine(line1) + ' ' + str(i))
+        posibilidades.append(randomizeLine(line1) )
     
     while True:
         
