@@ -785,7 +785,7 @@
 
 
 
-(defvar *ponderations* '((300 210 210 150 90 120) (300 180 60 270 180 210)))
+(defvar *ponderations* '((300 300 240 90 210 90)(120 60 150 240 60 270)))
 
 
 
@@ -817,8 +817,8 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -50000 
-		  50000)
+		  -5000 
+		  5000)
 		 0)))
 
 (defvar *jdr-nmx-helado* (make-jugador
@@ -1087,6 +1087,6 @@
 
 ;(pasa-regular *jdr-nmx-helado*)
 
-(evaluador-percentage *jdr-nmx-helado* 200)
+(evaluador-percentage *jdr-nmx-helado* 2000)
 
 
