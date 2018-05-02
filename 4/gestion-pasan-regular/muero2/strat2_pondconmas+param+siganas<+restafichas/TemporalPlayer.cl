@@ -783,9 +783,9 @@
 
 
 
-(defvar *ponderations* '((90 240 90 180 240 180) (180 300 60 210 30 300)))
-(defvar *parameters* '((120 120 150 300) (90 30 150 30)))
-(defvar *ponderations1* '((84 52 -68 12 52 -20) (76 -104 -56 -16 -68 -104)))
+(defvar *ponderations* '((150 90 240 90 270 120) (240 180 300 60 180 270)))
+(defvar *parameters* '((180 210 240 240) (270 300 210 60)))
+(defvar *ponderations1* '((-92 -44 -44 -100 32 -60) (-116 -60 -8 0 -40 -84)))
 (defvar *ponderations2* '((-80 72 40 -80 -40 -60) (-108 -60 -8 -4 44 -36)))
 (defvar *parameters1* '((-108 64 20 56) (0 -24 -72 44)))
 (defvar *parameters2* '((-72 -100 84 -16) (-68 72 72 -96)))
@@ -1100,6 +1100,6 @@
 
 
 
-(evaluador-percentage *jdr-nmx-helado* 100)
+(evaluador-percentage *jdr-nmx-helado* 200)
 
 

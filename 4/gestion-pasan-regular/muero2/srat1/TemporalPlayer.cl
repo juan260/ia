@@ -923,10 +923,10 @@
        (third parameters)))))
 
 
-;(defvar *jdr-nmx-verano* (make-jugador
-                        ;:nombre   '|oso-panda|
-                        ;:f-juego  #'f-j-nmx
-                        ;;:f-eval   #'heuristica))
+(defvar *jdr-nmx-verano* (make-jugador
+                        :nombre   '|oso-panda|
+                        :f-juego  #'f-j-nmx
+                        :f-eval   #'heuristica))
                         ;:f-eval   #'(lambda(x) (f-eval-ponderation-2 x *parameters*))))
                         
 (setq *debug-level* 2)         ; Ajusta a 2 el nivel de detalle
@@ -1094,7 +1094,7 @@
 
 
 
-;(pasa-regular *jdr-nmx-helado*)
+;(pasa-regular *jdr-nmx-verano*)
 ;(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
 ;(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
 ;(evaluador-percentage *jdr-nmx-helado* 50)
