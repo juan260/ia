@@ -785,13 +785,12 @@
 
 
 
-(defvar *ponderations1* '((-54 -12 -12 85 45 95) (19 54 -36 -38 -8 -136)))
-(defvar *ponderations2* '((-5 -63 31 82 -82 -15) (93 -40 47 -88 -45 -38)))
-(defvar *parameters1* '((-92 47 -27 55) (-2 58 -53 105)))
-(defvar *parameters2* '((-101 75 -1 24) (-105 -4 -4 -60)))
-(defvar *peso1* 227)
-(defvar *peso2* 71)
-
+(defvar *ponderations1* '((-8 120 16 20 -24 52) (112 156 32 -88 -60 -124)))
+(defvar *ponderations2* '((112 -168 -76 -4 -164 32) (120 200 168 124 92 -68)))
+(defvar *parameters1* '((-112 112 188 148) (92 -156 -156 52)))
+(defvar *parameters2* '((-152 -8 4 -116) (132 -188 -188 28)))
+(defvar *peso1* 76)
+(defvar *peso2* 88)
 
 (defun f-j-nmx (estado profundidad-max f-eval)
 ;;;(negamax-a-b estado profundidad-max f-eval))
@@ -806,7 +805,7 @@
                 (rest ponderation)
                 lado tablero))))
 
-(defun f-eval-ponderation (estado ponderations parameters peso)
+(defun f-eval-ponderation (estado ponderations parameters)
     (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
@@ -825,19 +824,18 @@
 		  1000)
 		 0)
     (f-eval-ponderation-2 estado parameters)
-        
-    (* (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
-     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))) peso)))
+    (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado))))))
 
 (defvar *jdr-nmx-helado1* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations1* *parameters1* *peso1*))))
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations1* *parameters1*))))
                         
 (defvar *jdr-nmx-helado2* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2* *peso1*))))
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations2* *parameters2*))))
                      
 
 
@@ -1070,9 +1068,8 @@
       (suma jug2 jug1 (- nveces 1)))))
 
 (defun media (jug1 jug2  nveces)
-  (print
     (float
-      (/ (suma jug1 jug2 nveces) nveces))))
+      (/ (suma jug1 jug2 nveces) nveces)))
 
 
 ; Funcion para saber si un jugador determinado gana o no al aleatorio
@@ -1100,7 +1097,8 @@
 ;(pasa-regular *jdr-nmx-verano*)
 ;(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
 ;(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
-(trace evaluador-percentage)
-
-;(evaluador-percentage *jdr-nmx-helado1* 5)
-;(list (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-eval-aleatorio*))
+;(evaluador-percentage *jdr-nmx-helado* 50)
+(print (+ (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
+    (partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*)))
+    (- (evaluador *jdr-nmx-helado1* 1000)
+        (evaluador *jdr-nmx-helado2* 1000))))
