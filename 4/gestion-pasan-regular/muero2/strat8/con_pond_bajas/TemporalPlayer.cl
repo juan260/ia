@@ -782,9 +782,9 @@
 
 
 
-(defvar *peso* 24)
-(defvar *ponderations* '((27 30 21 27 12 9 )(30 27 24 12 15 3)))
-(defvar *parameters* '((24 18 18 21 )(9 9 27 30)))
+(defvar *peso* 3)
+(defvar *ponderations* '((3 27 3 21 18 9) (18 3 15 27 15 15)))
+(defvar *parameters* '((24 3 3 12) (21 30 27 9)))
 (defvar *ponderations1* '((-22 -24 9 -52 -114 77) (87 73 -6 40 -41 -111)))
 (defvar *ponderations2* '((-103 -17 -119 31 73 -99) (39 103 -83 -74 -93 -51)))
 (defvar *parameters1* '((-86 89 -6 97) (5 -107 -107 -75)))
@@ -1026,7 +1026,7 @@
       0)
     (if
       ; Si jug2 gana, devuelve 1. Si no, 0
-      (< (partida 0 2 (list jug2 jug1)) 0)
+      (< (partida 0 2 (list jug1 jug2)) 0)
       1
       0)))
 
@@ -1096,7 +1096,7 @@
 ;(pasa-regular *jdr-nmx-verano*)
 ;(print (- (partida 0 2 (list *jdr-nmx-helado1* *jdr-nmx-helado2*))
 ;(partida 0 2 (list *jdr-nmx-helado2* *jdr-nmx-helado1*))))
-(evaluador-percentage *jdr-nmx-helado* 2000)
+(evaluador-percentage *jdr-nmx-helado* 200)
 
 ;(evaluador-percentage *jdr-nmx-helado1* 1000)
 

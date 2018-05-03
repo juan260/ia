@@ -16,18 +16,13 @@
 
 
 # DESCOMENTAR ESTO Y COMENTAR LO ANTERIOR EN CASO DE QUE SEA UN FICHERP EN FORMATO DE LOS DE STRAT,
-# QUE TIENENE EN LA LINEA 786 *PONDERATIONS* Y EN 787 *PARAMETERS*
+# QUE TIENENE EN LA LINEA EN 785 *PESO* 786 *PONDERATIONS* Y EN 787 *PARAMETERS*
 
-replacementline="$2"
-sedcommand="787s/.*/${2}/"
-sed -i "$sedcommand" TemporalPlayer.cl
-
-replacementline="$1"
-sedcommand="786s/.*/${1}/"
-sed -i "$sedcommand" TemporalPlayer.cl
+sedcommand="10s/.*/${1}/"
+sed -i "$sedcommand" jugador2.cl
 
 
-OUTPUT=$(sbcl --noinform --disable-ldb --script TemporalPlayer.cl)
+sedcommand="12s/.*/${2}/"
+sed -i "$sedcommand" jugador2.cl
 
-echo $OUTPUT
 

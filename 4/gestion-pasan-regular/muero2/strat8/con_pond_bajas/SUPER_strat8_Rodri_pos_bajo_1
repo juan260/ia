@@ -1,0 +1,1 @@
+(defvar *ponderations* '((27 21 3 18 18 9 )(24 24 9 15 3 24)))	(defvar *parameters* '((6 30 9 3 )(27 15 27 9)))	(defvar *peso* 9)							0.7132352941176471

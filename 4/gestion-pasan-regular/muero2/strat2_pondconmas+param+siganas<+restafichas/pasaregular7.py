@@ -13,7 +13,7 @@ def main():
     k = 0
     random.seed()
     while 1:    
-        perm = [str(30*random.randint(1, 10)) for i in range(20)]
+        perm = [str(30*random.randint(1, 10)) for i in range(21)]
                 
         #String de llamada al script
         args = '(defvar *ponderations* \'(('

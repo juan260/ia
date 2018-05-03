@@ -784,8 +784,8 @@
 
 
 
-
-(defvar *ponderations* '((300 210 210 150 90 120) (300 180 60 270 180 210)))
+(defvar *peso* 30)
+(defvar *ponderations* '((150 90 90 30 300 90) (270 60 270 150 210 150)))
 
 
 
@@ -801,8 +801,7 @@
             (ponderate (+ position 1)
                 (rest ponderation)
                 lado tablero))))
-
-(defun f-eval-ponderation (estado ponderations)
+(defun f-eval-ponderation (estado ponderations peso)
     (+ (ponderate 0 (first ponderations)
             (lado-contrario (estado-lado-sgte-jugador estado)) 
             (estado-tablero estado))
@@ -817,14 +816,18 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -50000 
-		  50000)
-		 0)))
+		  -100000 
+		  100000)
+		 0)
+        
+    (* (- (suma-fila (estado-tablero estado) (estado-lado-sgte-jugador estado))
+     (suma-fila (estado-tablero estado) (lado-contrario (estado-lado-sgte-jugador estado)))) peso)))
+
 
 (defvar *jdr-nmx-helado* (make-jugador
                         :nombre   '|tu-cree-que-yo-soi-guapa|
                         :f-juego  #'f-j-nmx
-                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations*))))
+                        :f-eval   #'(lambda (x) (f-eval-ponderation x *ponderations* *peso*))))
                      
 
 
@@ -863,8 +866,8 @@
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
                      (lado-contrario (estado-lado-sgte-jugador estado))))
-        -10000
-        10000)
+        -100000
+        100000)
         0)))
         
 ; Parameters tiene 6 (3+3) eltos:
@@ -1013,7 +1016,7 @@
       0)
     (if
       ; Si jug2 gana, devuelve 1. Si no, 0
-      (< (partida 0 2 (list jug2 jug1)) 0)
+      (< (partida 0 2 (list jug1 jug2)) 0)
       1
       0)))
 

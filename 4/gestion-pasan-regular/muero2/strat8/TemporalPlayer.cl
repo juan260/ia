@@ -782,9 +782,9 @@
 
 
 
-(defvar *peso* 240)
-(defvar *ponderations* '((60 300 180 300 120 90 )(120 210 60 240 270 150)))
-(defvar *parameters* '((30 150 30 180 )(90 300 210 30)))
+(defvar *peso* 120)
+(defvar *ponderations* '((300 120 90 240 180 300) (300 180 90 300 270 300)))
+(defvar *parameters* '((60 60 150 120) (180 210 240 60)))
 (defvar *ponderations1* '((-22 -24 9 -52 -114 77) (87 73 -6 40 -41 -111)))
 (defvar *ponderations2* '((-103 -17 -119 31 73 -99) (39 103 -83 -74 -93 -51)))
 (defvar *parameters1* '((-86 89 -6 97) (5 -107 -107 -75)))
@@ -1026,7 +1026,7 @@
       0)
     (if
       ; Si jug2 gana, devuelve 1. Si no, 0
-      (< (partida 0 2 (list jug2 jug1)) 0)
+      (< (partida 0 2 (list jug1 jug2)) 0)
       1
       0)))
 
