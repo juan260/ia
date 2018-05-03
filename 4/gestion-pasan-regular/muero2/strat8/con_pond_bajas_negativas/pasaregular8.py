@@ -42,9 +42,9 @@ def main():
         NUMERO_BOTS = 204
         out1 = get_out('jugador.cl')
         win_rate1 = win_rate(out1,NUMERO_BOTS)
-        if win_rate1 > 0.75:
+        if win_rate1 > 0.85:
             results = pond + '\t' + param + '\t' + peso + '\t' + str(win_rate1) + '\n'
-            if win_rate1 > 0.85:
+            if win_rate1 > 0.9:
                 outputSuperFile.write(results)
                 print('\t\t Hemos conseguido uno de ' + str(win_rate1))
             
