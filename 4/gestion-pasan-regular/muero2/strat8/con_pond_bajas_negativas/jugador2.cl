@@ -103,8 +103,8 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
+		  -100000
+		  100000)
 		 0)
     (f-eval-ponderation-2 estado parameters)
         

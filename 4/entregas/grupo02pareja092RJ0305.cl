@@ -5,8 +5,8 @@
 (in-package grupo02pareja092RJ0305)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation estado '((0 300 150 300 -150 -150 )(180 240 -30 -60 -270 -300)) 
-    '((0 210 -90 60 )(-150 30 -180 -150))
+    (f-eval-ponderation estado '((60 240 -270 300 30 120 )(180 240 -120 0 -240 -300)) 
+    '((-210 120 180 90 )(-240 150 -150 -270))
     270)) ; función de evaluación heurística a implementar
 
 (defvar *alias* '|DE_LA_BOTA_EMPINAPARAPAPA|) ; alias que aparecerá en el ranking
@@ -102,8 +102,8 @@
                (suma-fila
                  (estado-tablero estado) 
                  (lado-contrario (estado-lado-sgte-jugador estado))))
-		  -1000
-		  1000)
+		  -100000
+		  100000)
 		 0)
     (f-eval-ponderation-2 estado parameters)
         
