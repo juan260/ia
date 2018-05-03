@@ -1,75 +1,75 @@
 (defvar *ponderations* '((300 -270 90 -300 30 270 )(120 150 -30 -90 -210 210)))
 (defvar *parameters* '((-210 240 240 180 )(90 120 300 30)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.9044117647058824
 (defvar *ponderations* '((60 240 -270 300 30 120 )(180 240 -120 0 -240 -300)))
 (defvar *parameters* '((-210 120 180 90 )(-240 150 -150 -270)))
-(defvar *peso* 270)
+(defvar *peso* 270)							0.9338235294117647
 (defvar *ponderations* '((210 210 -210 150 210 240 )(-150 -150 30 60 -60 300)))
 (defvar *parameters* '((-300 150 60 240 )(120 -240 0 -240)))
-(defvar *peso* 270)
+(defvar *peso* 270)							0.8676470588235294
 (defvar *ponderations* '((-30 -90 90 -240 120 -210 )(300 60 -210 -90 -150 -240)))
 (defvar *parameters* '((-270 -120 120 90 )(-240 -240 120 150)))
-(defvar *peso* 30)
+(defvar *peso* 30)							0.8578431372549019
 (defvar *ponderations* '((90 -60 -210 30 -120 120 )(30 270 30 -60 -150 -180)))
 (defvar *parameters* '((-180 300 60 30 )(270 -150 210 30)))
-(defvar *peso* 30)
+(defvar *peso* 30)							0.8872549019607843
 (defvar *ponderations* '((-300 30 -90 -300 -120 -270 )(60 300 300 -150 -120 240)))
 (defvar *parameters* '((-300 150 -180 90 )(90 120 -120 -270)))
-(defvar *peso* 120)
+(defvar *peso* 120)							0.8529411764705882
 (defvar *ponderations* '((270 -30 270 300 -60 300 )(240 240 -150 60 -270 -240)))
 (defvar *parameters* '((-30 0 -30 210 )(30 -90 270 90)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.8578431372549019
 (defvar *ponderations* '((-60 300 240 210 -270 300 )(240 -60 -150 -240 -150 -270)))
 (defvar *parameters* '((120 -30 -120 240 )(-300 -120 -90 -270)))
-(defvar *peso* 120)
+(defvar *peso* 120)							0.8725490196078431
 (defvar *ponderations* '((60 -60 -90 60 120 -120 )(150 180 150 -180 -270 -120)))
 (defvar *parameters* '((60 150 -60 240 )(0 30 30 -180)))
-(defvar *peso* 300)
+(defvar *peso* 300)							0.8921568627450981
 (defvar *ponderations* '((-30 210 -120 90 180 0 )(-30 180 240 -90 -210 210)))
 (defvar *parameters* '((-60 180 180 120 )(270 60 -180 -210)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.8848039215686274
 (defvar *ponderations* '((-90 120 150 90 150 0 )(150 120 120 -150 -300 -240)))
 (defvar *parameters* '((-120 -270 -270 150 )(-180 300 240 -210)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.8995098039215687
 (defvar *ponderations* '((120 300 -270 -150 60 270 )(150 300 -30 60 -150 -150)))
 (defvar *parameters* '((-300 270 90 270 )(300 -120 -210 -180)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.9191176470588235
 (defvar *ponderations* '((210 -30 150 -60 180 210 )(-60 -270 -60 -270 -240 -30)))
 (defvar *parameters* '((-300 240 -240 120 )(210 -270 180 -300)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.8553921568627451
 (defvar *ponderations* '((-150 -30 -210 90 30 -150 )(300 90 270 -240 -180 -180)))
 (defvar *parameters* '((-240 -240 150 -30 )(30 90 -270 -180)))
-(defvar *peso* 60)
+(defvar *peso* 60)							0.8799019607843137
 (defvar *ponderations* '((60 -180 -120 240 60 -240 )(0 -60 -30 -60 -150 -210)))
 (defvar *parameters* '((-180 -270 300 240 )(30 -180 -150 -300)))
-(defvar *peso* 0)
+(defvar *peso* 0)							0.8700980392156863
 (defvar *ponderations* '((-210 210 180 -120 -270 -270 )(150 120 -180 -180 -240 -90)))
 (defvar *parameters* '((-270 -90 30 30 )(-210 210 240 -270)))
-(defvar *peso* 90)
+(defvar *peso* 90)							0.8774509803921569
 (defvar *ponderations* '((-270 -180 -210 270 120 -240 )(-30 210 0 -150 -240 -120)))
 (defvar *parameters* '((-120 0 210 90 )(300 60 -90 -210)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.8921568627450981
 (defvar *ponderations* '((270 240 150 -60 270 30 )(240 -90 -270 -240 -210 -150)))
 (defvar *parameters* '((-30 -60 180 150 )(-90 -150 180 -300)))
-(defvar *peso* 240)
+(defvar *peso* 240)							0.9166666666666666
 (defvar *ponderations* '((-180 -120 180 -150 60 60 )(-240 -240 0 -210 -180 -90)))
 (defvar *parameters* '((-300 210 270 180 )(270 60 300 -180)))
-(defvar *peso* 0)
+(defvar *peso* 0)							0.9044117647058824
 (defvar *ponderations* '((30 120 -120 270 270 -210 )(-150 -120 -120 0 -300 -270)))
 (defvar *parameters* '((-270 0 120 -30 )(-300 -180 -30 -210)))
-(defvar *peso* 30)
+(defvar *peso* 30)							0.9019607843137255
 (defvar *ponderations* '((240 -60 90 -270 -30 -150 )(90 -60 120 -180 -30 -120)))
 (defvar *parameters* '((-270 -150 30 30 )(210 -180 150 0)))
-(defvar *peso* 60)
+(defvar *peso* 60)							0.9044117647058824
 (defvar *ponderations* '((-300 240 -30 -30 -270 240 )(120 90 60 -120 -210 60)))
 (defvar *parameters* '((-300 -60 60 -30 )(270 -270 150 -210)))
-(defvar *peso* 180)
+(defvar *peso* 180)							0.9093137254901961
 (defvar *ponderations* '((-150 -240 180 300 30 210 )(270 150 -60 -60 -60 30)))
 (defvar *parameters* '((-210 90 0 90 )(240 -270 -180 0)))
-(defvar *peso* 90)
+(defvar *peso* 90)							0.9142156862745098
 (defvar *ponderations* '((0 -120 300 -240 270 -300 )(0 300 240 -210 -150 -300)))
 (defvar *parameters* '((-150 150 -270 150 )(240 -60 -60 -150)))
-(defvar *peso* 240)
+(defvar *peso* 240)							0.9264705882352942
 (defvar *ponderations* '((90 300 -180 -90 240 30 )(30 30 -60 -60 -90 240)))
 (defvar *parameters* '((-270 -90 210 60 )(-30 210 150 -180)))
-(defvar *peso* 210)
+(defvar *peso* 210)							0.9068627450980392

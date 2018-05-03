@@ -7,9 +7,9 @@
 ; Y TUS VARIABLES AUXILIARES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *ponderations* '((0 270 270 120 210 -210 )(-240 -270 -300 -150 180 -150)))
-(defvar *parameters* '((-180 60 120 240 )(60 60 -60 -150)))
-(defvar *peso* 30)						
+(defvar *ponderations* '((-180 0 -180 30 210 0 )(60 -210 30 180 60 300)))
+(defvar *parameters* '((-60 -90 120 -150 )(0 -240 30 180)))
+(defvar *peso* 180)						
 
 
 
