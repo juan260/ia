@@ -35,7 +35,7 @@ def randomizeLine(line):
     splitted = line.split(" ")
     ret = list()
     for el in splitted:
-        ret.append(str(random.randint(-3, 3) + int(el)))
+        ret.append(str(random.randint(-20, 20) + int(el)))
     return str(' '.join(ret) + ' ' + str(random.randint(1, 500)))
     
 def main():
@@ -46,15 +46,15 @@ def main():
     infile = open(sys.argv[1], 'r')
     lines = infile.readlines()
     infile.close()
-    posibilidades = list()
-    results = list()
-    # 
-    
-    for line1 in lines:
-        posibilidades.append(randomizeLine(line1) )
-    
-    while True:
+    while 1:
+        posibilidades = list()
+        results = list()
+        # 
         
+        for line1 in lines:
+            posibilidades.append(randomizeLine(line1) )
+        
+     
         for p1 in posibilidades:
             readyPlayerSetPerm(p1.split(" "), './CreatePlayer1.sh')
             res = 0.0
@@ -63,18 +63,14 @@ def main():
                 res += float(runGame()) 
             print(res)
             add(l, res, p1)
+          
         
-    
         print("RESULTS: ")
         for el in l:
-            outputFile.write(str(el[1]) + '\t\t' + el[0] + '\n')
+            outputFile.write(str(el[1]) + '\t\t' + str(el[0]) + '\n')
             print(el)
         
-        posibilidades = list()
-        for el in l:
-            for i in np.arange(-1, 1, 0.1):
-                posibilidades.append(randomizeLine(' '.join(el[1])) + ' ' + str(i))
-    
+     
 main()
 
 
