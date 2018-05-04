@@ -5,7 +5,7 @@
 (in-package grupo02pareja093RJ0305)
 
 (defun heuristica (estado) 
-    (f-eval-ponderation estado '((-60 30 60 -90 180 300)(240 270 0 -120 -240 -270)) 
+    (f-eval-ponderation estado '((-60 30 60 -90 180 300 )(240 270 0 -120 -240 -270)) 
     '((-90 -30 240 0 )(-300 30 0 -60))
     30)) ; función de evaluación heurística a implementar
 
@@ -36,8 +36,8 @@
                      (estado-lado-sgte-jugador estado))
 		  (suma-fila (estado-tablero estado) 
                      (lado-contrario (estado-lado-sgte-jugador estado))))
-        -10000
-        10000)
+        -100000
+        100000)
         0)))
 
 (defun calc-ponderations (tablero parameters side posicion)
